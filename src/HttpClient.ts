@@ -148,10 +148,10 @@ async function fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> 
   }
 
   try {
-    const res = await fetch(request.url, options as RequestInit);
+    const response = await fetch(request.url, options as RequestInit);
     
     return {
-      data: await res.json()
+      data: await response.json()
     } as HttpResponse
   } catch (error) {
     throw new Error(`HTTP error: ${error}`);
