@@ -19,7 +19,7 @@
   "author": "Cedric Pierre",
   "email": "jirotoh@gmail.com",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --minify --out-dir dist ",
+    "build": "tsup src/index.ts --format esm --dts --minify --out-dir dist",
     "test": "vitest tests",
     "docs": "typedoc --out docs src/index.ts"
   },
