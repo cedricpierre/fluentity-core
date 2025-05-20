@@ -541,4 +541,4 @@ interface CacheData {
     timestamp: number;
 }
 
-export { type Attributes, BelongsTo, BelongsToMany, Cast, type Constructor, HttpClient as FluORM, HasMany, HasOne, HttpClient, type HttpRequest, type HttpResponse, type MethodType, Methods, Model, type PropertyDecoratorType, type Relation, RelationBuilder, type RequestOptions, fetchRequestHandler };
+export { type Attributes, BelongsTo, BelongsToMany, Cast, type Constructor, HttpClient as Fluentity, HasMany, HasOne, HttpClient, type HttpRequest, type HttpResponse, type MethodType, Methods, Model, type PropertyDecoratorType, type Relation, RelationBuilder, type RequestOptions, fetchRequestHandler };
