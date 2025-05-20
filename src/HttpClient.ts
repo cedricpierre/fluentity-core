@@ -152,7 +152,7 @@ async function fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> 
     
     return {
       data: await res.json()
-    }
+    } as HttpResponse
   } catch (error) {
     throw new Error(`HTTP error: ${error}`);
   }
