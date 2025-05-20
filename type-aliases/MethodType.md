@@ -8,4 +8,4 @@
 
 > **MethodType** = keyof *typeof* [`Methods`](../variables/Methods.md)
 
-Defined in: [HttpClient.ts:172](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L172)
+Defined in: [HttpClient.ts:172](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L172)

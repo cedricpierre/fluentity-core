@@ -8,7 +8,7 @@
 
 > **Constructor**\<`T`\> = (...`args`) => `T`
 
-Defined in: [decorators.ts:10](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/decorators.ts#L10)
+Defined in: [decorators.ts:10](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/decorators.ts#L10)
 
 Type representing a constructor function that creates instances of type T.
 

@@ -8,7 +8,7 @@
 
 > **Relation**\<`T`\> = `T` *extends* [`Model`](../classes/Model.md)\<`any`\> ? `HasOneRelationBuilder`\<`T`\> : `T` *extends* [`Model`](../classes/Model.md)\<`any`\>[] ? `HasManyRelationBuilder`\<`T`\[`number`\]\> : `never`
 
-Defined in: [RelationBuilder.ts:11](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L11)
+Defined in: [RelationBuilder.ts:11](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/RelationBuilder.ts#L11)
 
 Type that determines the appropriate relation builder based on the model type.
 

@@ -6,7 +6,7 @@
 
 # Interface: RequestOptions
 
-Defined in: [HttpClient.ts:223](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L223)
+Defined in: [HttpClient.ts:223](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L223)
 
 Configuration options for HTTP requests.
 Extends the standard Fetch API RequestInit interface with additional options.
@@ -17,7 +17,7 @@ Extends the standard Fetch API RequestInit interface with additional options.
 
 > `optional` **body**: `any`
 
-Defined in: [HttpClient.ts:225](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L225)
+Defined in: [HttpClient.ts:225](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L225)
 
 Request body data
 
@@ -27,7 +27,7 @@ Request body data
 
 > `optional` **cache**: `RequestCache`
 
-Defined in: [HttpClient.ts:243](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L243)
+Defined in: [HttpClient.ts:243](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L243)
 
 Cache mode
 
@@ -37,7 +37,7 @@ Cache mode
 
 > `optional` **credentials**: `RequestCredentials`
 
-Defined in: [HttpClient.ts:231](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L231)
+Defined in: [HttpClient.ts:231](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L231)
 
 Request credentials mode
 
@@ -47,7 +47,7 @@ Request credentials mode
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: [HttpClient.ts:229](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L229)
+Defined in: [HttpClient.ts:229](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L229)
 
 Request headers
 
@@ -57,7 +57,7 @@ Request headers
 
 > `optional` **integrity**: `string`
 
-Defined in: [HttpClient.ts:241](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L241)
+Defined in: [HttpClient.ts:241](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L241)
 
 Subresource integrity value
 
@@ -67,7 +67,7 @@ Subresource integrity value
 
 > `optional` **keepalive**: `boolean`
 
-Defined in: [HttpClient.ts:245](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L245)
+Defined in: [HttpClient.ts:245](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L245)
 
 Whether to keep the connection alive
 
@@ -77,7 +77,7 @@ Whether to keep the connection alive
 
 > `optional` **method**: `"GET"` \| `"POST"` \| `"PUT"` \| `"PATCH"` \| `"DELETE"` \| `"HEAD"` \| `"OPTIONS"`
 
-Defined in: [HttpClient.ts:227](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L227)
+Defined in: [HttpClient.ts:227](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L227)
 
 HTTP method to use
 
@@ -87,7 +87,7 @@ HTTP method to use
 
 > `optional` **mode**: `RequestMode`
 
-Defined in: [HttpClient.ts:233](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L233)
+Defined in: [HttpClient.ts:233](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L233)
 
 Request mode
 
@@ -97,7 +97,7 @@ Request mode
 
 > `optional` **redirect**: `RequestRedirect`
 
-Defined in: [HttpClient.ts:235](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L235)
+Defined in: [HttpClient.ts:235](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L235)
 
 How to handle redirects
 
@@ -107,7 +107,7 @@ How to handle redirects
 
 > `optional` **referrer**: `string`
 
-Defined in: [HttpClient.ts:237](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L237)
+Defined in: [HttpClient.ts:237](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L237)
 
 Referrer URL
 
@@ -117,7 +117,7 @@ Referrer URL
 
 > `optional` **referrerPolicy**: `ReferrerPolicy`
 
-Defined in: [HttpClient.ts:239](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L239)
+Defined in: [HttpClient.ts:239](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L239)
 
 Referrer policy
 
@@ -127,6 +127,6 @@ Referrer policy
 
 > `optional` **signal**: `AbortSignal`
 
-Defined in: [HttpClient.ts:247](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L247)
+Defined in: [HttpClient.ts:247](https://github.com/cedricpierre/fluentity-core/blob/67e692bbd289864a7426aa17449637a48dccd630/src/HttpClient.ts#L247)
 
 Abort signal for cancelling the request
