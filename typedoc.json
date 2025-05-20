@@ -1,0 +1,21 @@
+{
+  "entryPoints": ["./src/index.ts"],
+  "out": "docs",
+  "name": "Fluentity Core Documentation",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "theme": "default",
+  "readme": "README.md",
+  "plugin": ["typedoc-plugin-markdown"],
+  "categorizeByGroup": true,
+  "categoryOrder": ["Models", "Decorators", "Interfaces", "Types", "*"],
+  "navigationLinks": {
+    "GitHub": "https://github.com/cedricpierre/fluentity-core",
+    "Globals": "globals.html"
+  },
+  "navigation": {
+    "includeCategories": true,
+    "includeFolders": true
+  }
+} 

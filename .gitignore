@@ -1,0 +1,17 @@
+node_modules
+coverage
+.DS_Store
+.env
+dist
+docs
+.vite
+.vscode
+.idea
+.turbo
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
+.env.production
