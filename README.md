@@ -10,7 +10,7 @@
 
 # Fluentity
 
-Fluentity is a lightweight and flexible Object-Relational Mapping (ORM) library for TypeScript/JavaScript applications. It provides a simple and intuitive way to interact with your API endpoints while maintaining type safety and following object-oriented principles. Fluentity has also a small caching mechinism.
+Fluentity is a lightweight and flexible library for TypeScript/JavaScript applications to consume RESTFul API using models. It's inspired by Active Record and Laravel Eloquent. It provides a simple and intuitive way to interact with your API endpoints while maintaining type safety and following object-oriented principles. Fluentity has also a small caching mechinism.
 
 ## Quality & Reliability
 
