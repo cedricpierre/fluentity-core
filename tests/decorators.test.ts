@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { User } from '../examples/models/User'
-import { FluORM, HttpClient } from '../src/index'
+import { Fluentity, HttpClient } from '../src/index'
 import { Media } from '../examples/models/Media'
 import { Thumbnail } from '../examples/models/Thumbnail'
 
 const baseUrl = 'http://localhost:3000'
-FluORM.configure({
+Fluentity.configure({
   baseUrl
 })
 

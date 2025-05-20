@@ -3,10 +3,10 @@ import { expect, describe, it, vi, beforeEach } from 'vitest'
 import { User } from '../examples/models/User'
 import { Post } from '../examples/models/Post'
 import { Comment } from '../examples/models/Comment'
-import { FluORM, HttpClient, Model } from '../src'
+import { Fluentity, HttpClient, Model } from '../src'
 import { Company } from '../examples/models/Company'
 
-FluORM.configure({
+Fluentity.configure({
     baseUrl: 'https://jsonplaceholder.typicode.com'
 })
 

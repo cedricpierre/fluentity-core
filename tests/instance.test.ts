@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { Fluentity } from '../src/index'
 import { User } from '../examples/models/User'
-import { FluORM } from '../src/index'
 import { Media } from '../examples/models/Media'
 import { Thumbnail } from '../examples/models/Thumbnail'
 
 let user: User = new User({ id: '123', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 })
 const baseUrl = 'http://localhost:3000'
-FluORM.configure({
+Fluentity.configure({
   baseUrl
 })
 
@@ -15,9 +15,12 @@ describe('Models', () => {
     vi.restoreAllMocks()
   })
 
-
   it('can save a user', async () => {
-    vi.spyOn(FluORM, 'call').mockResolvedValue({ id: '123', name: 'Cedric created' })
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
+
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', name: 'Cedric created' })
 
     await user.save()
 
@@ -27,7 +30,11 @@ describe('Models', () => {
   })
 
   it('can set the id of an instance and fetch the instance', async () => {
-    vi.spyOn(FluORM, 'call').mockResolvedValue({ id: '123', name: 'Cedric' })
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
+
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', name: 'Cedric' })
 
     const user = await User.id(123).get()
 
@@ -36,7 +43,11 @@ describe('Models', () => {
   })
 
   it('can update an instance of a user', async () => {
-    vi.spyOn(FluORM, 'call').mockResolvedValue( { id: '123', name: 'Cedric updated' })
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
+
+    vi.spyOn(Fluentity, 'call').mockResolvedValue( { id: '123', name: 'Cedric updated' })
 
     await user.update({ name: 'Cedric updated' })
 
@@ -44,14 +55,21 @@ describe('Models', () => {
   })
 
   it('can delete an instance of a user', async () => {
-    vi.spyOn(FluORM, 'call').mockResolvedValue(true)
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
+
+    vi.spyOn(Fluentity, 'call').mockResolvedValue(true)
 
     await user.delete()
   })
 
   it('can have a relation HasOne', async () => {
-    
-    vi.spyOn(FluORM, 'call').mockResolvedValue({ id: '123', url: 'https://example.com/thumbnail.jpg' })
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
+
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', url: 'https://example.com/thumbnail.jpg' })
 
     const picture = await user.picture.get()
 
@@ -61,7 +79,11 @@ describe('Models', () => {
   })
 
   it('can update a relation HasOne', async () => {
-    vi.spyOn(FluORM, 'call').mockResolvedValue({ id: '123', url: 'https://example.com/thumbnail-updated.jpg' })
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
+
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', url: 'https://example.com/thumbnail-updated.jpg' })
 
     const picture = await user.picture.update({ url: 'https://example.com/thumbnail-updated.jpg' })
 
@@ -71,14 +93,21 @@ describe('Models', () => {
   })
 
   it('can delete a relation HasOne', async () => {
-    vi.spyOn(FluORM, 'call').mockResolvedValue(true)
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
+
+    vi.spyOn(Fluentity, 'call').mockResolvedValue(true)
 
     await user.picture.delete()
   })
 
   it('can have a relation HasMany', async () => {
+    Fluentity.configure({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    })
 
-    vi.spyOn(FluORM, 'call').mockResolvedValue([
+    vi.spyOn(Fluentity, 'call').mockResolvedValue([
       { id: '1', name: 'Photo 1', url: 'https://example.com/photo1.jpg' },
       { id: '2', name: 'Photo 2', url: 'https://example.com/photo2.jpg' }
     ])
