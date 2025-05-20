@@ -6,7 +6,7 @@
 
 # Class: Model\<T\>
 
-Defined in: [Model.ts:22](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L22)
+Defined in: [Model.ts:22](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L22)
 
 Base class for all models in the ORM.
 Provides core functionality for interacting with the API and managing model data.
@@ -29,7 +29,7 @@ The type of attributes this model will have
 
 > **new Model**\<`T`\>(`attributes`): `Model`\<`T`\>
 
-Defined in: [Model.ts:42](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L42)
+Defined in: [Model.ts:42](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L42)
 
 Creates a new model instance with the given attributes.
 
@@ -53,7 +53,7 @@ A new model instance
 
 > `optional` **id**: `string` \| `number`
 
-Defined in: [Model.ts:28](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L28)
+Defined in: [Model.ts:28](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L28)
 
 Unique identifier for the model instance
 
@@ -63,7 +63,7 @@ Unique identifier for the model instance
 
 > `static` **resource**: `string`
 
-Defined in: [Model.ts:32](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L32)
+Defined in: [Model.ts:32](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L32)
 
 Resource endpoint for the model
 
@@ -73,7 +73,7 @@ Resource endpoint for the model
 
 > `static` `optional` **scopes**: `Record`\<`string`, (`query`) => [`RelationBuilder`](RelationBuilder.md)\<`any`\>\>
 
-Defined in: [Model.ts:24](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L24)
+Defined in: [Model.ts:24](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L24)
 
 Custom query scopes that can be applied to model queries
 
@@ -85,7 +85,7 @@ Custom query scopes that can be applied to model queries
 
 > **get** **path**(): `string`
 
-Defined in: [Model.ts:60](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L60)
+Defined in: [Model.ts:60](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L60)
 
 Gets the current path for the model instance.
 The path represents the API endpoint for this model.
@@ -98,7 +98,7 @@ The path represents the API endpoint for this model.
 
 > **set** **path**(`path`): `void`
 
-Defined in: [Model.ts:68](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L68)
+Defined in: [Model.ts:68](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L68)
 
 Sets the path for the model instance.
 
@@ -120,7 +120,7 @@ New path value to set
 
 > **delete**(): `Promise`\<`void`\>
 
-Defined in: [Model.ts:239](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L239)
+Defined in: [Model.ts:239](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L239)
 
 Deletes the current model instance from the API.
 
@@ -140,7 +140,7 @@ Error if the model has no ID
 
 > **get**(): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:185](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L185)
+Defined in: [Model.ts:185](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L185)
 
 Retrieves the current model instance from the server
 
@@ -156,7 +156,7 @@ Promise resolving to the updated model instance
 
 > **save**(): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:202](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L202)
+Defined in: [Model.ts:202](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L202)
 
 Saves the current model instance to the API.
 Creates a new record if the model has no ID, updates existing record otherwise.
@@ -173,7 +173,7 @@ A promise that resolves to the saved model instance
 
 > **toObject**(): `Record`\<`string`, `any`\>
 
-Defined in: [Model.ts:252](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L252)
+Defined in: [Model.ts:252](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L252)
 
 Converts the model instance to a plain object
 Handles nested model instances and arrays of models
@@ -190,7 +190,7 @@ A plain object representation of the model
 
 > **update**(`attributes?`): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:222](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L222)
+Defined in: [Model.ts:222](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L222)
 
 Updates the current model instance with new attributes.
 
@@ -214,7 +214,7 @@ A promise that resolves to the updated model instance
 
 > `static` **all**\<`T`\>(`this`): `Promise`\<`T`[]\>
 
-Defined in: [Model.ts:140](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L140)
+Defined in: [Model.ts:140](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L140)
 
 Retrieves all records for the model
 
@@ -242,7 +242,7 @@ Promise resolving to an array of model instances
 
 > `static` **create**\<`A`, `T`\>(`this`, `data`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:158](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L158)
+Defined in: [Model.ts:158](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L158)
 
 Creates a new record
 
@@ -280,7 +280,7 @@ Promise resolving to the created model instance
 
 > `static` **delete**\<`T`\>(`this`, `id`): `Promise`\<`void`\>
 
-Defined in: [Model.ts:177](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L177)
+Defined in: [Model.ts:177](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L177)
 
 Deletes a record by ID
 
@@ -314,7 +314,7 @@ Promise that resolves when the deletion is complete
 
 > `static` **filter**\<`T`\>(`this`, `filters`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:123](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L123)
+Defined in: [Model.ts:123](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L123)
 
 Starts a query with filter conditions
 
@@ -348,7 +348,7 @@ A HasManyRelationBuilder instance with filters applied
 
 > `static` **find**\<`T`\>(`this`, `id`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:149](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L149)
+Defined in: [Model.ts:149](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L149)
 
 Finds a single record by ID
 
@@ -382,7 +382,7 @@ Promise resolving to a model instance
 
 > `static` **id**\<`T`\>(`this`, `id`): `T`
 
-Defined in: [Model.ts:97](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L97)
+Defined in: [Model.ts:97](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L97)
 
 Creates a new model instance with the given ID.
 
@@ -416,7 +416,7 @@ A new model instance with the specified ID
 
 > `static` **include**\<`T`\>(`this`, `relations`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:132](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L132)
+Defined in: [Model.ts:132](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L132)
 
 Starts a query with relations to include
 
@@ -450,7 +450,7 @@ A HasManyRelationBuilder instance with relations included
 
 > `static` **query**\<`T`\>(`this`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:105](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L105)
+Defined in: [Model.ts:105](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L105)
 
 Starts a new query builder for the model
 
@@ -478,7 +478,7 @@ A HasManyRelationBuilder instance
 
 > `static` **update**\<`A`, `T`\>(`this`, `id`, `data`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:168](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L168)
+Defined in: [Model.ts:168](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L168)
 
 Updates an existing record
 
@@ -522,7 +522,7 @@ Promise resolving to the updated model instance
 
 > `static` **where**\<`T`\>(`this`, `where`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:114](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/Model.ts#L114)
+Defined in: [Model.ts:114](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/Model.ts#L114)
 
 Starts a query with a where clause
 

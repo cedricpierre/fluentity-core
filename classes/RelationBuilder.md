@@ -6,7 +6,7 @@
 
 # Class: RelationBuilder\<T\>
 
-Defined in: [RelationBuilder.ts:22](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L22)
+Defined in: [RelationBuilder.ts:22](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L22)
 
 Base class for building and managing relationships between models.
 Provides methods for querying related models and building API requests.
@@ -29,7 +29,7 @@ The type of model this relation builder works with
 
 > **new RelationBuilder**\<`T`\>(`model`, `urlQueryBuilder?`, `initialPath?`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:36](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L36)
+Defined in: [RelationBuilder.ts:36](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L36)
 
 Creates a new relation builder instance.
 
@@ -63,7 +63,7 @@ Optional initial path for the relation
 
 > **filter**(`filters`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:100](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L100)
+Defined in: [RelationBuilder.ts:100](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L100)
 
 Adds filter conditions to the query.
 
@@ -87,7 +87,7 @@ The relation builder instance for chaining
 
 > **find**(`id`): `Promise`\<`T`\>
 
-Defined in: [RelationBuilder.ts:75](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L75)
+Defined in: [RelationBuilder.ts:75](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L75)
 
 Fetches a model instance by ID from the API.
 
@@ -111,7 +111,7 @@ A promise that resolves to the fetched model instance
 
 > **id**(`id`): `T`
 
-Defined in: [RelationBuilder.ts:64](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L64)
+Defined in: [RelationBuilder.ts:64](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L64)
 
 Gets a model instance by ID without making an API request.
 
@@ -135,7 +135,7 @@ A new model instance with the given ID
 
 > **include**(`relations`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:110](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L110)
+Defined in: [RelationBuilder.ts:110](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L110)
 
 Specifies relations to include in the response.
 
@@ -159,7 +159,7 @@ The relation builder instance for chaining
 
 > **limit**(`n`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:131](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L131)
+Defined in: [RelationBuilder.ts:131](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L131)
 
 Limits the number of results returned.
 
@@ -183,7 +183,7 @@ The relation builder instance for chaining
 
 > **offset**(`n`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:136](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L136)
+Defined in: [RelationBuilder.ts:136](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L136)
 
 #### Parameters
 
@@ -201,7 +201,7 @@ Defined in: [RelationBuilder.ts:136](https://github.com/cedricpierre/fluentity-c
 
 > **orderBy**(`field`, `dir`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:121](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L121)
+Defined in: [RelationBuilder.ts:121](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L121)
 
 Adds an order by clause to the query.
 
@@ -231,7 +231,7 @@ The relation builder instance for chaining
 
 > **where**(`where`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:90](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/RelationBuilder.ts#L90)
+Defined in: [RelationBuilder.ts:90](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/RelationBuilder.ts#L90)
 
 Adds a where clause to the query.
 

@@ -6,7 +6,7 @@
 
 # Class: HttpClient
 
-Defined in: [HttpClient.ts:5](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L5)
+Defined in: [HttpClient.ts:5](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L5)
 
 A static HTTP client class that provides methods for making HTTP requests with built-in caching,
 interceptors, and request/response handling capabilities.
@@ -27,7 +27,7 @@ interceptors, and request/response handling capabilities.
 
 > `static` **options**: `HttpClientOptions`
 
-Defined in: [HttpClient.ts:9](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L9)
+Defined in: [HttpClient.ts:9](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L9)
 
 ## Accessors
 
@@ -37,7 +37,7 @@ Defined in: [HttpClient.ts:9](https://github.com/cedricpierre/fluentity-core/blo
 
 > **get** `static` **cache**(): `Map`\<`string`, `CacheData`\>
 
-Defined in: [HttpClient.ts:53](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L53)
+Defined in: [HttpClient.ts:53](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L53)
 
 Gets the current cache map containing all cached responses.
 
@@ -55,7 +55,7 @@ The cache map
 
 > **get** `static` **url**(): `string`
 
-Defined in: [HttpClient.ts:70](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L70)
+Defined in: [HttpClient.ts:70](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L70)
 
 Gets the last URL that was called.
 
@@ -71,7 +71,7 @@ The last called URL
 
 > `static` **call**\<`T`\>(`url`, `options?`): `Promise`\<[`HttpResponse`](../type-aliases/HttpResponse.md)\<`T`\>\>
 
-Defined in: [HttpClient.ts:82](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L82)
+Defined in: [HttpClient.ts:82](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L82)
 
 Makes an HTTP request to the specified URL with optional request options.
 Handles caching, interceptors, and error handling.
@@ -112,7 +112,7 @@ Error if baseUrl is not configured or if the request fails
 
 > `static` **clearCache**(): `void`
 
-Defined in: [HttpClient.ts:45](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L45)
+Defined in: [HttpClient.ts:45](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L45)
 
 Clears all cached responses.
 
@@ -126,7 +126,7 @@ Clears all cached responses.
 
 > `static` **configure**(`opts`): `void`
 
-Defined in: [HttpClient.ts:30](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L30)
+Defined in: [HttpClient.ts:30](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L30)
 
 Configures the HTTP client with custom options.
 
@@ -148,7 +148,7 @@ Partial configuration options to merge with existing options
 
 > `static` **deleteCache**(`url`): `void`
 
-Defined in: [HttpClient.ts:38](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L38)
+Defined in: [HttpClient.ts:38](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L38)
 
 Removes a specific URL from the cache.
 
@@ -170,7 +170,7 @@ The URL to remove from the cache
 
 > `static` **getCache**\<`T`\>(`url`): `CacheData`
 
-Defined in: [HttpClient.ts:62](https://github.com/cedricpierre/fluentity-core/blob/aeae44228536f4359f4af07d63f99633e9a3b24c/src/HttpClient.ts#L62)
+Defined in: [HttpClient.ts:62](https://github.com/cedricpierre/fluentity-core/blob/8e2af2c49efe8e91127ddf71a1f873baf08b923d/src/HttpClient.ts#L62)
 
 Retrieves cached data for a specific URL.
 
