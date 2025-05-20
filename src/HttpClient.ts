@@ -174,7 +174,7 @@ export type MethodType = keyof typeof Methods;
 /**
  * Configuration options for the HttpClient.
  */
-interface HttpClientOptions {
+export interface HttpClientOptions {
   /** Base URL to prepend to all requests */
   baseUrl?: string
   /** Default request options to apply to all requests */
@@ -194,7 +194,7 @@ interface HttpClientOptions {
 /**
  * Configuration options for response caching.
  */
-interface CacheOptions {
+export interface CacheOptions {
   /** Whether caching is enabled */
   enabled: boolean;
   /** Time-to-live for cached responses in milliseconds */
@@ -250,7 +250,7 @@ export interface RequestOptions {
 /**
  * Represents cached data with its timestamp.
  */
-interface CacheData {
+export interface CacheData {
   /** The cached response data */
   data: any;
   /** Timestamp when the data was cached (milliseconds since epoch) */
