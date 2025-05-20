@@ -1,0 +1,16 @@
+{
+  "compilationOptions": {
+    "preferredConfigPath": "./tsconfig.json"
+  },
+  "entries": [
+    {
+      "filePath": "./src/index.ts",
+      "outFile": "./dist/fluorm.d.ts",
+      "noCheck": false,
+      "libraries": {
+        "importedLibraries": ["node"],
+        "allowedTypesLibraries": ["node"]
+      }
+    }
+  ]
+} 
