@@ -120,7 +120,9 @@ Fluentity.configure({
   requestHandler: async (request: HttpRequest): HttpResponse => {
     // Handle request and return a the response
     const response = await fetch(request.url, request.options)
-    return await response.json() as HttpRequest
+    return {
+        data: await response.json()
+    } as HttpResponse
   }
 });
 
