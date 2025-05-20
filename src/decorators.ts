@@ -110,5 +110,12 @@ export const HasMany = (model: () => Constructor<Model<any>>, resource?: string)
     return makeRelation(model, HasManyRelationBuilder as Constructor<RelationBuilder<any>>, resource);
 }
 
+/**
+ * Alias for HasOne
+ */
 export const BelongsTo = HasOne;
+
+/**
+ * Alias for HasMany
+ */
 export const BelongsToMany = HasMany;

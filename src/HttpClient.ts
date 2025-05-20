@@ -140,7 +140,7 @@ export class HttpClient {
  * @returns A promise that resolves to the JSON response
  * @throws Error if the request fails
  */
-export async function fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> {
+async function fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> {
   const options = { ...request.options };
 
   if (options.headers?.['Content-Type'] === 'application/json' && options.body) {
