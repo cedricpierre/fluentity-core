@@ -20,7 +20,7 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', name: 'Cedric created' })
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric created' } })
 
     await user.save()
 
@@ -34,7 +34,7 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', name: 'Cedric' })
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric' } })
 
     const user = await User.id(123).get()
 
@@ -47,7 +47,7 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue( { id: '123', name: 'Cedric updated' })
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric updated' } })
 
     await user.update({ name: 'Cedric updated' })
 
@@ -59,7 +59,7 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue(true)
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ data: true })
 
     await user.delete()
   })
@@ -69,7 +69,7 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', url: 'https://example.com/thumbnail.jpg' })
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ data: { id: '123', url: 'https://example.com/thumbnail.jpg' } })
 
     const picture = await user.picture.get()
 
@@ -83,7 +83,7 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue({ id: '123', url: 'https://example.com/thumbnail-updated.jpg' })
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ data: { id: '123', url: 'https://example.com/thumbnail-updated.jpg' } })
 
     const picture = await user.picture.update({ url: 'https://example.com/thumbnail-updated.jpg' })
 
@@ -97,7 +97,7 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue(true)
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ data: true })
 
     await user.picture.delete()
   })
@@ -107,10 +107,12 @@ describe('Models', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    vi.spyOn(Fluentity, 'call').mockResolvedValue([
-      { id: '1', name: 'Photo 1', url: 'https://example.com/photo1.jpg' },
-      { id: '2', name: 'Photo 2', url: 'https://example.com/photo2.jpg' }
-    ])
+    vi.spyOn(Fluentity, 'call').mockResolvedValue({ 
+      data: [
+        { id: '1', name: 'Photo 1', url: 'https://example.com/photo1.jpg' },
+        { id: '2', name: 'Photo 2', url: 'https://example.com/photo2.jpg' }
+      ]
+    })
 
     const medias = await user.medias.all()
 

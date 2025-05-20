@@ -3,11 +3,11 @@ import { expect, describe, it, vi, beforeEach } from 'vitest'
 import { User } from '../examples/models/User'
 import { Post } from '../examples/models/Post'
 import { Comment } from '../examples/models/Comment'
-import { Fluentity, HttpClient, Model } from '../src'
+import { Fluentity, HttpClient, HttpResponse, Model } from '../src'
 import { Company } from '../examples/models/Company'
 
 Fluentity.configure({
-    baseUrl: 'https://jsonplaceholder.typicode.com'
+    baseUrl: 'https://jsonplaceholder.typicode.com',
 })
 
 
@@ -88,8 +88,8 @@ describe('API', () => {
 
     it('can transform the response', async () => {
         HttpClient.configure({
-            responseInterceptor: (response: Response) => {
-                (response as any).name = 'Cedric'
+            responseInterceptor: (response: HttpResponse) => {
+                response.data.name = 'Cedric'
                 return response
             }
         })

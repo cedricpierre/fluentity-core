@@ -14,7 +14,7 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      */
     async all(): Promise<T[]> {
         const list = await HttpClient.call(this.buildUrl())
-        return list?.map((i: any) => new (this.relatedModel as any)(i))
+        return list?.data?.map((i: any) => new (this.relatedModel as any)(i))
     }
 
     /**
@@ -27,7 +27,7 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
             method: Methods.POST,
             body: data
         })
-        return new (this.relatedModel as any)(response)
+        return new (this.relatedModel as any)(response.data)
     }
 
     /**
@@ -50,7 +50,7 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
             method: Methods.PUT,
             body: data
         })
-        return new (this.relatedModel as any)(response)
+        return new (this.relatedModel as any)(response.data)
     }
 
     /**
@@ -66,6 +66,6 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
             .limit(perPage)
 
         const list = await HttpClient.call(this.buildUrl())
-        return list?.map((i: any) => new (this.relatedModel as any)(i))
+        return list?.data?.map((i: any) => new (this.relatedModel as any)(i))
     }
 }

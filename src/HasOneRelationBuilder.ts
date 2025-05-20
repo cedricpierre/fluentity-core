@@ -14,7 +14,7 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
      */
     async get(): Promise<T> {
         const response = await HttpClient.call(`${this.path}/${this.relatedModel.id}`, { method: Methods.GET })
-        return new (this.relatedModel as any)(response)
+        return new (this.relatedModel as any)(response.data)
     }
 
     /**
@@ -27,7 +27,7 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
             method: Methods.PATCH,
             body: data
         })
-        return new (this.relatedModel as any)(updated)
+        return new (this.relatedModel as any)(updated.data)
     }
 
     /**

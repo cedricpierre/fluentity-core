@@ -17,10 +17,12 @@ describe('Models', () => {
   
   it('should be able to get medias from a user', async () => {
 
-    vi.spyOn(HttpClient, 'call').mockResolvedValue([
+    vi.spyOn(HttpClient, 'call').mockResolvedValue({
+      data: [
         { id: 1, name: 'Media 1' },
         { id: 2, name: 'Media 2' },
-      ])
+      ]
+    })
 
     const media = await User.id(1).medias.all()
     expect(media).toBeInstanceOf(Array)
@@ -35,10 +37,12 @@ describe('Models', () => {
       
       expect(url).toBe('users/1/medias')
       
-      return Promise.resolve([
-        { id: 1, name: 'Media 1' },
-        { id: 2, name: 'Media 2' },
-      ])
+      return Promise.resolve({
+        data: [
+          { id: 1, name: 'Media 1' },
+          { id: 2, name: 'Media 2' },
+        ]
+      })
     });
 
     const media = await User.id(1).libraries.all()
@@ -49,12 +53,14 @@ describe('Models', () => {
 
   it('should be able to cast thumbnail', async () => {
     vi.spyOn(HttpClient, 'call').mockResolvedValue({
-      id: 1,
-      thumbnail: {
+      data: {
         id: 1,
-        url: 'https://example.com/thumbnail.jpg',
-        width: 100,
-        height: 100,
+        thumbnail: {
+          id: 1,
+          url: 'https://example.com/thumbnail.jpg',
+          width: 100,
+          height: 100,
+        }
       }
     })
 
@@ -76,7 +82,7 @@ describe('Models', () => {
     vi.spyOn(HttpClient, 'call')
       .mockImplementation((url) => {
         expect(url).toBe('users/1/custom-resource')
-        return Promise.resolve([])
+        return Promise.resolve({ data: [] })
       });
 
     const result = await User.id(1).customResource.all()
@@ -87,7 +93,7 @@ describe('Models', () => {
     vi.spyOn(HttpClient, 'call')
       .mockImplementation((url) => {
         expect(url).toBe('users/1/medias')
-        return Promise.resolve([])
+        return Promise.resolve({ data: [] })
       });
 
     const result = await User.id(1).medias.all()
@@ -98,7 +104,7 @@ describe('Models', () => {
     vi.spyOn(HttpClient, 'call')
       .mockImplementation((url) => {
         expect(url).toBe('users/1/medias/2/thumbnails')
-        return Promise.resolve([])
+        return Promise.resolve({ data: [] })
       });
 
     const result = await User.id(1).medias.id(2).thumbnails.all()
@@ -109,7 +115,7 @@ describe('Models', () => {
     vi.spyOn(HttpClient, 'call')
       .mockImplementation((url) => {
         expect(url).toBe('users/1')
-        return Promise.resolve({})
+        return Promise.resolve({ data: {} })
       });
 
     const result = await User.id(1).get()

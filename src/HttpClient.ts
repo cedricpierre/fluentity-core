@@ -150,7 +150,9 @@ export async function fetchRequestHandler(request: HttpRequest): Promise<HttpRes
   try {
     const res = await fetch(request.url, options as RequestInit);
     
-    return res.json();
+    return {
+      data: await res.json()
+    }
   } catch (error) {
     throw new Error(`HTTP error: ${error}`);
   }
@@ -214,7 +216,9 @@ export interface HttpRequest {
 /**
  * Represents an HTTP response, which can be a single item or an array.
  */
-export type HttpResponse<T = any> = T | T[]
+export interface HttpResponse<T = any | any[]> {
+  data: T
+}
 
 /**
  * Configuration options for HTTP requests.

@@ -189,7 +189,7 @@ export class Model<T extends Attributes = Attributes> {
       method: Methods.GET,
     })
 
-    Object.assign(this, data)
+    Object.assign(this, data.data)
 
     return this
   }
@@ -210,7 +210,7 @@ export class Model<T extends Attributes = Attributes> {
       method: Methods.POST,
       body: { ...this }
     })
-    Object.assign(this, data)
+    Object.assign(this, data.data)
     return this
   }
 
@@ -227,7 +227,7 @@ export class Model<T extends Attributes = Attributes> {
       method: Methods.PATCH,
       body: { ...this }
     })
-    Object.assign(this, updated)
+    Object.assign(this, updated.data)
     return this
   }
 
