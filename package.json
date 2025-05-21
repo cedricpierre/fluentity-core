@@ -5,6 +5,17 @@
   "main": "./dist/fluentity.js",
   "types": "./dist/fluentity.d.ts",
   "type": "module",
+  "keywords": [
+    "fluentity",
+    "rest",
+    "api",
+    "client",
+    "typescript",
+    "model",
+    "fluent",
+    "http",
+    "orm"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
