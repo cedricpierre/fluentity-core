@@ -31,7 +31,7 @@
   "email": "jirotoh@gmail.com",
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --minify --out-dir dist",
-    "test": "vitest __tests__",
+    "test": "vitest",
     "docs": "typedoc --out docs src/index.ts"
   },
   "repository": {

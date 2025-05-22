@@ -4,10 +4,7 @@ import { Fluentity, HttpClient } from '../src/index'
 import { Media } from '../examples/models/Media'
 import { Thumbnail } from '../examples/models/Thumbnail'
 
-const baseUrl = 'http://localhost:3000'
-Fluentity.configure({
-  baseUrl
-})
+const fluentity = Fluentity.initialize()
 
 describe('Models', () => {
   beforeEach(() => {
@@ -17,32 +14,32 @@ describe('Models', () => {
   
   it('should be able to get medias from a user', async () => {
 
-    vi.spyOn(HttpClient, 'call').mockResolvedValue({
-      data: [
-        { id: 1, name: 'Media 1' },
-        { id: 2, name: 'Media 2' },
-      ]
-    })
-
-    const media = await User.id(1).medias.all()
-    expect(media).toBeInstanceOf(Array)
-    expect(media).toHaveLength(2)
-    expect(media[0]).toBeInstanceOf(Media)
-  })
-  
-  it('should be able to get libraries (custom name) from a user', async () => {
-
-    vi.spyOn(HttpClient, 'call')
-    .mockImplementation((url) => {
-      
-      expect(url).toBe('users/1/medias')
-      
-      return Promise.resolve({
+    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({
         data: [
           { id: 1, name: 'Media 1' },
           { id: 2, name: 'Media 2' },
         ]
       })
+
+    const medias = await User.id(1).medias.all()
+
+    expect(medias).toBeInstanceOf(Array)
+    expect(medias).toHaveLength(2)
+    expect(medias[0]).toBeInstanceOf(Media)
+  })
+  
+  it('should be able to get libraries (custom name) from a user', async () => {
+
+    vi.spyOn(fluentity.adapter, 'call')
+      .mockImplementation((options) => {
+        expect(options.url).toBe('users/1/medias')
+      
+        return Promise.resolve({
+          data: [
+            { id: 1, name: 'Media 1' },
+            { id: 2, name: 'Media 2' },
+          ]
+        })
     });
 
     const media = await User.id(1).libraries.all()
@@ -52,7 +49,7 @@ describe('Models', () => {
   })
 
   it('should be able to cast thumbnail', async () => {
-    vi.spyOn(HttpClient, 'call').mockResolvedValue({
+    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({
       data: {
         id: 1,
         thumbnail: {
@@ -79,9 +76,9 @@ describe('Models', () => {
   })
   
   it('should construct correct path with custom resource name', async () => {
-    vi.spyOn(HttpClient, 'call')
-      .mockImplementation((url) => {
-        expect(url).toBe('users/1/custom-resource')
+    vi.spyOn(fluentity.adapter, 'call')
+      .mockImplementation((options) => {
+        expect(options.url).toBe('users/1/custom-resource')
         return Promise.resolve({ data: [] })
       });
 
@@ -90,9 +87,9 @@ describe('Models', () => {
   })
 
   it('should construct correct path with default resource name', async () => {
-    vi.spyOn(HttpClient, 'call')
-      .mockImplementation((url) => {
-        expect(url).toBe('users/1/medias')
+    vi.spyOn(fluentity.adapter, 'call')
+      .mockImplementation((options) => {
+        expect(options.url).toBe('users/1/medias')
         return Promise.resolve({ data: [] })
       });
 
@@ -101,9 +98,9 @@ describe('Models', () => {
   })
 
   it('should handle nested paths correctly', async () => {
-    vi.spyOn(HttpClient, 'call')
-      .mockImplementation((url) => {
-        expect(url).toBe('users/1/medias/2/thumbnails')
+    vi.spyOn(fluentity.adapter, 'call')
+      .mockImplementation((options) => {
+        expect(options.url).toBe('users/1/medias/2/thumbnails')
         return Promise.resolve({ data: [] })
       });
 
@@ -112,9 +109,9 @@ describe('Models', () => {
   })
 
   it('should handle empty path correctly', async () => {
-    vi.spyOn(HttpClient, 'call')
-      .mockImplementation((url) => {
-        expect(url).toBe('users/1')
+    vi.spyOn(fluentity.adapter, 'call')
+      .mockImplementation((options) => {
+        expect(options.url).toBe('users/1')
         return Promise.resolve({ data: {} })
       });
 

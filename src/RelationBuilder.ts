@@ -1,8 +1,8 @@
 import { Model } from "./Model"
-import { HttpClient } from "./HttpClient"
 import { URLQueryBuilder } from "./URLQueryBuilder"
 import { HasManyRelationBuilder } from "./HasManyRelationBuilder"
 import { HasOneRelationBuilder } from "./HasOneRelationBuilder"
+import { Fluentity, Methods } from "./Fluentity"
 
 /**
  * Type that determines the appropriate relation builder based on the model type.
@@ -20,11 +20,11 @@ export type Relation<T> = T extends Model<any>
  * @template T - The type of model this relation builder works with
  */
 export class RelationBuilder<T extends Model<any>> {
-    /** Query builder instance for constructing API URLs */
+    /** Query builder instance for constructing API URLs and managing query parameters */
     protected queryBuilder: URLQueryBuilder
-    /** The related model instance */
+    /** The related model instance that this builder operates on */
     protected relatedModel: T
-    /** The API path for this relation */
+    /** The API path for this relation, used to construct the final URL */
     protected path: string = ''
 
     /**
@@ -53,9 +53,18 @@ export class RelationBuilder<T extends Model<any>> {
         }
     }
 
-    // Add type definition for dynamic scope methods
+    /** Type definition for dynamic scope methods that can be added at runtime */
     [key: string]: any
 
+    /**
+     * Gets the Fluentity instance for making API requests.
+     * @protected
+     * @returns The singleton Fluentity instance
+     */
+    protected get fluentity() {
+        return Fluentity.getInstance();
+    }
+    
     /**
      * Gets a model instance by ID without making an API request.
      * @param id - The ID of the model to get
@@ -75,7 +84,10 @@ export class RelationBuilder<T extends Model<any>> {
     async find(id: string | number): Promise<T> {
         this.queryBuilder.id(id)
 
-        const response = await HttpClient.call(this.buildUrl())
+        const response = await this.fluentity.adapter.call({
+            url: this.buildUrl(),
+            method: Methods.GET
+        })
         const model = new (this.relatedModel as any)(response.data)
         model.path = `${this.path}/${id}`
 
@@ -133,6 +145,11 @@ export class RelationBuilder<T extends Model<any>> {
         return this
     }
 
+    /**
+     * Sets the offset for pagination in the query results.
+     * @param n - The number of records to skip
+     * @returns The relation builder instance for chaining
+     */
     offset(n: number): RelationBuilder<T> { 
         this.queryBuilder.offset(n)
         return this

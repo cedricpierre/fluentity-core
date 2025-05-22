@@ -1,5 +1,6 @@
+import { HttpClient } from "./adapters/HttpClient"
+import { Methods } from "./Fluentity"
 import { Model, Attributes } from "./Model"
-import { HttpClient, Methods } from "./HttpClient"
 import { RelationBuilder } from "./RelationBuilder"
 
 /**
@@ -13,7 +14,11 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
      * @returns A promise that resolves to the related model instance
      */
     async get(): Promise<T> {
-        const response = await HttpClient.call(`${this.path}/${this.relatedModel.id}`, { method: Methods.GET })
+        console.log('get')
+        const response = await this.fluentity.adapter.call({
+            url: `${this.path}/${this.relatedModel.id}`,
+            method: Methods.GET
+        })
         return new (this.relatedModel as any)(response.data)
     }
 
@@ -23,7 +28,8 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
      * @returns A promise that resolves to the updated model instance
      */
     async update<A extends Partial<Attributes>>(data: A): Promise<T> {
-        const updated = await HttpClient.call(`${this.path}/${this.relatedModel.id}`, {
+        const updated = await this.fluentity.adapter.call({
+            url: `${this.path}/${this.relatedModel.id}`,
             method: Methods.PATCH,
             body: data
         })
@@ -35,6 +41,9 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
      * @returns A promise that resolves when the deletion is complete
      */
     async delete(): Promise<void> {
-        await HttpClient.call(`${this.path}/${this.relatedModel.id}`, { method: Methods.DELETE })
+        await this.fluentity.adapter.call({
+            url: `${this.path}/${this.relatedModel.id}`,
+            method: Methods.DELETE
+        })
     }
 }

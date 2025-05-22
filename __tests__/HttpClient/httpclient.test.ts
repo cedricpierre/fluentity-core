@@ -1,12 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { HttpClient, Methods } from '../src/HttpClient'
-import { User } from '../examples/models/User'
+import { HttpClient } from '../../src/adapters/HttpClient'
+import { Methods } from '../../src/Fluentity'
+
+const httpClient = new HttpClient({
+  baseUrl: 'https://api.example.com',
+  cacheOptions: { enabled: false }
+})
 
 describe('HttpClient', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    HttpClient.clearCache()
-    HttpClient.configure({
+    httpClient.clearCache()
+    httpClient.configure({
       baseUrl: 'https://api.example.com',
       cacheOptions: { enabled: false }
     })
@@ -16,12 +21,12 @@ describe('HttpClient', () => {
     const mockResponse = { id: 1, title: 'Test Post' }
     const mockRequestHandler = vi.fn().mockResolvedValue(mockResponse)
     
-    HttpClient.configure({ 
+    httpClient.configure({ 
       requestHandler: mockRequestHandler,
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    const response = await HttpClient.call('posts')
+    const response = await httpClient.call({ url: 'posts' })
     expect(response).toEqual(mockResponse)
     expect(mockRequestHandler).toHaveBeenCalledWith(expect.objectContaining({
       url: 'https://jsonplaceholder.typicode.com/posts'
@@ -29,16 +34,16 @@ describe('HttpClient', () => {
   })
 
   it('doest have a baseUrl', async () => {
-    HttpClient.configure({ baseUrl: undefined })
+    httpClient.configure({ baseUrl: undefined })
 
-    await expect(HttpClient.call('https://jsonplaceholder.typicode.com/posts')).rejects.toThrow('baseUrl is required')
+    await expect(httpClient.call({ url: 'https://jsonplaceholder.typicode.com/posts' })).rejects.toThrow('baseUrl is required')
 
   })
 
   it('has a baseUrl', async () => {
-    HttpClient.configure({ baseUrl: 'https://jsonplaceholder.typicode.com' })
+    httpClient.configure({ baseUrl: 'https://jsonplaceholder.typicode.com' })
 
-    const response = await HttpClient.call('posts')
+    const response = await httpClient.call('posts')
 
     expect(response).not.toBeNull()
   })
@@ -46,8 +51,8 @@ describe('HttpClient', () => {
   it('should raise an error if the response is not ok', async () => {
 
     try {
-      vi.spyOn(HttpClient, 'call').mockRejectedValue(new Error('HTTP error: 404'))
-      await HttpClient.call('https://google.com')
+      vi.spyOn(httpClient, 'call').mockRejectedValue(new Error('HTTP error: 404'))
+      await httpClient.call({ url: 'https://google.com' })
     } catch (error) {
       expect(error).toBeDefined()
       expect(error).toBeInstanceOf(Error)
@@ -56,31 +61,31 @@ describe('HttpClient', () => {
 
   
   it('can cache a response', async () => {
-    HttpClient.configure({ cacheOptions: { enabled: true }, baseUrl: 'https://jsonplaceholder.typicode.com' })
+    httpClient.configure({ cacheOptions: { enabled: true }, baseUrl: 'https://jsonplaceholder.typicode.com' })
 
-    await HttpClient.call('posts')
+    await httpClient.call({ url: 'posts' })
 
-    const cachedResponse = HttpClient.getCache('posts')
+    const cachedResponse = httpClient.getCache('posts')
 
     expect(cachedResponse).not.toBeNull()
 
-    HttpClient.deleteCache('posts')
+    httpClient.deleteCache('posts')
 
-    const emptyCache = HttpClient.getCache('cache')
+    const emptyCache = httpClient.getCache('cache')
 
     expect(emptyCache).toBeUndefined()
 
-    HttpClient.clearCache()
+    httpClient.clearCache()
 
-    expect(HttpClient.cache.size).toBe(0)
+    expect(httpClient.cache.size).toBe(0)
   })
 
   it('can cache a response with a ttl', async () => {
-    HttpClient.configure({ cacheOptions: { enabled: true, ttl: 1000 }, baseUrl: 'https://jsonplaceholder.typicode.com' })
+    httpClient.configure({ cacheOptions: { enabled: true, ttl: 1000 }, baseUrl: 'https://jsonplaceholder.typicode.com' })
 
-    await HttpClient.call('posts')
+    await httpClient.call({ url: 'posts' })
 
-    const cachedResponse = HttpClient.getCache('posts')
+    const cachedResponse = httpClient.getCache('posts')
 
     expect(cachedResponse).not.toBeNull() 
   })
@@ -93,12 +98,12 @@ describe('HttpClient', () => {
       }))
 
       const requestHandler = vi.fn().mockResolvedValue({ data: 'test' })
-      HttpClient.configure({ 
+      httpClient.configure({ 
         requestInterceptor,
         requestHandler
       })
 
-      await HttpClient.call('test')
+      await httpClient.call({ url: 'test' })
       expect(requestInterceptor).toHaveBeenCalled()
       expect(requestHandler).toHaveBeenCalledWith(expect.objectContaining({
         options: expect.objectContaining({
@@ -113,9 +118,9 @@ describe('HttpClient', () => {
         transformed: true
       }))
 
-      HttpClient.configure({ responseInterceptor })
+      httpClient.configure({ responseInterceptor })
 
-      const response = await HttpClient.call('test')
+      const response = await httpClient.call({ url: 'test' })
       expect(responseInterceptor).toHaveBeenCalled()
     })
   })
@@ -126,12 +131,12 @@ describe('HttpClient', () => {
       const errorInterceptor = vi.fn()
       const mockRequestHandler = vi.fn().mockRejectedValue(mockError)
       
-      HttpClient.configure({ 
+      httpClient.configure({ 
         errorInterceptor,
         requestHandler: mockRequestHandler,
       })
       
-      await expect(HttpClient.call('test')).rejects.toThrow('HTTP error: 404')
+      await expect(httpClient.call({ url: 'test' })).rejects.toThrow('HTTP error: 404')
       expect(errorInterceptor).toHaveBeenCalledTimes(1)
       expect(errorInterceptor).toHaveBeenCalledWith(mockError)
     })
@@ -142,9 +147,9 @@ describe('HttpClient', () => {
       const methods = [Methods.POST, Methods.PUT, Methods.PATCH, Methods.DELETE]
       
       for (const method of methods) {
-        vi.spyOn(HttpClient, 'call').mockResolvedValue({ success: true })
+        vi.spyOn(httpClient, 'call').mockResolvedValue({ success: true })
         
-        const response = await HttpClient.call('test', { method })
+        const response = await httpClient.call({ url: 'test', options: { method } })
         expect(response).toEqual({ success: true })
       }
     })
@@ -152,15 +157,15 @@ describe('HttpClient', () => {
 
   describe('Cache Management', () => {
     it('should respect cache TTL', async () => {
-      HttpClient.configure({ 
+      httpClient.configure({ 
         cacheOptions: { 
           enabled: true, 
           ttl: 100 // 100ms TTL
         }
       })
       
-      await HttpClient.call('test')
-      const initialCache = HttpClient.getCache('test')
+      await httpClient.call({ url: 'test' })
+      const initialCache = httpClient.getCache('test')
       expect(initialCache).toBeDefined()
 
       // Wait for cache to expire
@@ -170,21 +175,21 @@ describe('HttpClient', () => {
 
       await new Promise(resolve => setTimeout(resolve, 150))
 
-      await HttpClient.call('test')
+      await httpClient.call({ url: 'test' })
       
-      const expiredCache = HttpClient.getCache('test')
+      const expiredCache = httpClient.getCache('test')
       expect(expiredCache).toBeDefined()
     })
 
     it('should handle cache with different URLs', async () => {
-      HttpClient.configure({ cacheOptions: { enabled: true } })
+      httpClient.configure({ cacheOptions: { enabled: true } })
       
-      await HttpClient.call('test1')
-      await HttpClient.call('test2')
+      await httpClient.call({ url: 'test1' })
+      await httpClient.call({ url: 'test2' })
 
-      expect(HttpClient.getCache('test1')).toBeDefined()
-      expect(HttpClient.getCache('test2')).toBeDefined()
-      expect(HttpClient.cache.size).toBe(2)
+      expect(httpClient.getCache('test1')).toBeDefined()
+      expect(httpClient.getCache('test2')).toBeDefined()
+      expect(httpClient.cache.size).toBe(2)
     })
   })
 
@@ -197,14 +202,14 @@ describe('HttpClient', () => {
         credentials: 'include' as const
       }
 
-      vi.spyOn(HttpClient, 'call').mockResolvedValue({ success: true })
+      vi.spyOn(httpClient, 'call').mockResolvedValue({ data: { success: true } })
       
-      const response = await HttpClient.call('test', options)
-      expect(response).toEqual({ success: true })
+      const response = await httpClient.call({ url: 'test', options })
+      expect(response).toEqual({ data: { success: true } })
     })
 
     it('should merge default and custom options', async () => {
-      HttpClient.configure({
+      httpClient.configure({
         options: {
           headers: { 'X-Default': 'default' }
         }
@@ -214,10 +219,10 @@ describe('HttpClient', () => {
         headers: { 'X-Custom': 'custom' }
       }
 
-      vi.spyOn(HttpClient, 'call').mockResolvedValue({ success: true })
+      vi.spyOn(httpClient, 'call').mockResolvedValue({ data: { success: true } })
       
-      await HttpClient.call('test', customOptions)
-      expect(HttpClient.options.options?.headers).toHaveProperty('X-Default')
+      await httpClient.call({ url: 'test', options: customOptions })
+      expect(httpClient.options.options?.headers).toHaveProperty('X-Default')
     })
   })
 })

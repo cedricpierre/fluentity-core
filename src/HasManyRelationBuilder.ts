@@ -1,4 +1,4 @@
-import { HttpClient, Methods } from "./HttpClient"
+import { Methods } from "./Fluentity"
 import { Attributes, Model } from "./Model"
 import { RelationBuilder } from "./RelationBuilder"
 
@@ -13,7 +13,10 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves to an array of related model instances
      */
     async all(): Promise<T[]> {
-        const list = await HttpClient.call(this.buildUrl())
+        const list = await this.fluentity.adapter.call({
+            url: this.buildUrl(),
+            method: Methods.GET
+        })
         return list?.data?.map((i: any) => new (this.relatedModel as any)(i))
     }
 
@@ -23,7 +26,8 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves to the created model instance
      */
     async create<A extends Partial<Attributes>>(data: A): Promise<T> {
-        const response = await HttpClient.call(this.path, {
+        const response = await this.fluentity.adapter.call({
+            url: this.path,
             method: Methods.POST,
             body: data
         })
@@ -36,7 +40,10 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves when the deletion is complete
      */
     async delete(id: string | number): Promise<void> {
-        await HttpClient.call(`${this.path}/${id}`, { method: Methods.DELETE })
+        await this.fluentity.adapter.call({
+            url: `${this.path}/${id}`,
+            method: Methods.DELETE
+        })
     }
 
     /**
@@ -46,7 +53,8 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves to the updated model instance
      */
     async update<A extends Partial<Attributes>>(id: string | number, data: A): Promise<T> {
-        const response = await HttpClient.call(`${this.path}/${id}`, {
+        const response = await this.fluentity.adapter.call({
+            url: `${this.path}/${id}`,
             method: Methods.PUT,
             body: data
         })
@@ -65,7 +73,10 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
             .offset((page - 1) * perPage)
             .limit(perPage)
 
-        const list = await HttpClient.call(this.buildUrl())
+        const list = await this.fluentity.adapter.call({
+            url: this.buildUrl(),
+            method: Methods.GET
+        })
         return list?.data?.map((i: any) => new (this.relatedModel as any)(i))
     }
 }

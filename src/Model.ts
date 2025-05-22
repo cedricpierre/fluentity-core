@@ -1,8 +1,8 @@
 import { RelationBuilder, type Relation } from './RelationBuilder'
-import { HttpClient, Methods } from './HttpClient'
 import { HasOneRelationBuilder } from './HasOneRelationBuilder'
 import { HasManyRelationBuilder } from './HasManyRelationBuilder'
 import { Constructor } from './decorators'
+import { Fluentity, Methods } from './Fluentity'
 
 /**
  * Base interface for model attributes that all models must implement.
@@ -20,18 +20,20 @@ export interface Attributes {
  * @template T - The type of attributes this model will have
  */
 export class Model<T extends Attributes = Attributes> {
-  /** Custom query scopes that can be applied to model queries */
+  /** Custom query scopes that can be applied to model queries to modify the query builder behavior */
   static scopes?: Record<string, (query: RelationBuilder<any>) => RelationBuilder<any>>
+  /** Internal storage for the model's API path */
   #path: string
 
   /** Unique identifier for the model instance */
   id?: string | number
+  /** Index signature for dynamic properties */
   [key: string]: any
 
-  /** Resource endpoint for the model */
+  /** Resource endpoint for the model, used to construct API URLs */
   static resource: string
 
-  /** Cache for relation builders to prevent unnecessary instantiation */
+  /** Cache for relation builders to prevent unnecessary instantiation and improve performance */
   private static _relationCache = new Map<string, any>()
 
   /**
@@ -51,6 +53,15 @@ export class Model<T extends Attributes = Attributes> {
     }
 
     return this
+  }
+
+  /**
+   * Gets the Fluentity instance for making API requests.
+   * @protected
+   * @returns The singleton Fluentity instance
+   */
+  protected get fluentity() {
+    return Fluentity.getInstance();
   }
 
   /**
@@ -179,13 +190,15 @@ export class Model<T extends Attributes = Attributes> {
   }
 
   /**
-   * Retrieves the current model instance from the server
+   * Retrieves the current model instance from the server.
+   * Updates the local instance with fresh data from the API.
    * @returns Promise resolving to the updated model instance
    */
   async get(): Promise<this> {
     const path = (this.constructor as any).path
 
-    const data = await HttpClient.call(`${path}/${this.id}`, {
+    const data = await this.fluentity.adapter.call({
+      url: `${path}/${this.id}`,
       method: Methods.GET,
     })
 
@@ -195,9 +208,9 @@ export class Model<T extends Attributes = Attributes> {
   }
 
   /**
-   * Saves the current model instance to the API.
-   * Creates a new record if the model has no ID, updates existing record otherwise.
-   * @returns A promise that resolves to the saved model instance
+   * Saves the current model instance to the server.
+   * Creates a new record if the model doesn't have an ID, updates existing record otherwise.
+   * @returns Promise resolving to the saved model instance
    */
   async save(): Promise<this> {
     if (this.id) {
@@ -206,7 +219,8 @@ export class Model<T extends Attributes = Attributes> {
 
     const path = (this.constructor as any).path
 
-    const data = await HttpClient.call(path, {
+    const data = await this.fluentity.adapter.call({
+      url: path,
       method: Methods.POST,
       body: { ...this }
     })
@@ -215,15 +229,16 @@ export class Model<T extends Attributes = Attributes> {
   }
 
   /**
-   * Updates the current model instance with new attributes.
-   * @param attributes - The attributes to update
-   * @returns A promise that resolves to the updated model instance
+   * Updates the model instance with new attributes and saves to the server.
+   * @param attributes - Optional attributes to update before saving
+   * @returns Promise resolving to the updated model instance
    */
   async update(attributes?: Partial<T>): Promise<this> {
     const path = (this.constructor as any).path
 
     if (attributes) Object.assign(this, attributes)
-    const updated = await HttpClient.call(`${path}/${this.id}`, {
+    const updated = await this.fluentity.adapter.call({
+      url: `${path}/${this.id}`,
       method: Methods.PATCH,
       body: { ...this }
     })
@@ -232,22 +247,21 @@ export class Model<T extends Attributes = Attributes> {
   }
 
   /**
-   * Deletes the current model instance from the API.
-   * @returns A promise that resolves when the deletion is complete
-   * @throws Error if the model has no ID
+   * Deletes the model instance from the server.
+   * @returns Promise that resolves when the deletion is complete
    */
   async delete(): Promise<void> {
     const path = (this.constructor as any).path
 
-    await HttpClient.call(`${path}/${this.id}`, {
+    await this.fluentity.adapter.call({
+      url: `${path}/${this.id}`,
       method: Methods.DELETE
     })
   }
 
   /**
-   * Converts the model instance to a plain object
-   * Handles nested model instances and arrays of models
-   * @returns A plain object representation of the model
+   * Converts the model instance to a plain object.
+   * @returns A plain object representation of the model's attributes
    */
   toObject(): Record<string, any> {
     const obj: Record<string, any> = {}

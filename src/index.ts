@@ -1,5 +1,5 @@
 export * from './Model'
 export * from './decorators'
-export * from './HttpClient'
 export * from './RelationBuilder'
-export { HttpClient as Fluentity } from './HttpClient'
+export * from './Fluentity'
+export * from './adapters/HttpClient'
