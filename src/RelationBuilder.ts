@@ -1,5 +1,5 @@
 import { Model } from "./Model"
-import { QueryBuilder, QueryBuilderInterface } from './QueryBuilder';
+import { QueryBuilder } from './QueryBuilder';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
 import { Fluentity, Methods } from './Fluentity';

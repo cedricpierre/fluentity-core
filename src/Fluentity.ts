@@ -1,5 +1,5 @@
 import { DefaultAdapter } from "./adapters/DefaultAdapter";
-import { QueryBuilder, QueryBuilderInterface } from "./QueryBuilder";
+import { QueryBuilder } from './QueryBuilder';
 
 /**
  * Interface for adapters that handle API communication.
