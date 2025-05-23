@@ -34,7 +34,7 @@ npm test
 
 In JavaScript, property decorators are not natively supported yet (as of 2025), but they can be enabled using transpilers like Babel or TypeScript with experimental support.
 
-Here’s how to enable and use them in TypeScript, which has the best support for decorators:
+Here's how to enable and use them in TypeScript, which has the best support for decorators:
 
 ### Typescript
 
@@ -61,73 +61,26 @@ In your `tsconfig.json`
 }
 ```
 
- After you need to define an API base URL and optional interceptors:
+After you need to initialize Fluentity with an adapter:
 
 ```typescript
-import { Fluentity } from '@fluentity/core';
+import { Fluentity, RestAdapter } from '@fluentity/core';
 
-Fluentity.configure({
-  baseUrl: 'https://api.example.com',
-  // headers, ...
-  options: RequestOptions,
-  // Optional interceptors
-  requestInterceptor: (request) => {
-    // Modify request before sending
-    return request;
-  },
-  responseInterceptor: (response) => {
-    // Modify response before returning
-    return response;
-  },
-  errorInterceptor: (error) => {
-    // Handle errors
-    console.error(error);
-  },
-  cacheOptions?: CacheOptions
+const fluentity = Fluentity.initialize({
+    adapter: new RestAdapter({
+        baseUrl: 'https://api.example.com',
+        // Optional configuration
+        cacheOptions: {
+            enabled: true,
+            ttl: 1000 // Time to live in milliseconds
+        },
+        responseInterceptor: (response) => {
+            // Modify response before returning
+            return response;
+        }
+    })
 });
 ```
-
-```typescript
-interface RequestOptions {
-  body?: any,
-  method?: MethodType,
-  headers?: Record<string, string>
-  credentials?: RequestCredentials
-  mode?: RequestMode
-  redirect?: RequestRedirect
-  referrer?: string
-  referrerPolicy?: ReferrerPolicy
-  integrity?: string
-  cache?: RequestCache
-  keepalive?: boolean
-  signal?: AbortSignal
-}
-
-interface CacheOptions {
-  enabled: boolean;
-  ttl?: number; // Time to live in milliseconds
-}
-```
-
-## Use a custom request handler
-
-By default, Fluentity uses the `fetch()` method.
-But you can provide your own request handler like `axios`.
-
-```typescript
-Fluentity.configure({
-  baseUrl: 'https://api.example.com',
-  requestHandler: async (request: HttpRequest): HttpResponse => {
-    // Handle request and return a the response
-    const response = await fetch(request.url, request.options)
-    return {
-        data: await response.json()
-    } as HttpResponse
-  }
-});
-
-```
-
 
 ## Creating Models
 
@@ -136,16 +89,111 @@ Models are the core of Fluentity. Here's how to create a model:
 ```typescript
 import { Model, Attributes } from '@fluentity/core';
 
-interface IUser extends Attributes {
+interface UserAttributes extends Attributes {
   name: string;
   email: string;
-  created_at?: string;
-  updated_at?: string;
+  phone?: number;
+  company?: Company;
 }
 
-export class User extends Model<IUser> {
+export class User extends Model<UserAttributes> {
   static resource = 'users'; // The API endpoint for this model
 }
+```
+
+## Model Methods
+
+### Static Methods
+
+Models come with several static methods for querying and manipulating data:
+
+- `Model.all()`: Get all records
+- `Model.find(id)`: Find a record by ID
+- `Model.id(id)`: Start a query for a specific ID
+- `Model.create(data)`: Create a new record
+- `Model.update(id, data)`: Update a record
+- `Model.delete(id)`: Delete a record
+
+### Instance Methods
+
+- `model.save()`: Save the instance (create or update)
+- `model.update(data)`: Update the instance with data
+- `model.delete()`: Delete the instance
+
+### Relation Methods
+
+- `model.relation.all()`: Get all related records
+- `model.relation.create(data)`: Create a new related record
+- `model.relation.update(id, data)`: Update a related record
+- `model.relation.delete(id)`: Delete a related record
+- `model.relation.limit(n)`: Limit the number of records
+- `model.relation.offset(n)`: Skip n records
+
+Example usage:
+
+```typescript
+// Get all users
+const users = await User.all();
+
+// Find user by ID
+const user = await User.find(1);
+
+// Get user by ID using query builder
+const user = await User.id(1).get();
+
+// Create new user
+const user = new User({ 
+    name: 'John Doe', 
+    email: 'john@example.com',
+    phone: 1234567890 
+});
+await user.save();
+
+// Or create directly
+const user = await User.create({
+    name: 'John Doe',
+    email: 'john@example.com',
+    phone: 1234567890
+});
+
+// Update user
+await User.update(1, { name: 'Jane Doe' });
+
+// Delete user
+await User.delete(1);
+
+// Working with relations
+const post = await Post.find(1);
+const comments = await post.comments.all();
+const comment = await post.comments.create({ 
+    name: 'John', 
+    email: 'john@example.com' 
+});
+
+// Using pagination
+const comments = await post.comments.limit(10).offset(10).all();
+```
+
+## Caching
+
+Fluentity provides a simple caching mechanism that can be configured through the adapter:
+
+```typescript
+const fluentity = Fluentity.initialize({
+    adapter: new RestAdapter({
+        baseUrl: 'https://api.example.com',
+        cacheOptions: {
+            enabled: true,
+            ttl: 1000 // Time to live in milliseconds
+        }
+    })
+});
+
+// Clear cache for a specific endpoint
+fluentity.adapter.deleteCache("users/1");
+
+// Get cache for a specific endpoint
+const cache = fluentity.adapter.getCache("users/1");
 ```
 
 ## Decorators
@@ -157,7 +205,7 @@ Fluentity provides several decorators to define relationships and type casting:
 ```typescript
 import { HasOne, HasMany, BelongsTo, BelongsToMany } from '@fluentity/core';
 
-class User extends Model<IUser> {
+class User extends Model<UserAttributes> {
   @HasOne(() => Profile)
   profile!: Relation<Profile>;
 
@@ -178,7 +226,7 @@ class User extends Model<IUser> {
 ```typescript
 import { Cast } from '@fluentity/core';
 
-class User extends Model<IUser> {
+class User extends Model<UserAttributes> {
   @Cast(() => Date)
   created_at?: Date;
 
@@ -195,7 +243,7 @@ class User extends Model<IUser> {
 Scopes allow you to define reusable query constraints:
 
 ```typescript
-class User extends Model<IUser> {
+class User extends Model<UserAttributes> {
   static scopes = {
     active: (query) => query.where({ status: 'active' })
   };

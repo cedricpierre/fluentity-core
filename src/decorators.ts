@@ -2,6 +2,7 @@ import { RelationBuilder } from './RelationBuilder'
 import { Model } from './Model'
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
+import { QueryBuilder } from './QueryBuilder';
 
 /**
  * Type representing a constructor function that creates instances of type T.
@@ -16,27 +17,35 @@ export type PropertyDecoratorType = (target: Object, key: string | symbol) => vo
 
 /**
  * Creates a relation decorator that sets up a relationship between models.
- * @param modelFactory - Factory function that returns the related model constructor
+ * @param model - Factory function that returns the related model constructor
  * @param relationBuilderFactory - Constructor for the appropriate relation builder
  * @param resource - Optional custom resource name for the relation
  * @returns A property decorator function
  */
-const makeRelation = (
-    modelFactory: () => Constructor<Model<any>>,
-    relationBuilderFactory: Constructor<RelationBuilder<any>>,
+const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
+    model: () => T,
+    relationBuilderFactory: Constructor<R>,
     resource?: string
 ): PropertyDecoratorType => {
     return function (target: Object, key: string | symbol): void {
         // Initialize the property on the prototype
         Object.defineProperty(target, key, {
             get(this: Model<any>) {
-                const path = (this.path ? `${this.path}/` : '') + (resource ?? String(key))
+                const queryBuilder = new QueryBuilder()
 
-                return new relationBuilderFactory(
-                    modelFactory,
-                    undefined,
-                    path
-                );
+                if (this.queryBuilder) {
+                    queryBuilder.path = this.queryBuilder.path
+                } else {
+                    queryBuilder.path = resource ?? (this.constructor as any).resource
+                }
+                
+                
+                if (this.id) {
+                    queryBuilder.id = this.id
+                    queryBuilder.path += `/${this.id}`
+                }
+                
+                return new relationBuilderFactory(model(), queryBuilder, resource)
             },
             enumerable: true,
             configurable: true,
@@ -96,7 +105,7 @@ export const Cast = (caster: () => Constructor<any>): PropertyDecoratorType => {
  * @param resource - Optional custom resource name for the relation
  * @returns A property decorator function
  */
-export const HasOne = (model: () => Constructor<Model<any>>, resource?: string): PropertyDecoratorType => {
+export const HasOne = (model: () => Model<any>, resource?: string): PropertyDecoratorType => {
     return makeRelation(model, HasOneRelationBuilder as Constructor<RelationBuilder<any>>, resource);
 }
 
@@ -106,7 +115,7 @@ export const HasOne = (model: () => Constructor<Model<any>>, resource?: string):
  * @param resource - Optional custom resource name for the relation
  * @returns A property decorator function
  */
-export const HasMany = (model: () => Constructor<Model<any>>, resource?: string): PropertyDecoratorType => {
+export const HasMany = (model: () => Model<any>, resource?: string): PropertyDecoratorType => {
     return makeRelation(model, HasManyRelationBuilder as Constructor<RelationBuilder<any>>, resource);
 }
 

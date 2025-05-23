@@ -1,4 +1,5 @@
-import { DefaultClient } from "./adapters/DefaultClient";
+import { DefaultAdapter } from "./adapters/DefaultAdapter";
+import { QueryBuilder, QueryBuilderInterface } from "./QueryBuilder";
 
 /**
  * Interface for adapters that handle API communication.
@@ -6,11 +7,16 @@ import { DefaultClient } from "./adapters/DefaultClient";
  */
 export interface AdapterInterface {
   /**
+   * The options for the adapter.
+   */
+  options?: AdapterOptions;
+
+  /**
    * Makes an API request using the adapter's implementation.
    * @param data - The request options and data
    * @returns Promise resolving to the API response
    */
-  call(data: AdapterOptions): Promise<AdapterResponse>;
+  call(queryBuilder: QueryBuilder): Promise<AdapterResponse>;
   /**
    * Configures the adapter with additional options.
    * @param options - The configuration options to apply
@@ -77,7 +83,7 @@ export class Fluentity {
     if (Fluentity.instance) {
       throw new Error('Fluentity instance already exists. Use getInstance() instead.');
     }
-    this.#adapter = options?.adapter ?? new DefaultClient();
+    this.#adapter = options?.adapter ?? new DefaultAdapter();
     Fluentity.instance = this;
   }
 

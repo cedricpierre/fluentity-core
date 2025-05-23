@@ -1,4 +1,4 @@
-import { Methods } from "./Fluentity"
+import { Methods, MethodType } from "./Fluentity"
 import { Attributes, Model } from "./Model"
 import { RelationBuilder } from "./RelationBuilder"
 
@@ -13,11 +13,10 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves to an array of related model instances
      */
     async all(): Promise<T[]> {
-        const list = await this.fluentity.adapter.call({
-            url: this.buildUrl(),
-            method: Methods.GET
-        })
-        return list?.data?.map((i: any) => new (this.relatedModel as any)(i))
+        this.queryBuilder.method = Methods.GET
+        this.queryBuilder.id = undefined
+        const list = await this.fluentity.adapter.call(this.queryBuilder)
+        return list?.data?.map((i: any) => new (this.relatedModel as any)(i, {...this.queryBuilder}))
     }
 
     /**
@@ -26,12 +25,11 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves to the created model instance
      */
     async create<A extends Partial<Attributes>>(data: A): Promise<T> {
-        const response = await this.fluentity.adapter.call({
-            url: this.path,
-            method: Methods.POST,
-            body: data
-        })
-        return new (this.relatedModel as any)(response.data)
+        this.queryBuilder.method = Methods.POST
+        this.queryBuilder.body = data
+        this.queryBuilder.id = undefined
+        const response = await this.fluentity.adapter.call(this.queryBuilder)
+        return new (this.relatedModel as any)(response.data, {...this.queryBuilder})
     }
 
     /**
@@ -40,10 +38,9 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves when the deletion is complete
      */
     async delete(id: string | number): Promise<void> {
-        await this.fluentity.adapter.call({
-            url: `${this.path}/${id}`,
-            method: Methods.DELETE
-        })
+        this.queryBuilder.method = Methods.DELETE
+        this.queryBuilder.id = id
+        await this.fluentity.adapter.call(this.queryBuilder)
     }
 
     /**
@@ -52,13 +49,12 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @param data - The data to update the model with
      * @returns A promise that resolves to the updated model instance
      */
-    async update<A extends Partial<Attributes>>(id: string | number, data: A): Promise<T> {
-        const response = await this.fluentity.adapter.call({
-            url: `${this.path}/${id}`,
-            method: Methods.PUT,
-            body: data
-        })
-        return new (this.relatedModel as any)(response.data)
+    async update<A extends Partial<Attributes>>(id: string | number, data: A, method: MethodType = Methods.PUT): Promise<T> {
+        this.queryBuilder.method = method
+        this.queryBuilder.id = id
+        this.queryBuilder.body = data
+        const response = await this.fluentity.adapter.call(this.queryBuilder)
+        return new (this.relatedModel as any)(response.data, {...this.queryBuilder})
     }
 
     /**
@@ -68,15 +64,12 @@ export class HasManyRelationBuilder<T extends Model<any>> extends RelationBuilde
      * @returns A promise that resolves to an array of related model instances
      */
     async paginate(page = 1, perPage = 10): Promise<T[]> {
-        this.queryBuilder.page(page)
-            .perPage(perPage)
-            .offset((page - 1) * perPage)
-            .limit(perPage)
+        this.queryBuilder.page = page
+        this.queryBuilder.perPage = perPage
+        this.queryBuilder.offset = (page - 1) * perPage
+        this.queryBuilder.limit = perPage
 
-        const list = await this.fluentity.adapter.call({
-            url: this.buildUrl(),
-            method: Methods.GET
-        })
-        return list?.data?.map((i: any) => new (this.relatedModel as any)(i))
+        const list = await this.fluentity.adapter.call(this.queryBuilder)
+        return list?.data?.map((i: any) => new (this.relatedModel as any)(i, {...this.queryBuilder}))
     }
 }

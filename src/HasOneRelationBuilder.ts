@@ -1,5 +1,5 @@
-import { HttpClient } from "./adapters/HttpClient"
-import { Methods } from "./Fluentity"
+import { RestAdapter } from "./adapters/RestAdapter"
+import { Methods, MethodType } from "./Fluentity"
 import { Model, Attributes } from "./Model"
 import { RelationBuilder } from "./RelationBuilder"
 
@@ -14,12 +14,10 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
      * @returns A promise that resolves to the related model instance
      */
     async get(): Promise<T> {
-        console.log('get')
-        const response = await this.fluentity.adapter.call({
-            url: `${this.path}/${this.relatedModel.id}`,
-            method: Methods.GET
-        })
-        return new (this.relatedModel as any)(response.data)
+        this.queryBuilder.method = Methods.GET
+        this.queryBuilder.id = this.relatedModel.id!
+        const response = await this.fluentity.adapter.call(this.queryBuilder)
+        return new (this.relatedModel as any)(response.data, {...this.queryBuilder})
     }
 
     /**
@@ -27,13 +25,11 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
      * @param data - The data to update the related model with
      * @returns A promise that resolves to the updated model instance
      */
-    async update<A extends Partial<Attributes>>(data: A): Promise<T> {
-        const updated = await this.fluentity.adapter.call({
-            url: `${this.path}/${this.relatedModel.id}`,
-            method: Methods.PATCH,
-            body: data
-        })
-        return new (this.relatedModel as any)(updated.data)
+    async update<A extends Partial<Attributes>>(data: A, method: MethodType = Methods.PUT): Promise<T> {
+        this.queryBuilder.method = method
+        this.queryBuilder.id = this.relatedModel.id!
+        const response = await this.fluentity.adapter.call(this.queryBuilder)
+        return new (this.relatedModel as any)(response.data, {...this.queryBuilder})
     }
 
     /**
@@ -41,9 +37,8 @@ export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder
      * @returns A promise that resolves when the deletion is complete
      */
     async delete(): Promise<void> {
-        await this.fluentity.adapter.call({
-            url: `${this.path}/${this.relatedModel.id}`,
-            method: Methods.DELETE
-        })
+        this.queryBuilder.method = Methods.DELETE
+        this.queryBuilder.id = this.relatedModel.id!
+        await this.fluentity.adapter.call(this.queryBuilder)
     }
 }

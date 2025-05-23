@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { User } from '../examples/models/User'
-import { Fluentity, HttpClient } from '../src/index'
+import { Fluentity, RestAdapter } from '../src/index'
 import { Media } from '../examples/models/Media'
 import { Thumbnail } from '../examples/models/Thumbnail'
+import { QueryBuilder } from '../src/QueryBuilder'
 
 const fluentity = Fluentity.initialize()
 
@@ -31,8 +32,8 @@ describe('Models', () => {
   it('should be able to get libraries (custom name) from a user', async () => {
 
     vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((options) => {
-        expect(options.url).toBe('users/1/medias')
+      .mockImplementation((queryBuilder: QueryBuilder) => {
+        expect(queryBuilder.path).toBe('users/1/medias')
       
         return Promise.resolve({
           data: [
@@ -77,8 +78,8 @@ describe('Models', () => {
   
   it('should construct correct path with custom resource name', async () => {
     vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((options) => {
-        expect(options.url).toBe('users/1/custom-resource')
+    .mockImplementation((queryBuilder: QueryBuilder) => {
+        expect(queryBuilder.path).toBe('users/1/custom-resource')
         return Promise.resolve({ data: [] })
       });
 
@@ -88,8 +89,8 @@ describe('Models', () => {
 
   it('should construct correct path with default resource name', async () => {
     vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((options) => {
-        expect(options.url).toBe('users/1/medias')
+      .mockImplementation((queryBuilder: QueryBuilder) => {
+        expect(queryBuilder.path).toBe('users/1/medias')
         return Promise.resolve({ data: [] })
       });
 
@@ -99,20 +100,20 @@ describe('Models', () => {
 
   it('should handle nested paths correctly', async () => {
     vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((options) => {
-        expect(options.url).toBe('users/1/medias/2/thumbnails')
+      .mockImplementation((queryBuilder: QueryBuilder) => {
+        expect(queryBuilder.path).toBe('users/1/medias/2/thumbnails')
         return Promise.resolve({ data: [] })
       });
-
     const result = await User.id(1).medias.id(2).thumbnails.all()
     expect(result).toBeInstanceOf(Array)
   })
 
   it('should handle empty path correctly', async () => {
     vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((options) => {
-        expect(options.url).toBe('users/1')
-        return Promise.resolve({ data: {} })
+      .mockImplementation((queryBuilder: QueryBuilder) => {
+        expect(queryBuilder.path).toBe('users')
+        expect(queryBuilder.id).toBe(1)
+        return Promise.resolve({ data: {id: 1, name: 'Cedric'} })
       });
 
     const result = await User.id(1).get()

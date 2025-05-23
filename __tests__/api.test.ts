@@ -2,15 +2,20 @@ import { expect, describe, it, vi, beforeEach } from 'vitest'
 import { User } from '../examples/models/User'
 import { Post } from '../examples/models/Post'
 import { Comment } from '../examples/models/Comment'
-import { Fluentity, HttpClient, HttpResponse } from '../src'
+import { Fluentity, RestAdapter, HttpResponse } from '../src'
 import { Company } from '../examples/models/Company'
 
 
 
 describe('API', () => { 
     const fluentity = Fluentity.initialize({
-        adapter: new HttpClient({
+        adapter: new RestAdapter({
             baseUrl: 'https://jsonplaceholder.typicode.com',
+            options: {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
         })
     })
 
@@ -129,6 +134,7 @@ describe('API', () => {
         expect(comments.length).toBeGreaterThan(0)
 
         post.update({ title: 'Cedric updated' })
+        expect(fluentity.adapter.url).toBe('posts/1')
         expect(post.title).toBe('Cedric updated')
 
         post.title = 'Cedric updated 2'
@@ -148,11 +154,12 @@ describe('API', () => {
         expect(comment).toBeDefined()
         expect(comment).toBeInstanceOf(Comment)
 
+        await Comment.update(1, { name: 'Cedric updated 2' })
+        expect(fluentity.adapter.url).toBe('comments/1')
+
         await comment.update({ name: 'Cedric updated' })
         expect(fluentity.adapter.url).toBe('posts/1/comments/1')
 
-        await Comment.update(1, { name: 'Cedric updated 2' })
-        expect(fluentity.adapter.url).toBe('comments/1')
     })
 
 
@@ -229,13 +236,14 @@ describe('API', () => {
         expect(comments).toBeInstanceOf(Array)
         expect(comments.length).toBeGreaterThan(0)
 
+        console.log(comments)
         const comment = comments[0]
         expect(comment).toBeDefined()
         expect(comment).toBeInstanceOf(Comment)
 
-        comment.update({ name: 'Cedric updated' })
+        comment.update({ name: 'Cedric updated lol' })
         expect(fluentity.adapter.url).toBe('posts/1/comments/1')
-        expect(comment.name).toBe('Cedric updated')
+        expect(comment.name).toBe('Cedric updated lol')
     })
 
     it('can fetch one and all posts and comments', async () => {

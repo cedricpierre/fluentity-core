@@ -2,7 +2,8 @@ import { RelationBuilder, type Relation } from './RelationBuilder'
 import { HasOneRelationBuilder } from './HasOneRelationBuilder'
 import { HasManyRelationBuilder } from './HasManyRelationBuilder'
 import { Constructor } from './decorators'
-import { Fluentity, Methods } from './Fluentity'
+import { Fluentity, Methods, MethodType } from './Fluentity'
+import { QueryBuilder } from './QueryBuilder'
 
 /**
  * Base interface for model attributes that all models must implement.
@@ -22,37 +23,44 @@ export interface Attributes {
 export class Model<T extends Attributes = Attributes> {
   /** Custom query scopes that can be applied to model queries to modify the query builder behavior */
   static scopes?: Record<string, (query: RelationBuilder<any>) => RelationBuilder<any>>
-  /** Internal storage for the model's API path */
-  #path: string
 
   /** Unique identifier for the model instance */
   id?: string | number
   /** Index signature for dynamic properties */
   [key: string]: any
 
+  /** Query builder for the model */
+  #queryBuilder: QueryBuilder
+
   /** Resource endpoint for the model, used to construct API URLs */
   static resource: string
 
   /** Cache for relation builders to prevent unnecessary instantiation and improve performance */
-  private static _relationCache = new Map<string, any>()
+  static #relationCache = new Map<string, any>()
 
   /**
    * Creates a new model instance with the given attributes.
    * @param attributes - The attributes to initialize the model with
    * @returns A new model instance
    */
-  constructor(attributes: T) {
+  constructor(attributes: T, queryBuilder?: QueryBuilder) {
     if (attributes) {
       Object.assign(this, attributes)
     }
 
-    this.#path = (this.constructor as any).path ?? (this.constructor as any).resource
-
-    if (this.id) {
-      this.path += `/${this.id}`
+    if (queryBuilder) {
+      this.#queryBuilder = queryBuilder
+    } else {
+      this.#queryBuilder = new QueryBuilder()
+      this.#queryBuilder.path = (this.constructor as any).resource
     }
-
+    
+    this.#queryBuilder.id = this.id
     return this
+  }
+
+  get queryBuilder() {
+    return this.#queryBuilder
   }
 
   /**
@@ -65,22 +73,6 @@ export class Model<T extends Attributes = Attributes> {
   }
 
   /**
-   * Gets the current path for the model instance.
-   * The path represents the API endpoint for this model.
-   */
-  get path(): string {
-    return this.#path
-  }
-
-  /**
-   * Sets the path for the model instance.
-   * @param path - New path value to set
-   */
-  set path(path: string) {
-    this.#path = path
-  }
-
-  /**
    * Gets or creates a relation builder for the given model class.
    * Uses an internal cache to avoid creating duplicate relation builders.
    * @param modelClass - The model class to create a relation builder for
@@ -88,16 +80,12 @@ export class Model<T extends Attributes = Attributes> {
    * @returns A relation builder instance
    */
   private static getRelationBuilder<T extends Model<any>, R extends RelationBuilder<T>>(
-    modelClass: Constructor<Model<any>>,
+    model: T,
     relationBuilderFactory: Constructor<R>
   ): R {
-    const key = `${modelClass.name}_${relationBuilderFactory.name}`
-    if (!Model._relationCache.has(key)) {
-      const model = modelClass as any
-      const resource = model.resource
-      Model._relationCache.set(key, new relationBuilderFactory(() => modelClass as any, undefined, resource))
-    }
-    return Model._relationCache.get(key) as R
+    const queryBuilder = new QueryBuilder()
+
+    return new relationBuilderFactory(model, queryBuilder, model.resource)
   }
 
   /**
@@ -113,7 +101,7 @@ export class Model<T extends Attributes = Attributes> {
    * Starts a new query builder for the model
    * @returns A HasManyRelationBuilder instance
    */
-  static query<T extends Model<Attributes>>(this: Constructor<T>): HasManyRelationBuilder<T> {
+  static query<T extends Model<Attributes>>(this: T): HasManyRelationBuilder<T> {
     return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder)
   }
 
@@ -122,7 +110,7 @@ export class Model<T extends Attributes = Attributes> {
    * @param where - Conditions to filter by
    * @returns A HasManyRelationBuilder instance with where conditions applied
    */
-  static where<T extends Model<Attributes>>(this: Constructor<T>, where: Partial<Attributes>): HasManyRelationBuilder<T> {
+  static where<T extends Model<Attributes>>(this: T, where: Partial<Attributes>): HasManyRelationBuilder<T> {
     return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).where(where) as HasManyRelationBuilder<T>
   }
 
@@ -131,7 +119,7 @@ export class Model<T extends Attributes = Attributes> {
    * @param filters - Filter conditions to apply
    * @returns A HasManyRelationBuilder instance with filters applied
    */
-  static filter<T extends Model<Attributes>>(this: Constructor<T>, filters: Record<string, any>): HasManyRelationBuilder<T> {
+  static filter<T extends Model<Attributes>>(this: T, filters: Record<string, any>): HasManyRelationBuilder<T> {
     return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).filter(filters) as HasManyRelationBuilder<T>
   }
 
@@ -140,7 +128,7 @@ export class Model<T extends Attributes = Attributes> {
    * @param relations - Single relation or array of relations to include
    * @returns A HasManyRelationBuilder instance with relations included
    */
-  static include<T extends Model<Attributes>>(this: Constructor<T>, relations: string | string[]): HasManyRelationBuilder<T> {
+  static include<T extends Model<Attributes>>(this: T, relations: string | string[]): HasManyRelationBuilder<T> {
     return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).include(relations) as HasManyRelationBuilder<T>
   }
 
@@ -148,7 +136,7 @@ export class Model<T extends Attributes = Attributes> {
    * Retrieves all records for the model
    * @returns Promise resolving to an array of model instances
    */
-  static async all<T extends Model<Attributes>>(this: Constructor<T>): Promise<T[]> {
+  static async all<T extends Model<Attributes>>(this: T): Promise<T[]> {
     return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).all()) as T[]
   }
 
@@ -157,7 +145,7 @@ export class Model<T extends Attributes = Attributes> {
    * @param id - The ID to find
    * @returns Promise resolving to a model instance
    */
-  static async find<T extends Model<Attributes>>(this: Constructor<T>, id: string | number): Promise<T> {
+  static async find<T extends Model<Attributes>>(this: T, id: string | number): Promise<T> {
     return (await Model.getRelationBuilder<T, HasOneRelationBuilder<T>>(this, HasOneRelationBuilder).find(id)) as T
   }
 
@@ -166,7 +154,7 @@ export class Model<T extends Attributes = Attributes> {
    * @param data - The data to create the record with
    * @returns Promise resolving to the created model instance
    */
-  static async create<A extends Partial<Attributes>, T extends Model<Attributes>>(this: Constructor<T>, data: A): Promise<T> {
+  static async create<A extends Partial<Attributes>, T extends Model<Attributes>>( this: T, data: A): Promise<T> {
     return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).create(data)) as T
   }
 
@@ -176,8 +164,8 @@ export class Model<T extends Attributes = Attributes> {
    * @param data - The data to update the record with
    * @returns Promise resolving to the updated model instance
    */
-  static async update<A extends Partial<Attributes>, T extends Model<Attributes>>(this: Constructor<T>, id: string | number, data: A): Promise<T> {
-    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).update(id, data)) as T
+  static async update<A extends Partial<Attributes>, T extends Model<Attributes>>(this: T, id: string | number, data: A, method: MethodType = Methods.PUT): Promise<T> {
+    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).update(id, data, method)) as T
   }
 
   /**
@@ -185,7 +173,7 @@ export class Model<T extends Attributes = Attributes> {
    * @param id - The ID of the record to delete
    * @returns Promise that resolves when the deletion is complete
    */
-  static async delete<T extends Model<Attributes>>(this: Constructor<T>, id: string | number): Promise<void> {
+  static async delete<T extends Model<Attributes>>(this: T, id: string | number): Promise<void> {
     return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).delete(id)
   }
 
@@ -195,12 +183,8 @@ export class Model<T extends Attributes = Attributes> {
    * @returns Promise resolving to the updated model instance
    */
   async get(): Promise<this> {
-    const path = (this.constructor as any).path
-
-    const data = await this.fluentity.adapter.call({
-      url: `${path}/${this.id}`,
-      method: Methods.GET,
-    })
+    this.#queryBuilder.method = Methods.GET
+    const data = await this.fluentity.adapter.call(this.#queryBuilder)
 
     Object.assign(this, data.data)
 
@@ -217,13 +201,10 @@ export class Model<T extends Attributes = Attributes> {
       return this.update()
     }
 
-    const path = (this.constructor as any).path
 
-    const data = await this.fluentity.adapter.call({
-      url: path,
-      method: Methods.POST,
-      body: { ...this }
-    })
+    this.#queryBuilder.method = Methods.POST
+    this.#queryBuilder.body = this.toObject()
+    const data = await this.fluentity.adapter.call(this.#queryBuilder)
     Object.assign(this, data.data)
     return this
   }
@@ -233,16 +214,15 @@ export class Model<T extends Attributes = Attributes> {
    * @param attributes - Optional attributes to update before saving
    * @returns Promise resolving to the updated model instance
    */
-  async update(attributes?: Partial<T>): Promise<this> {
-    const path = (this.constructor as any).path
-
+  async update(attributes?: Partial<T>, method: MethodType = Methods.PUT): Promise<this> {
     if (attributes) Object.assign(this, attributes)
-    const updated = await this.fluentity.adapter.call({
-      url: `${path}/${this.id}`,
-      method: Methods.PATCH,
-      body: { ...this }
-    })
+
+    this.#queryBuilder.method = method
+    this.#queryBuilder.body = this.toObject()
+
+    const updated = await this.fluentity.adapter.call(this.#queryBuilder)
     Object.assign(this, updated.data)
+
     return this
   }
 
@@ -251,12 +231,8 @@ export class Model<T extends Attributes = Attributes> {
    * @returns Promise that resolves when the deletion is complete
    */
   async delete(): Promise<void> {
-    const path = (this.constructor as any).path
-
-    await this.fluentity.adapter.call({
-      url: `${path}/${this.id}`,
-      method: Methods.DELETE
-    })
+    this.#queryBuilder.method = Methods.DELETE
+    await this.fluentity.adapter.call(this.#queryBuilder)
   }
 
   /**
@@ -277,7 +253,7 @@ export class Model<T extends Attributes = Attributes> {
         if (value instanceof Model) {
           obj[key] = value.toObject()
         } else if (Array.isArray(value) && value.length > 0) {
-          obj[key] = value.filter((item: any) => item instanceof Model).map((item: Model<any>) => item.toObject())
+          obj[key] = value.filter((item: any) => item instanceof Model && typeof item.toObject === 'function').map((item: Model<any>) => item.toObject())
         }
       }
     }

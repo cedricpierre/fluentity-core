@@ -1,8 +1,9 @@
 import { Model } from "./Model"
-import { URLQueryBuilder } from "./URLQueryBuilder"
+import { QueryBuilder } from "./QueryBuilder"
 import { HasManyRelationBuilder } from "./HasManyRelationBuilder"
 import { HasOneRelationBuilder } from "./HasOneRelationBuilder"
 import { Fluentity, Methods } from "./Fluentity"
+import { Constructor } from "./decorators"
 
 /**
  * Type that determines the appropriate relation builder based on the model type.
@@ -21,28 +22,31 @@ export type Relation<T> = T extends Model<any>
  */
 export class RelationBuilder<T extends Model<any>> {
     /** Query builder instance for constructing API URLs and managing query parameters */
-    protected queryBuilder: URLQueryBuilder
+    public queryBuilder: QueryBuilder
     /** The related model instance that this builder operates on */
     protected relatedModel: T
-    /** The API path for this relation, used to construct the final URL */
-    protected path: string = ''
 
     /**
      * Creates a new relation builder instance.
      * @param model - Factory function that returns a model instance
-     * @param urlQueryBuilder - Optional query builder instance
-     * @param initialPath - Optional initial path for the relation
+     * @param queryBuilder - Optional query builder instance
      */
     constructor(
-        model: () => Model<any>,
-        urlQueryBuilder?: URLQueryBuilder,
-        initialPath?: string
+        model: T,
+        queryBuilder: QueryBuilder,
+        resource?: string
     ) {
-        this.queryBuilder = urlQueryBuilder ?? new URLQueryBuilder()
-        this.relatedModel = model() as T
-        this.path = initialPath ?? (this.relatedModel as any).resource
+        
+        this.relatedModel = model
+        this.queryBuilder = queryBuilder
 
-        this.relatedModel.path = this.path
+        const path = resource ?? (this.relatedModel as any).resource
+
+        if (queryBuilder.path) {
+            this.queryBuilder.path = queryBuilder.path + '/' + path
+        } else {
+            this.queryBuilder.path = path
+        }
 
         if (this.relatedModel.scopes) {
             Object.entries(this.relatedModel.scopes).forEach(([name, scope]) => {
@@ -71,8 +75,8 @@ export class RelationBuilder<T extends Model<any>> {
      * @returns A new model instance with the given ID
      */
     id(id: string | number): T { 
-        const model = new (this.relatedModel as any)({ id })
-        model.path = `${this.path}/${id}`
+        const model = new (this.relatedModel as any)({ id }, this.queryBuilder)
+        model.queryBuilder.id = id
         return model
     }
 
@@ -82,15 +86,12 @@ export class RelationBuilder<T extends Model<any>> {
      * @returns A promise that resolves to the fetched model instance
      */
     async find(id: string | number): Promise<T> {
-        this.queryBuilder.id(id)
+        this.queryBuilder.id = id
+        this.queryBuilder.method = Methods.GET
 
-        const response = await this.fluentity.adapter.call({
-            url: this.buildUrl(),
-            method: Methods.GET
-        })
-        const model = new (this.relatedModel as any)(response.data)
-        model.path = `${this.path}/${id}`
-
+        const response = await this.fluentity.adapter.call(this.queryBuilder)
+        const model = new (this.relatedModel as any)(response.data, this.queryBuilder)
+        model.queryBuilder.id = id
         return model
     }
 
@@ -115,23 +116,14 @@ export class RelationBuilder<T extends Model<any>> {
     }
 
     /**
-     * Specifies relations to include in the response.
-     * @param relations - Single relation name or array of relation names to include
-     * @returns The relation builder instance for chaining
-     */
-    include(relations: string | string[]): RelationBuilder<T> { 
-        this.queryBuilder.include(relations)
-        return this
-    }
-
-    /**
      * Adds an order by clause to the query.
      * @param field - The field to order by
      * @param dir - The direction to order in ('asc' or 'desc')
      * @returns The relation builder instance for chaining
      */
-    orderBy(field: string, dir: string = 'asc'): RelationBuilder<T> { 
-        this.queryBuilder.orderBy(field, dir)
+    orderBy(sort: string = 'id', direction: string = 'asc'): RelationBuilder<T> { 
+        this.queryBuilder.sort = sort
+        this.queryBuilder.direction = direction
         return this
     }
 
@@ -141,7 +133,7 @@ export class RelationBuilder<T extends Model<any>> {
      * @returns The relation builder instance for chaining
      */
     limit(n: number): RelationBuilder<T> { 
-        this.queryBuilder.limit(n)
+        this.queryBuilder.limit = n
         return this
     }
 
@@ -151,18 +143,7 @@ export class RelationBuilder<T extends Model<any>> {
      * @returns The relation builder instance for chaining
      */
     offset(n: number): RelationBuilder<T> { 
-        this.queryBuilder.offset(n)
+        this.queryBuilder.offset = n
         return this
-    }
-
-    /**
-     * Builds the final URL for the API request.
-     * @returns The constructed URL with query parameters
-     */
-    protected buildUrl() {
-        const url = this.queryBuilder.path(this.path).toUrl()
-        this.queryBuilder.reset()
-
-        return decodeURIComponent(`${url}`)
     }
 }

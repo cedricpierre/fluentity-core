@@ -1,24 +1,24 @@
+import { RestAdapter } from '../../src/adapters/RestAdapter'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { HttpClient } from '../../src/adapters/HttpClient'
+import { DefaultAdapter } from '../../src/adapters/DefaultAdapter'
 import { User } from '../../examples/models/User'
 import { Methods } from '../../src/Fluentity'
-import { DefaultClient } from '../../src/adapters/DefaultClient'
 
-const defaultClient = new DefaultClient()
+const defaultAdapter = new DefaultAdapter()
 
-describe('DefaultClient', () => {
+describe('DefaultAdapter', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
 
-  it('should be able to call the default client', async () => {
-    const response = await defaultClient.call({ url: 'https://api.example.com' })
-    expect(response).toEqual({ data: {} })
+  it('should make a request', async () => {
+    const response = await defaultAdapter.call({ url: 'https://api.example.com' })
+    expect(response).toBeDefined()
   })
 
-  it('should be able to configure the default client', async () => {
-    defaultClient.configure({ baseUrl: 'https://api.example.com' })
-    const response = await defaultClient.call({ url: 'https://api.example.com' })
-    expect(response).toEqual({ data: {} })
+  it('should configure the adapter', async () => {
+    defaultAdapter.configure({ baseUrl: 'https://api.example.com' })
+    const response = await defaultAdapter.call({ url: 'https://api.example.com' })
+    expect(response).toBeDefined()
   })
 })

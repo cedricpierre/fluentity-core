@@ -3,6 +3,7 @@ import { User } from '../examples/models/User'
 import { Fluentity } from '../src/index'
 import { Media } from '../examples/models/Media'
 import { Thumbnail } from '../examples/models/Thumbnail'
+import { QueryBuilder } from '../src/QueryBuilder'
 
 let user: User
 let medias: Media[]
@@ -218,19 +219,15 @@ describe('Models', () => {
   })
 
   it('can find users where name is Cedric and is active', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users?name=Cedric&email=cedric@example.com&status=active&include=medias`)
-      expect(options.url.includes('status=active')).toBeTruthy()
-      expect(options.url.includes('include=medias')).toBeTruthy()
-      expect(options.url.includes('email=cedric@example.com')).toBeTruthy()
-      expect(options.url.includes('name=Cedric')).toBeTruthy()
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.path).toBe(`users`)
+      expect(queryBuilder.query).toEqual({ name: 'Cedric Pierre', email: 'cedric@example.com', status: 'active' })
       return Promise.resolve({ data: [{ id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 }] })
     })
 
     const users = await User
-      .where({ name: 'Cedric' })
+      .where({ name: 'Cedric Pierre' })
       .filter({ email: 'cedric@example.com' })
-      .include('medias')
       .active()
       .all()
 
@@ -242,20 +239,19 @@ describe('Models', () => {
 
   it('generates correct URL with query parameters', async () => {
     const mockCall = vi.spyOn(fluentity.adapter, 'call')
-    mockCall.mockImplementation((options) => {
-      expect(options.url).toBe(`users?name=Cedric&email=cedric@example.com&include=medias,profile&sort=-created_at&limit=10&offset=0&page=1&per_page=10`)
-      expect(options.url.includes('name=Cedric')).toBeTruthy()
-      expect(options.url.includes('email=cedric@example.com')).toBeTruthy()
-      expect(options.url.includes('include=medias,profile')).toBeTruthy()
-      expect(options.url.includes('page=1')).toBeTruthy()
-      expect(options.url.includes('per_page=10')).toBeTruthy()
+    mockCall.mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.path).toBe(`users`)
+      expect(queryBuilder.query).toEqual({ name: 'Cedric', email: 'cedric@example.com'})
+      expect(queryBuilder.limit).toBe(10)
+      expect(queryBuilder.offset).toBe(0)
+      expect(queryBuilder.page).toBe(1)
+      expect(queryBuilder.perPage).toBe(10)
       return Promise.resolve({ data: [] })
     })
 
     await User
       .where({ name: 'Cedric' })
       .filter({ email: 'cedric@example.com' })
-      .include(['medias', 'profile'])
       .orderBy('created_at', 'desc')
       .paginate(1, 10)
 
@@ -287,9 +283,9 @@ describe('Models', () => {
 
     const user = await User.find(1)
 
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users/1/medias/2?include=thumbnails`)
-      expect(options.url.includes('include=thumbnails')).toBeTruthy()
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation(async (queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.path).toBe(`users/1/medias`)
+      expect(queryBuilder.id).toBe(2)
 
       return Promise.resolve({ data: { 
         id: '2',
@@ -298,23 +294,22 @@ describe('Models', () => {
       }})
     })    
   
-    const media = await user.medias.include('thumbnails').find(2)
+    const media = await user.medias.find(2)
 
     expect(media).toBeInstanceOf(Media)
     expect(media.id).toBe('2')
     expect(media.name).toBe('thumbnail')
     expect(media.url).toBe('https://example.com/thumbnail.jpg')
 
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users/1/medias/2/thumbnails?include=size`)
-      expect(options.url.includes('include=size')).toBeTruthy()
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.path).toBe(`users/1/medias/2/thumbnails`)
       return Promise.resolve({ data: [
         { id: '1', size: 'sm', url: 'https://example.com/thumbnail1.jpg' },
         { id: '2', size: 'md', url: 'https://example.com/thumbnail2.jpg' }
       ]})
     })    
 
-    const thumbnails = await media.thumbnails.include('size').all()
+    const thumbnails = await media.thumbnails.all()
 
     expect(thumbnails).toBeInstanceOf(Array)
     expect(thumbnails).toHaveLength(2)
@@ -324,27 +319,25 @@ describe('Models', () => {
 
   it('generates deep nested relations', async () => {
 
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users/1/medias/2/thumbnails?include=size`)
-      expect(options.url.includes('include=size')).toBeTruthy()
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.path).toBe(`users/1/medias/2/thumbnails`)
       return Promise.resolve({ data: [] })
     })
 
-    await User.id(1).medias.id(2).thumbnails.include('size').all();
+    await User.id(1).medias.id(2).thumbnails.all();
   })
 
   it('can use the query method', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users?name=Cedric`)
-      expect(options.url.includes('name=Cedric')).toBeTruthy()
-      expect(options.url.includes('include=medias')).toBeTruthy()
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.path).toBe(`users`)
+      expect(queryBuilder.query).toEqual({ name: 'Cedric' })
       return Promise.resolve({ data: [] })
     })
     .mockResolvedValue({ data: [
       { id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 }
     ]})
 
-    const users = await User.query().include('medias').where({ name: 'Cedric' }).all()
+    const users = await User.query().where({ name: 'Cedric' }).all()
 
     expect(users).toBeInstanceOf(Array)
     expect(users).toHaveLength(1)
@@ -353,8 +346,9 @@ describe('Models', () => {
   })
 
   it('can use the get method', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users/1`)
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.path).toBe(`users`)
+      expect(queryBuilder.id).toBe(1)
       return Promise.resolve({ data: { id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 }})
     })
 
@@ -365,27 +359,11 @@ describe('Models', () => {
     expect(user.name).toBe('Cedric')
   })
 
-  it('can use the static include method', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users?include=medias`)
-      expect(options.url.includes('include=medias')).toBeTruthy()
-      return Promise.resolve({ data: [
-        { id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 }
-      ]})
-    })
-
-    const users = await User.include('medias').all()
-
-    expect(users).toBeInstanceOf(Array)
-    expect(users).toHaveLength(1)
-    expect(users[0]).toBeInstanceOf(User)
-    expect(users[0].name).toBe('Cedric')
-  })
-
   it('can use the filter method', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users?name=Cedric`)
-      expect(options.url.includes('name=Cedric')).toBeTruthy()
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      console.log(queryBuilder)
+      expect(queryBuilder.path).toBe(`users`)
+      expect(queryBuilder.query).toEqual({ name: 'Cedric' })
       return Promise.resolve({ data: [
         { id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 }
       ]})
@@ -398,24 +376,5 @@ describe('Models', () => {
     expect(users[0]).toBeInstanceOf(User)
     expect(users[0].name).toBe('Cedric')
   })
-
-  it('can use the include method', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((options) => {
-      expect(options.url).toBe(`users?name=Cedric&include=medias`)
-      expect(options.url.includes('name=Cedric')).toBeTruthy()
-      expect(options.url.includes('include=medias')).toBeTruthy()
-      return Promise.resolve({ data: [
-        { id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 }
-      ]})
-    })
-
-    const users = await User.filter({ name: 'Cedric' }).include('medias').all()
-
-    expect(users).toBeInstanceOf(Array)
-    expect(users).toHaveLength(1)
-    expect(users[0]).toBeInstanceOf(User)
-    expect(users[0].name).toBe('Cedric')
-  })
-
   
 })

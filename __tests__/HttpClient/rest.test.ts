@@ -1,19 +1,19 @@
+import { RestAdapter } from '../../src/adapters/RestAdapter'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { HttpClient } from '../../src/adapters/HttpClient'
 import { Methods } from '../../src/Fluentity'
 
-const httpClient = new HttpClient({
-  baseUrl: 'https://api.example.com',
-  cacheOptions: { enabled: false }
+const restfulApiAdapter = new RestAdapter({
+  baseUrl: 'https://jsonplaceholder.typicode.com'
 })
 
-describe('HttpClient', () => {
+describe('RestAdapter', () => {
+  let httpClient: RestAdapter
+
   beforeEach(() => {
-    vi.restoreAllMocks()
+    httpClient = new RestAdapter({ baseUrl: '' })
     httpClient.clearCache()
     httpClient.configure({
-      baseUrl: 'https://api.example.com',
-      cacheOptions: { enabled: false }
+      baseUrl: 'https://jsonplaceholder.typicode.com'
     })
   })
   
@@ -26,7 +26,7 @@ describe('HttpClient', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com'
     })
 
-    const response = await httpClient.call({ url: 'posts' })
+    const response = await httpClient.call({ path: 'posts' })
     expect(response).toEqual(mockResponse)
     expect(mockRequestHandler).toHaveBeenCalledWith(expect.objectContaining({
       url: 'https://jsonplaceholder.typicode.com/posts'
@@ -36,14 +36,14 @@ describe('HttpClient', () => {
   it('doest have a baseUrl', async () => {
     httpClient.configure({ baseUrl: undefined })
 
-    await expect(httpClient.call({ url: 'https://jsonplaceholder.typicode.com/posts' })).rejects.toThrow('baseUrl is required')
+    await expect(httpClient.call({ path: 'https://jsonplaceholder.typicode.com/posts' })).rejects.toThrow('baseUrl is required')
 
   })
 
   it('has a baseUrl', async () => {
     httpClient.configure({ baseUrl: 'https://jsonplaceholder.typicode.com' })
 
-    const response = await httpClient.call('posts')
+    const response = await httpClient.call({ path: 'posts' })
 
     expect(response).not.toBeNull()
   })
@@ -52,7 +52,7 @@ describe('HttpClient', () => {
 
     try {
       vi.spyOn(httpClient, 'call').mockRejectedValue(new Error('HTTP error: 404'))
-      await httpClient.call({ url: 'https://google.com' })
+      await httpClient.call({ path: 'not-valid' })
     } catch (error) {
       expect(error).toBeDefined()
       expect(error).toBeInstanceOf(Error)
@@ -63,7 +63,7 @@ describe('HttpClient', () => {
   it('can cache a response', async () => {
     httpClient.configure({ cacheOptions: { enabled: true }, baseUrl: 'https://jsonplaceholder.typicode.com' })
 
-    await httpClient.call({ url: 'posts' })
+    await httpClient.call({ path: 'posts' })
 
     const cachedResponse = httpClient.getCache('posts')
 
@@ -83,7 +83,7 @@ describe('HttpClient', () => {
   it('can cache a response with a ttl', async () => {
     httpClient.configure({ cacheOptions: { enabled: true, ttl: 1000 }, baseUrl: 'https://jsonplaceholder.typicode.com' })
 
-    await httpClient.call({ url: 'posts' })
+    await httpClient.call({ path: 'posts' })
 
     const cachedResponse = httpClient.getCache('posts')
 
@@ -103,7 +103,7 @@ describe('HttpClient', () => {
         requestHandler
       })
 
-      await httpClient.call({ url: 'test' })
+      await httpClient.call({ path: 'test' })
       expect(requestInterceptor).toHaveBeenCalled()
       expect(requestHandler).toHaveBeenCalledWith(expect.objectContaining({
         options: expect.objectContaining({
@@ -120,7 +120,7 @@ describe('HttpClient', () => {
 
       httpClient.configure({ responseInterceptor })
 
-      const response = await httpClient.call({ url: 'test' })
+      const response = await httpClient.call({ path: 'test' })
       expect(responseInterceptor).toHaveBeenCalled()
     })
   })
@@ -136,7 +136,7 @@ describe('HttpClient', () => {
         requestHandler: mockRequestHandler,
       })
       
-      await expect(httpClient.call({ url: 'test' })).rejects.toThrow('HTTP error: 404')
+      await expect(httpClient.call({ path: 'test' })).rejects.toThrow('HTTP error: 404')
       expect(errorInterceptor).toHaveBeenCalledTimes(1)
       expect(errorInterceptor).toHaveBeenCalledWith(mockError)
     })
@@ -147,10 +147,10 @@ describe('HttpClient', () => {
       const methods = [Methods.POST, Methods.PUT, Methods.PATCH, Methods.DELETE]
       
       for (const method of methods) {
-        vi.spyOn(httpClient, 'call').mockResolvedValue({ success: true })
+        vi.spyOn(httpClient, 'call').mockResolvedValue({ data: { success: true } })
         
-        const response = await httpClient.call({ url: 'test', options: { method } })
-        expect(response).toEqual({ success: true })
+        const response = await httpClient.call({ path: 'test', method })
+        expect(response).toEqual({ data: { success: true } })
       }
     })
   })
@@ -164,7 +164,7 @@ describe('HttpClient', () => {
         }
       })
       
-      await httpClient.call({ url: 'test' })
+      await httpClient.call({ path: 'test' })
       const initialCache = httpClient.getCache('test')
       expect(initialCache).toBeDefined()
 
@@ -175,7 +175,7 @@ describe('HttpClient', () => {
 
       await new Promise(resolve => setTimeout(resolve, 150))
 
-      await httpClient.call({ url: 'test' })
+      await httpClient.call({ path: 'test' })
       
       const expiredCache = httpClient.getCache('test')
       expect(expiredCache).toBeDefined()
@@ -184,8 +184,8 @@ describe('HttpClient', () => {
     it('should handle cache with different URLs', async () => {
       httpClient.configure({ cacheOptions: { enabled: true } })
       
-      await httpClient.call({ url: 'test1' })
-      await httpClient.call({ url: 'test2' })
+      await httpClient.call({ path: 'test1' })
+      await httpClient.call({ path: 'test2' })
 
       expect(httpClient.getCache('test1')).toBeDefined()
       expect(httpClient.getCache('test2')).toBeDefined()
@@ -195,16 +195,9 @@ describe('HttpClient', () => {
 
   describe('Request Options', () => {
     it('should handle request options correctly', async () => {
-      const options = {
-        method: Methods.POST,
-        body: { test: 'data' },
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include' as const
-      }
-
       vi.spyOn(httpClient, 'call').mockResolvedValue({ data: { success: true } })
       
-      const response = await httpClient.call({ url: 'test', options })
+      const response = await httpClient.call({ path: 'test', method: Methods.POST, body: { test: 'data' } })
       expect(response).toEqual({ data: { success: true } })
     })
 
@@ -215,13 +208,9 @@ describe('HttpClient', () => {
         }
       })
 
-      const customOptions = {
-        headers: { 'X-Custom': 'custom' }
-      }
-
       vi.spyOn(httpClient, 'call').mockResolvedValue({ data: { success: true } })
       
-      await httpClient.call({ url: 'test', options: customOptions })
+      await httpClient.call({ path: 'test', method: Methods.POST, body: { test: 'data' }})
       expect(httpClient.options.options?.headers).toHaveProperty('X-Default')
     })
   })
