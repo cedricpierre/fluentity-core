@@ -1,6 +1,6 @@
 {
   "name": "@fluentity/core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Fluentity core is a fluent, model-oriented, typed REST client for TypeScript.",
   "main": "./dist/fluentity.js",
   "types": "./dist/fluentity.d.ts",
