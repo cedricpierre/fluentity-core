@@ -64,20 +64,24 @@ In your `tsconfig.json`
 After you need to initialize Fluentity with an adapter:
 
 ```typescript
-import { Fluentity, RestAdapter } from '@fluentity/core';
+import { Fluentity, RestAdapter, RestAdapterOptions } from '@fluentity/core';
 
+/**
+ * Configuration options for initializing Fluentity
+ */
+interface FluentityConfig {
+  /** The adapter to use for making API requests */
+  adapter: RestAdapter;
+}
+
+/**
+ * Initialize Fluentity with the given configuration
+ * @param config - The configuration options
+ * @returns The Fluentity instance
+ */
 const fluentity = Fluentity.initialize({
     adapter: new RestAdapter({
-        baseUrl: 'https://api.example.com',
-        // Optional configuration
-        cacheOptions: {
-            enabled: true,
-            ttl: 1000 // Time to live in milliseconds
-        },
-        responseInterceptor: (response) => {
-            // Modify response before returning
-            return response;
-        }
+        baseUrl: 'https://api.example.com'
     })
 });
 ```
@@ -86,19 +90,12 @@ const fluentity = Fluentity.initialize({
 
 Currently, Fluentity supports only one adapter: RestAdapter. This allows you to make Restful API calls using the models. In the future we are planning to add more adapters like GraphQL.
 
-```ts
+```typescript
+import { RestAdapter } from '@fluentity/core';
+
 const adapter = new RestAdapter({
     baseUrl: 'https://api.example.com',
-    // Optional configuration
-    cacheOptions: {
-        enabled: true,
-        ttl: 1000 // Time to live in milliseconds
-    },
-    responseInterceptor: (response) => {
-        // Modify response before returning
-        return response;
-    }
-})
+});
 ```
 
 ## Creating Models
@@ -108,15 +105,30 @@ Models are the core of Fluentity. Here's how to create a model:
 ```typescript
 import { Model, Attributes } from '@fluentity/core';
 
+/**
+ * Interface defining the attributes for a User model
+ * @interface UserAttributes
+ * @extends {Attributes}
+ */
 interface UserAttributes extends Attributes {
+  /** The user's full name */
   name: string;
+  /** The user's email address */
   email: string;
+  /** Optional phone number */
   phone?: number;
+  /** Optional associated company */
   company?: Company;
 }
 
+/**
+ * User model class for interacting with the users API endpoint
+ * @class User
+ * @extends {Model<UserAttributes>}
+ */
 export class User extends Model<UserAttributes> {
-  static resource = 'users'; // The API endpoint for this model
+  /** The API endpoint resource name for this model */
+  static resource = 'users';
 }
 ```
 
@@ -130,61 +142,78 @@ Have a look at this package to generate complete models: [Fluentity CLI](https:/
 
 Models come with several static methods for querying and manipulating data:
 
-- `Model.all()`: Get all records
-- `Model.find(id)`: Find a record by ID
-- `Model.id(id)`: Start a query for a specific ID
-- `Model.create(data)`: Create a new record
-- `Model.update(id, data)`: Update a record
-- `Model.delete(id)`: Delete a record
+```typescript
+/**
+ * Get all records from the API
+ * @returns Promise resolving to an array of model instances
+ */
+Model.all(): Promise<Model[]>
+
+/**
+ * Find a record by ID
+ * @param id - The ID of the record to find
+ * @returns Promise resolving to a model instance
+ */
+Model.find(id: string | number): Promise<Model>
+
+/**
+ * Start a query for a specific ID
+ * @param id - The ID to query
+ * @returns A query builder instance
+ */
+Model.id(id: string | number): QueryBuilder
+
+/**
+ * Create a new record
+ * @param data - The data to create the record with
+ * @returns Promise resolving to the created model instance
+ */
+Model.create(data: Partial<Attributes>): Promise<Model>
+
+/**
+ * Update a record
+ * @param id - The ID of the record to update
+ * @param data - The data to update the record with
+ * @returns Promise resolving to the updated model instance
+ */
+Model.update(id: string | number, data: Partial<Attributes>): Promise<Model>
+
+/**
+ * Delete a record
+ * @param id - The ID of the record to delete
+ * @returns Promise that resolves when the deletion is complete
+ */
+Model.delete(id: string | number): Promise<void>
+```
 
 ### Instance Methods
 
-- `model.save()`: Save the instance (create or update)
-- `model.update(data)`: Update the instance with data
-- `model.delete()`: Delete the instance
+```typescript
+/**
+ * Save the instance (create or update)
+ * @returns Promise resolving to the saved model instance
+ */
+model.save(): Promise<Model>
+
+/**
+ * Update the instance with new data
+ * @param data - The data to update the instance with
+ * @returns Promise resolving to the updated model instance
+ */
+model.update(data: Partial<Attributes>): Promise<Model>
+
+/**
+ * Delete the instance
+ * @returns Promise that resolves when the deletion is complete
+ */
+model.delete(): Promise<void>
+```
 
 ### Relation Methods
-
-- `model.relation.all()`: Get all related records
-- `model.relation.create(data)`: Create a new related record
-- `model.relation.update(id, data)`: Update a related record
-- `model.relation.delete(id)`: Delete a related record
-- `model.relation.limit(n)`: Limit the number of records
-- `model.relation.offset(n)`: Skip n records
 
 Example usage:
 
 ```typescript
-// Get all users
-const users = await User.all();
-
-// Find user by ID
-const user = await User.find(1);
-
-// Get user by ID using query builder
-const user = await User.id(1).get();
-
-// Create new user
-const user = new User({ 
-    name: 'John Doe', 
-    email: 'john@example.com',
-    phone: 1234567890 
-});
-await user.save();
-
-// Or create directly
-const user = await User.create({
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: 1234567890
-});
-
-// Update user
-await User.update(1, { name: 'Jane Doe' });
-
-// Delete user
-await User.delete(1);
-
 // Working with relations
 const post = await Post.find(1);
 const comments = await post.comments.all();
@@ -226,19 +255,27 @@ Fluentity provides several decorators to define relationships and type casting:
 ### Relationship Decorators
 
 ```typescript
-import { HasOne, HasMany, BelongsTo, BelongsToMany } from '@fluentity/core';
+import { HasOne, HasMany, BelongsTo, BelongsToMany, Relation } from '@fluentity/core';
 
+/**
+ * User model with relationship decorators
+ * @class User
+ * @extends {Model<UserAttributes>}
+ */
 class User extends Model<UserAttributes> {
+  /** One-to-one relationship with Profile model */
   @HasOne(() => Profile)
   profile!: Relation<Profile>;
 
+  /** One-to-many relationship with Post model */
   @HasMany(() => Post)
   posts!: Relation<Post[]>;
 
-  // use a custom resource named "libraries"
+  /** One-to-many relationship with Media model using custom resource name */
   @HasMany(() => Media, 'libraries')
   medias!: Relation<Media[]>;
 
+  /** Many-to-many relationship with Role model */
   @BelongsToMany(() => Role)
   roles!: Relation<Role[]>;
 }
@@ -249,13 +286,21 @@ class User extends Model<UserAttributes> {
 ```typescript
 import { Cast } from '@fluentity/core';
 
+/**
+ * User model with type casting decorators
+ * @class User
+ * @extends {Model<UserAttributes>}
+ */
 class User extends Model<UserAttributes> {
+  /** Cast created_at to Date type */
   @Cast(() => Date)
   created_at?: Date;
 
+  /** Cast thumbnail to Thumbnail type */
   @Cast(() => Thumbnail)
   thumbnail?: Thumbnail;
 
+  /** Cast thumbnails array to array of Thumbnail type */
   @Cast(() => Thumbnail)
   thumbnails?: Thumbnail[];
 }
@@ -296,34 +341,12 @@ Models come with several static methods for querying and manipulating data:
 - `query()`: Start a new query builder
 - `where(conditions)`: Add where conditions
 - `filter(filters)`: Add filter conditions
-- `include(relations)`: Add include query string
 
 Example usage:
 
 ```typescript
-// Get all users
-const users = await User.all();
-
-// Find user by ID
-const user = await User.find(1);
-
-// Create new user
-const newUser = await User.create({
-  name: 'John Doe',
-  email: 'john@example.com'
-});
-
-// Update user
-await User.update(1, { name: 'Jane Doe' });
-
-// Delete user
-await User.delete(1);
-
 // Query with conditions
 const activeUsers = await User.where({ status: 'active' }).all();
-
-// Include related models
-const userWithPosts = await User.include('posts').find(1);
 
 // Deep chaining
 const thumbails = User.id(1).medias.id(2).thumnails.all();
@@ -394,35 +417,6 @@ The `toObject()` method converts a model instance and its related models into a 
 const user = await User.find(1);
 const userObject = user.toObject();
 // Returns a plain object with all properties and nested related models
-```
-
-## Cache
-
-There is a built-in cache mechanism. This is disabled by default.
-
-```typescript
-Fluentity.configure({
-    cacheOptions: {
-        enabled: true,
-        ttl: 5 * 60 * 1000 // 5 minutes in milliseconds
-    }
-})
-```
-
-Every request is put into a cache using the resource as a key :
-
-```typescript
-const user = User.find(1)
-// if you fetch the same user later, it will come from the cache.
-```
-
-Manually accessing the cache
-
-```typescript
-// you can access the cache like this :
-const cachedResponse = Fluentity.getCache('users/1')
-
-const user = new User(cachedResponse.data)
 ```
 
 ## Error Handling
