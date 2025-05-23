@@ -82,6 +82,25 @@ const fluentity = Fluentity.initialize({
 });
 ```
 
+## Adapters
+
+Currently, Fluentity supports only one adapter: RestAdapter. This allows you to make Restful API calls using the models. In the future we are planning to add more adapters like GraphQL.
+
+```ts
+const adapter = new RestAdapter({
+    baseUrl: 'https://api.example.com',
+    // Optional configuration
+    cacheOptions: {
+        enabled: true,
+        ttl: 1000 // Time to live in milliseconds
+    },
+    responseInterceptor: (response) => {
+        // Modify response before returning
+        return response;
+    }
+})
+```
+
 ## Creating Models
 
 Models are the core of Fluentity. Here's how to create a model:
@@ -100,6 +119,10 @@ export class User extends Model<UserAttributes> {
   static resource = 'users'; // The API endpoint for this model
 }
 ```
+
+### Using the official CLI tool :
+
+Have a look at this package to generate complete models: [Fluentity CLI](https://github.com/cedricpierre/fluentity-cli)
 
 ## Model Methods
 
