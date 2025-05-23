@@ -42,7 +42,7 @@ export type PropertyDecoratorType = (target: object, key: string | symbol) => vo
  * @private
  */
 const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
-  model: () => T,
+  model: () => Constructor<T>,
   relationBuilderFactory: Constructor<R>,
   resource?: string
 ): PropertyDecoratorType => {
@@ -135,7 +135,10 @@ export const Cast = (caster: () => Constructor<any>): PropertyDecoratorType => {
  * }
  * ```
  */
-export const HasOne = (model: () => Model<any>, resource?: string): PropertyDecoratorType => {
+export const HasOne = (
+  model: () => Constructor<Model<any>>,
+  resource?: string
+): PropertyDecoratorType => {
   return makeRelation(model, HasOneRelationBuilder as Constructor<RelationBuilder<any>>, resource);
 };
 
@@ -154,7 +157,10 @@ export const HasOne = (model: () => Model<any>, resource?: string): PropertyDeco
  * }
  * ```
  */
-export const HasMany = (model: () => Model<any>, resource?: string): PropertyDecoratorType => {
+export const HasMany = (
+  model: () => Constructor<Model<any>>,
+  resource?: string
+): PropertyDecoratorType => {
   return makeRelation(model, HasManyRelationBuilder as Constructor<RelationBuilder<any>>, resource);
 };
 
