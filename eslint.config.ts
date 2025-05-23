@@ -8,7 +8,7 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   prettier,
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/src/**/*.ts', '**/examples/**/*.ts', '**/__tests__/**/*.ts'],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',

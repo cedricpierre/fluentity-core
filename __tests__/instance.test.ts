@@ -4,7 +4,7 @@ import { User } from '../examples/models/User'
 import { Media } from '../examples/models/Media'
 import { Thumbnail } from '../examples/models/Thumbnail'
 
-let user: User = new User({ id: '123', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 })
+const user: User = new User({ id: '123', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 })
 
 const fluentity = Fluentity.initialize()
 
