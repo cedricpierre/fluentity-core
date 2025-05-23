@@ -81,13 +81,9 @@ export class Model<T extends Attributes = Attributes> {
       Object.assign(this, attributes)
     }
 
-    if (queryBuilder) {
-      this.#queryBuilder = queryBuilder
-    } else {
-      this.#queryBuilder = new QueryBuilder()
-      this.#queryBuilder.path = (this.constructor as any).resource
-    }
-    
+    this.#queryBuilder = queryBuilder ?? new QueryBuilder();
+
+    this.#queryBuilder.resource = (this.constructor as any).resource;
     this.#queryBuilder.id = this.id
     return this
   }
@@ -146,7 +142,7 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   static id<T extends Model<any>>(this: Constructor<T>, id: string | number): T {
-    return new this({ id })
+    return new this({ id });
   }
 
   /**

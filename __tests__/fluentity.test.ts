@@ -60,140 +60,136 @@ describe('Fluentity Class', () => {
     })
 
     it('can configure the request handler', async () => {
-    
-        const handler = (request: HttpRequest) => {
-            expect(request.url).toBe('https://api.example.com/users')
-            expect(request).toBeDefined()
-            expect(request.method).toBe(Methods.GET)
-            return Promise.resolve<HttpResponse>({ data: true })
-        }
-        
-        fluentity.adapter.configure({ requestHandler: handler })
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        queryBuilder.method = Methods.GET
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-        expect(response.data).toBe(true)
-        expect(fluentity.adapter.options.requestHandler).toBe(handler)
-    })
+      const handler = (request: HttpRequest) => {
+        expect(request.url).toBe('https://api.example.com/');
+        expect(request).toBeDefined();
+        expect(request.method).toBe(Methods.GET);
+        return Promise.resolve<HttpResponse>({ data: true });
+      };
+
+      fluentity.adapter.configure({ requestHandler: handler });
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.method = Methods.GET;
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+      expect(response.data).toBe(true);
+      expect(fluentity.adapter.options.requestHandler).toBe(handler);
+    });
 
     it('can configure the error interceptor', () => {
-        vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true })
+      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
 
-        const interceptor = vi.fn()
-        fluentity.adapter.configure({ errorInterceptor: interceptor })
-        expect(fluentity.adapter.options.errorInterceptor).toBe(interceptor)
-    })
+      const interceptor = vi.fn();
+      fluentity.adapter.configure({ errorInterceptor: interceptor });
+      expect(fluentity.adapter.options.errorInterceptor).toBe(interceptor);
+    });
 
     it('can call a GET request', async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true })
-        const response = await fluentity.adapter.call(new QueryBuilder())
-        expect(response).toBeDefined()
-        expect(response.data).toBe(true)
-    })
-    
+      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
+      const response = await fluentity.adapter.call(new QueryBuilder());
+      expect(response).toBeDefined();
+      expect(response.data).toBe(true);
+    });
+
     it('can call a POST request', async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder) => {
-            expect(queryBuilder.path).toBe('users')
-            expect(queryBuilder.method).toBe(Methods.POST)
-            return Promise.resolve({ data: true })
-        })
+      vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+        expect(queryBuilder.resource).toBe('users');
+        expect(queryBuilder.method).toBe(Methods.POST);
+        return Promise.resolve({ data: true });
+      });
 
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        queryBuilder.method = Methods.POST
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.resource = 'users';
+      queryBuilder.method = Methods.POST;
 
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-    })
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+    });
 
     it('can call a PUT request', async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder) => {
-            expect(queryBuilder.path).toBe('users')
-            expect(queryBuilder.method).toBe(Methods.PUT)
-            return Promise.resolve({ data: true })
-        })
+      vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+        expect(queryBuilder.resource).toBe('users');
+        expect(queryBuilder.method).toBe(Methods.PUT);
+        return Promise.resolve({ data: true });
+      });
 
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        queryBuilder.method = Methods.PUT
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-    })  
-
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.resource = 'users';
+      queryBuilder.method = Methods.PUT;
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+    });
 
     it('can call a PATCH request', async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder) => {
-            expect(queryBuilder.path).toBe('users')
-            expect(queryBuilder.method).toBe(Methods.PATCH)
-            return Promise.resolve({ data: true })
-        })
+      vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+        expect(queryBuilder.resource).toBe('users');
+        expect(queryBuilder.method).toBe(Methods.PATCH);
+        return Promise.resolve({ data: true });
+      });
 
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        queryBuilder.method = Methods.PATCH
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-    })  
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.resource = 'users';
+      queryBuilder.method = Methods.PATCH;
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+    });
 
     it('can call a DELETE request', async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder) => {
-            expect(queryBuilder.path).toBe('users')
-            expect(queryBuilder.method).toBe(Methods.DELETE)
-            return Promise.resolve({ data: true })
-        })
+      vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+        expect(queryBuilder.resource).toBe('users');
+        expect(queryBuilder.method).toBe(Methods.DELETE);
+        return Promise.resolve({ data: true });
+      });
 
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        queryBuilder.method = Methods.DELETE
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-    })  
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.resource = 'users';
+      queryBuilder.method = Methods.DELETE;
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+    });
 
     it('can call a HEAD request', async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder) => {
-            expect(queryBuilder.path).toBe('users')
-            expect(queryBuilder.method).toBe(Methods.HEAD)
-            return Promise.resolve({ data: true })
-        })
+      vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+        expect(queryBuilder.resource).toBe('users');
+        expect(queryBuilder.method).toBe(Methods.HEAD);
+        return Promise.resolve({ data: true });
+      });
 
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        queryBuilder.method = Methods.HEAD
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-    })    
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.resource = 'users';
+      queryBuilder.method = Methods.HEAD;
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+    });
 
     it('can call a OPTIONS request', async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder) => {
-            expect(queryBuilder.path).toBe('users')
-            expect(queryBuilder.method).toBe(Methods.OPTIONS)
-            return Promise.resolve({ data: true })
-        })
+      vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+        expect(queryBuilder.resource).toBe('users');
+        expect(queryBuilder.method).toBe(Methods.OPTIONS);
+        return Promise.resolve({ data: true });
+      });
 
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        queryBuilder.method = Methods.OPTIONS
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-    })
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.resource = 'users';
+      queryBuilder.method = Methods.OPTIONS;
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+    });
 
     it('can use a custom request handler', async () => {
-        fluentity.adapter.configure({
-            baseUrl: 'https://jsonplaceholder.typicode.com',
-            requestHandler: async (request) => {
-                
-                return {id: 1, name: 'John Doe'}
-            }
-        });
+      fluentity.adapter.configure({
+        baseUrl: 'https://jsonplaceholder.typicode.com',
+        requestHandler: async request => {
+          return { id: 1, name: 'John Doe' };
+        },
+      });
 
-        const queryBuilder = new QueryBuilder()
-        queryBuilder.path = 'users'
-        const response = await fluentity.adapter.call(queryBuilder)
-        expect(response).toBeDefined()
-        expect(response.id).toBe(1)
-        expect(response.name).toBe('John Doe')
-    })
+      const queryBuilder = new QueryBuilder();
+      queryBuilder.resource = 'users';
+      const response = await fluentity.adapter.call(queryBuilder);
+      expect(response).toBeDefined();
+      expect(response.id).toBe(1);
+      expect(response.name).toBe('John Doe');
+    });
     
 })

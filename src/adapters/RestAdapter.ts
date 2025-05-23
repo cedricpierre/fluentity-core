@@ -1,5 +1,5 @@
 import { AdapterInterface, AdapterOptions, AdapterResponse, MethodType } from "../Fluentity"
-import { QueryBuilder } from "../QueryBuilder";
+import { QueryBuilder } from '../QueryBuilder';
 
 /**
  * A static HTTP client class that provides methods for making HTTP requests with built-in caching,
@@ -7,14 +7,14 @@ import { QueryBuilder } from "../QueryBuilder";
  */
 export class RestAdapter implements AdapterInterface {
   #cache: Map<string, CacheData> = new Map();
-  #url: string = ''
+  #url: string = '';
 
   options: RestAdapterOptions = {
-    baseUrl: '', 
+    baseUrl: '',
     options: {
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     },
     requestInterceptor: undefined,
     responseInterceptor: undefined,
@@ -23,19 +23,19 @@ export class RestAdapter implements AdapterInterface {
     cacheOptions: {
       enabled: false,
       ttl: 5 * 60 * 1000, // 5 minutes in milliseconds
-    }
-  }
+    },
+  };
 
   /**
    * Constructor for the RestAdapter class.
    * @param options - Partial configuration options to merge with existing options
    */
   constructor(options: Partial<RestAdapterOptions>) {
-    this.options = { ...this.options, ...options }
+    this.options = { ...this.options, ...options };
   }
 
   configure(options: Partial<RestAdapterOptions>) {
-    this.options = { ...this.options, ...options }
+    this.options = { ...this.options, ...options };
   }
 
   /**
@@ -58,7 +58,7 @@ export class RestAdapter implements AdapterInterface {
    * @returns The cache map
    */
   get cache() {
-    return this.#cache
+    return this.#cache;
   }
 
   /**
@@ -67,15 +67,11 @@ export class RestAdapter implements AdapterInterface {
    * @returns The cached data if it exists
    */
   getCache<T = any>(url: string): CacheData {
-    return this.#cache.get(url) as CacheData
+    return this.#cache.get(url) as CacheData;
   }
 
-  /**
-   * Gets the last URL that was called.
-   * @returns The last called URL
-   */
   get url() {
-    return this.#url
+    return this.#url;
   }
 
   /**
@@ -86,15 +82,12 @@ export class RestAdapter implements AdapterInterface {
    * @returns A promise that resolves to the response data
    * @throws Error if baseUrl is not configured or if the request fails
    */
-   async call<T = any>(
-    queryBuilder: QueryBuilder
-  ): Promise<AdapterResponse> {
+  async call<T = any>(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
     try {
-
-      this.#url = this.buildUrl(queryBuilder)
+      this.#url = this.buildUrl(queryBuilder);
 
       if (!this.options.baseUrl) {
-        throw new Error('baseUrl is required')
+        throw new Error('baseUrl is required');
       }
 
       // Check cache if enabled
@@ -110,80 +103,93 @@ export class RestAdapter implements AdapterInterface {
         }
       }
 
-    
-      const request: HttpRequest = { 
-        url:`${this.options.baseUrl}/${this.#url}`, 
+      const request: HttpRequest = {
+        url: `${this.options.baseUrl}/${this.#url}`,
         method: queryBuilder.method,
         body: queryBuilder.body,
-        options: this.options?.options
-      }
+        options: this.options?.options,
+      };
 
       if (this.options.requestInterceptor) {
-        Object.assign(request, this.options.requestInterceptor.call(this, request))
+        Object.assign(request, this.options.requestInterceptor.call(this, request));
       }
 
       let response = await this.options.requestHandler!.call(this, request);
 
       if (this.options.responseInterceptor) {
-        response = this.options.responseInterceptor.call(this, response)
+        response = this.options.responseInterceptor.call(this, response);
       }
 
       // Store in cache if enabled
       if (this.options.cacheOptions?.enabled) {
         this.#cache.set(this.#url, {
           data: response,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
       }
-      
-      return response
+
+      return response;
     } catch (error) {
       if (this.options.errorInterceptor && error instanceof Error) {
-        this.options.errorInterceptor(error)
+        this.options.errorInterceptor(error);
       }
-      throw error
+      throw error;
     }
   }
 
-    /**
-     * Builds the final URL for the API request.
-     * @returns The constructed URL with query parameters
-     */
-    private buildUrl(queryBuilder: QueryBuilder) {
-        let queryString = this.toQueryString(queryBuilder)
-        let url = queryBuilder.path ?? ''
+  /**
+   * Builds the final URL for the API request.
+   * @returns The constructed URL with query parameters
+   */
+  private buildUrl(queryBuilder: QueryBuilder) {
+    let queryString = this.toQueryString(queryBuilder);
 
-        if (queryBuilder.id) {
-            url += `/${String(queryBuilder.id)}`
-        }
+    let segments: Array<string> = [];
 
-        if (queryString) {
-            url += `?${queryString}`
-        }
+    segments = this.unwrapParents(queryBuilder, segments);
 
-        return decodeURIComponent(url)
+    let url = segments.join('/');
+    if (queryString) {
+      url += `?${queryString}`;
     }
 
-    /**
-     * Builds a query string from the query builder.
-     * @param queryBuilder - The query builder to build the query string from
-     * @returns The constructed query string
-     */
-    private toQueryString(queryBuilder: QueryBuilder): string {
-        const obj: Record<string, any> = { ...queryBuilder.query }
+    return decodeURIComponent(url);
+  }
 
-        obj.page = queryBuilder.page
-        obj.perPage = queryBuilder.perPage
-        obj.sort = queryBuilder.sort
-        obj.direction = queryBuilder.direction
-        obj.limit = queryBuilder.limit
-        obj.offset = queryBuilder.offset
-        
-        return Object.entries(obj)
-            .filter(([key, value]) => value !== undefined)
-            .map(([key, value]) => `${key}=${value}`)
-            .join('&')
+  private unwrapParents(queryBuilder: QueryBuilder, segments: Array<string>): Array<string> {
+    if (queryBuilder.parent) {
+      this.unwrapParents(queryBuilder.parent, segments);
     }
+
+    if (queryBuilder.resource && queryBuilder.id) {
+      segments.push(`${queryBuilder.resource}/${queryBuilder.id}`);
+    } else if (queryBuilder.resource) {
+      segments.push(`${queryBuilder.resource}`);
+    }
+
+    return segments;
+  }
+
+  /**
+   * Builds a query string from the query builder.
+   * @param queryBuilder - The query builder to build the query string from
+   * @returns The constructed query string
+   */
+  private toQueryString(queryBuilder: QueryBuilder): string {
+    const obj: Record<string, any> = { ...queryBuilder.query };
+
+    obj.page = queryBuilder.page;
+    obj.perPage = queryBuilder.perPage;
+    obj.sort = queryBuilder.sort;
+    obj.direction = queryBuilder.direction;
+    obj.limit = queryBuilder.limit;
+    obj.offset = queryBuilder.offset;
+
+    return Object.entries(obj)
+      .filter(([key, value]) => value !== undefined)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&');
+  }
 }
 
 

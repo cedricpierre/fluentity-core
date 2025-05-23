@@ -50,25 +50,11 @@ const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
     return function (target: Object, key: string | symbol): void {
         // Initialize the property on the prototype
         Object.defineProperty(target, key, {
-            get(this: Model<any>) {
-                const queryBuilder = new QueryBuilder()
-
-                if (this.queryBuilder) {
-                    queryBuilder.path = this.queryBuilder.path
-                } else {
-                    queryBuilder.path = resource ?? (this.constructor as any).resource
-                }
-                
-                
-                if (this.id) {
-                    queryBuilder.id = this.id
-                    queryBuilder.path += `/${this.id}`
-                }
-                
-                return new relationBuilderFactory(model(), queryBuilder, resource)
-            },
-            enumerable: true,
-            configurable: true,
+          get(this: Model<any>) {
+            return new relationBuilderFactory(model(), this.queryBuilder, resource);
+          },
+          enumerable: true,
+          configurable: true,
         });
     }
 }

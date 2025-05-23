@@ -30,24 +30,25 @@ describe('Models', () => {
   })
   
   it('should be able to get libraries (custom name) from a user', async () => {
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.resource).toBe('medias');
+      expect(queryBuilder.id).toBeUndefined();
+      expect(queryBuilder.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.id).toBe(1);
 
-    vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((queryBuilder: QueryBuilder) => {
-        expect(queryBuilder.path).toBe('users/1/medias')
-      
-        return Promise.resolve({
-          data: [
-            { id: 1, name: 'Media 1' },
-            { id: 2, name: 'Media 2' },
-          ]
-        })
+      return Promise.resolve({
+        data: [
+          { id: 1, name: 'Media 1' },
+          { id: 2, name: 'Media 2' },
+        ],
+      });
     });
 
-    const media = await User.id(1).libraries.all()
-    expect(media).toBeInstanceOf(Array)
-    expect(media).toHaveLength(2)
-    expect(media[0]).toBeInstanceOf(Media)
-  })
+    const media = await User.id(1).libraries.all();
+    expect(media).toBeInstanceOf(Array);
+    expect(media).toHaveLength(2);
+    expect(media[0]).toBeInstanceOf(Media);
+  });
 
   it('should be able to cast thumbnail', async () => {
     vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({
@@ -58,65 +59,73 @@ describe('Models', () => {
           url: 'https://example.com/thumbnail.jpg',
           width: 100,
           height: 100,
-        }
-      }
-    })
+        },
+      },
+    });
 
-    const user = await User.find(1)
-    expect(user.thumbnail).toBeInstanceOf(Thumbnail)
-    expect(user.thumbnail.url).toBe('https://example.com/thumbnail.jpg')
-  })
+    const user = await User.find(1);
+    expect(user.thumbnail).toBeInstanceOf(Thumbnail);
+    expect(user.thumbnail.url).toBe('https://example.com/thumbnail.jpg');
+  });
 
   it('can create a new instance of a model', async () => {
-    const user = new User({ name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 })
-    
-    expect(user).toBeDefined()
+    const user = new User({ name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 });
 
-    user.thumbnail = new Thumbnail({ id: 1, url: 'https://example.com/thumbnail.jpg' })
-    expect(user.thumbnail).toBeInstanceOf(Thumbnail)
-  })
-  
+    expect(user).toBeDefined();
+
+    user.thumbnail = new Thumbnail({ id: 1, url: 'https://example.com/thumbnail.jpg' });
+    expect(user.thumbnail).toBeInstanceOf(Thumbnail);
+  });
+
   it('should construct correct path with custom resource name', async () => {
-    vi.spyOn(fluentity.adapter, 'call')
-    .mockImplementation((queryBuilder: QueryBuilder) => {
-        expect(queryBuilder.path).toBe('users/1/custom-resource')
-        return Promise.resolve({ data: [] })
-      });
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      console.log(queryBuilder);
+      expect(queryBuilder.resource).toBe('custom-resource');
+      expect(queryBuilder.id).toBeUndefined();
+      expect(queryBuilder.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.id).toBe(1);
+      return Promise.resolve({ data: [] });
+    });
 
-    const result = await User.id(1).customResource.all()
-    expect(result).toBeInstanceOf(Array)
-  })
+    const result = await User.id(1).customResource.all();
+    expect(result).toBeInstanceOf(Array);
+  });
 
   it('should construct correct path with default resource name', async () => {
-    vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((queryBuilder: QueryBuilder) => {
-        expect(queryBuilder.path).toBe('users/1/medias')
-        return Promise.resolve({ data: [] })
-      });
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.resource).toBe('medias');
+      expect(queryBuilder.id).toBeUndefined();
+      expect(queryBuilder.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.id).toBe(1);
+      return Promise.resolve({ data: [] });
+    });
 
-    const result = await User.id(1).medias.all()
-    expect(result).toBeInstanceOf(Array)
-  })
+    const result = await User.id(1).medias.all();
+    expect(result).toBeInstanceOf(Array);
+  });
 
   it('should handle nested paths correctly', async () => {
-    vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((queryBuilder: QueryBuilder) => {
-        expect(queryBuilder.path).toBe('users/1/medias/2/thumbnails')
-        return Promise.resolve({ data: [] })
-      });
-    const result = await User.id(1).medias.id(2).thumbnails.all()
-    expect(result).toBeInstanceOf(Array)
-  })
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.resource).toBe('thumbnails');
+      expect(queryBuilder.id).toBeUndefined();
+      expect(queryBuilder.parent?.resource).toBe('medias');
+      expect(queryBuilder.parent?.id).toBe(2);
+      expect(queryBuilder.parent?.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.parent?.id).toBe(1);
+      return Promise.resolve({ data: [] });
+    });
+    const result = await User.id(1).medias.id(2).thumbnails.all();
+    expect(result).toBeInstanceOf(Array);
+  });
 
   it('should handle empty path correctly', async () => {
-    vi.spyOn(fluentity.adapter, 'call')
-      .mockImplementation((queryBuilder: QueryBuilder) => {
-        expect(queryBuilder.path).toBe('users')
-        expect(queryBuilder.id).toBe(1)
-        return Promise.resolve({ data: {id: 1, name: 'Cedric'} })
-      });
+    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+      expect(queryBuilder.resource).toBe('users');
+      expect(queryBuilder.id).toBe(1);
+      return Promise.resolve({ data: { id: 1, name: 'Cedric' } });
+    });
 
-    const result = await User.id(1).get()
-    expect(result).toBeDefined()
-  })
+    const result = await User.id(1).get();
+    expect(result).toBeDefined();
+  });
 })
