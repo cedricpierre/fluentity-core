@@ -1,4 +1,4 @@
-import { AdapterInterface, AdapterOptions, AdapterResponse, MethodType } from "../Fluentity"
+import { AdapterInterface, AdapterOptions, AdapterResponse, MethodType } from '../Fluentity';
 import { QueryBuilder } from '../QueryBuilder';
 
 /**
@@ -142,7 +142,7 @@ export class RestAdapter implements AdapterInterface {
    * @returns The constructed URL with query parameters
    */
   private buildUrl(queryBuilder: QueryBuilder) {
-    let queryString = this.toQueryString(queryBuilder);
+    const queryString = this.toQueryString(queryBuilder);
 
     let segments: Array<string> = [];
 
@@ -192,8 +192,6 @@ export class RestAdapter implements AdapterInterface {
   }
 }
 
-
-
 /**
  * Default request handler that uses the Fetch API to make HTTP requests.
  * @param request - The HTTP request configuration
@@ -220,33 +218,31 @@ async function fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> 
     } as RequestInit);
 
     return {
-      data: await response.json()
-    } as HttpResponse
+      data: await response.json(),
+    } as HttpResponse;
   } catch (error) {
     throw new Error(`HTTP error: ${error}`);
   }
-};
-
-
+}
 
 /**
  * Configuration options for the HttpClient.
  */
 export interface RestAdapterOptions {
   /** Base URL to prepend to all requests */
-  baseUrl?: string
+  baseUrl?: string;
   /** Default request options to apply to all requests */
-  options?: RequestOptions,
+  options?: RequestOptions;
   /** Interceptor to modify requests before they are sent */
-  requestInterceptor?: (request: HttpRequest) => HttpRequest
+  requestInterceptor?: (request: HttpRequest) => HttpRequest;
   /** Interceptor to modify responses after they are received */
-  responseInterceptor?: (response: HttpResponse) => HttpResponse
+  responseInterceptor?: (response: HttpResponse) => HttpResponse;
   /** Handler for request errors */
-  errorInterceptor?: (error: Error) => void
+  errorInterceptor?: (error: Error) => void;
   /** Custom request handler function */
-  requestHandler?: (request: HttpRequest) => Promise<HttpResponse>
+  requestHandler?: (request: HttpRequest) => Promise<HttpResponse>;
   /** Cache configuration options */
-  cacheOptions?: CacheOptions
+  cacheOptions?: CacheOptions;
 }
 
 /**
@@ -264,20 +260,20 @@ export interface CacheOptions {
  */
 export interface HttpRequest {
   /** The full URL to send the request to */
-  url: string
+  url: string;
   /** Request options including method, headers, body, etc. */
-  options?: RequestOptions
+  options?: RequestOptions;
   /** HTTP method to use */
-  method?: MethodType,
+  method?: MethodType;
   /** Request body data */
-  body?: any,
+  body?: any;
 }
 
 /**
  * Represents an HTTP response, which can be a single item or an array.
  */
 export interface HttpResponse<T = any | any[]> extends AdapterResponse {
-  data: T
+  data: T;
 }
 
 /**
@@ -286,25 +282,25 @@ export interface HttpResponse<T = any | any[]> extends AdapterResponse {
  */
 export interface RequestOptions extends AdapterOptions {
   /** Request headers */
-  headers?: Record<string, string>
+  headers?: Record<string, string>;
   /** Request credentials mode */
-  credentials?: RequestCredentials
+  credentials?: RequestCredentials;
   /** Request mode */
-  mode?: RequestMode
+  mode?: RequestMode;
   /** How to handle redirects */
-  redirect?: RequestRedirect
+  redirect?: RequestRedirect;
   /** Referrer URL */
-  referrer?: string
+  referrer?: string;
   /** Referrer policy */
-  referrerPolicy?: ReferrerPolicy
+  referrerPolicy?: ReferrerPolicy;
   /** Subresource integrity value */
-  integrity?: string
+  integrity?: string;
   /** Cache mode */
-  cache?: RequestCache
+  cache?: RequestCache;
   /** Whether to keep the connection alive */
-  keepalive?: boolean
+  keepalive?: boolean;
   /** Abort signal for cancelling the request */
-  signal?: AbortSignal
+  signal?: AbortSignal;
 }
 
 /**

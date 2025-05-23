@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@eslint/js':
+        specifier: ^9.0.0
+        version: 9.27.0
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -27,7 +30,7 @@ importers:
         specifier: ^0.25.4
         version: 0.25.4
       eslint:
-        specifier: ^9.27.0
+        specifier: ^9.0.0
         version: 9.27.0
       eslint-config-prettier:
         specifier: ^10.1.5
@@ -56,6 +59,9 @@ importers:
       typescript:
         specifier: ~5.8.0
         version: 5.8.3
+      typescript-eslint:
+        specifier: ^8.0.0
+        version: 8.32.1(eslint@9.27.0)(typescript@5.8.3)
       vitest:
         specifier: ^3.1.2
         version: 3.1.4(@types/node@22.15.21)(yaml@2.8.0)
@@ -2181,6 +2187,13 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x || 5.7.x || 5.8.x
+
+  typescript-eslint@8.32.1:
+    resolution: {integrity: sha512-D7el+eaDHAmXvrZBy1zpzSNIRqnCOrkwTgZxTu3MUqRWk8k0q9m9Ho4+vPf7iHtgUfrK/o8IZaEApsxPlHTFCg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+      typescript: '>=4.8.4 <5.9.0'
 
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
@@ -4689,6 +4702,16 @@ snapshots:
       minimatch: 9.0.5
       typescript: 5.8.3
       yaml: 2.8.0
+
+  typescript-eslint@8.32.1(eslint@9.27.0)(typescript@5.8.3):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.32.1(@typescript-eslint/parser@8.32.1(eslint@9.27.0)(typescript@5.8.3))(eslint@9.27.0)(typescript@5.8.3)
+      '@typescript-eslint/parser': 8.32.1(eslint@9.27.0)(typescript@5.8.3)
+      '@typescript-eslint/utils': 8.32.1(eslint@9.27.0)(typescript@5.8.3)
+      eslint: 9.27.0
+      typescript: 5.8.3
+    transitivePeerDependencies:
+      - supports-color
 
   typescript@5.8.3: {}
 

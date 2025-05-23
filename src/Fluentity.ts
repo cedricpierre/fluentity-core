@@ -1,10 +1,10 @@
-import { DefaultAdapter } from "./adapters/DefaultAdapter";
+import { DefaultAdapter } from './adapters/DefaultAdapter';
 import { QueryBuilder } from './QueryBuilder';
 
 /**
  * Interface for adapters that handle API communication.
  * Adapters must implement methods for making HTTP requests and configuration.
- * 
+ *
  * @interface
  * @example
  * ```typescript
@@ -27,7 +27,7 @@ export interface AdapterInterface {
 
   /**
    * Makes an API request using the adapter's implementation.
-   * 
+   *
    * @param queryBuilder - The query builder containing request details
    * @returns Promise resolving to the API response
    * @throws {Error} If the request fails
@@ -36,7 +36,7 @@ export interface AdapterInterface {
 
   /**
    * Configures the adapter with additional options.
-   * 
+   *
    * @param options - The configuration options to apply
    * @example
    * ```typescript
@@ -52,7 +52,7 @@ export interface AdapterInterface {
 /**
  * Base interface for adapter request options.
  * Can be extended with additional properties by specific adapters.
- * 
+ *
  * @interface
  * @example
  * ```typescript
@@ -62,12 +62,12 @@ export interface AdapterInterface {
  * }
  * ```
  */
-export interface AdapterOptions extends Record<string, any> {}
+export interface AdapterOptions {}
 
 /**
  * Interface for adapter responses.
  * Contains the response data from the API.
- * 
+ *
  * @interface
  * @example
  * ```typescript
@@ -84,7 +84,7 @@ export interface AdapterResponse {
 /**
  * HTTP method constants for use in requests.
  * Provides type-safe HTTP method names.
- * 
+ *
  * @example
  * ```typescript
  * const method: MethodType = Methods.POST;
@@ -107,7 +107,7 @@ export const Methods = {
   OPTIONS: 'OPTIONS',
 } as const;
 
-/** 
+/**
  * Type representing valid HTTP method names.
  * Derived from the Methods constant object.
  */
@@ -115,7 +115,7 @@ export type MethodType = keyof typeof Methods;
 
 /**
  * Configuration options for initializing Fluentity.
- * 
+ *
  * @interface
  * @example
  * ```typescript
@@ -133,14 +133,14 @@ export interface FluentityOptions {
  * Main Fluentity class that manages API communication.
  * Implements the singleton pattern to ensure a single instance is used throughout the application.
  * Handles adapter management and provides a central point for API communication.
- * 
+ *
  * @example
  * ```typescript
  * // Initialize with custom adapter
  * Fluentity.initialize({
  *   adapter: new RestAdapter()
  * });
- * 
+ *
  * // Get instance
  * const fluentity = Fluentity.getInstance();
  * ```
@@ -149,7 +149,7 @@ export class Fluentity {
   /** Singleton instance of Fluentity */
   private static instance: Fluentity;
 
-  /** 
+  /**
    * The adapter instance used for API communication.
    * @private
    */
@@ -158,7 +158,7 @@ export class Fluentity {
   /**
    * Creates a new Fluentity instance.
    * Private constructor to enforce singleton pattern.
-   * 
+   *
    * @param options - Configuration options for Fluentity
    * @throws {Error} If a Fluentity instance already exists
    * @private
@@ -173,7 +173,7 @@ export class Fluentity {
 
   /**
    * Gets the adapter instance used for API communication.
-   * 
+   *
    * @returns The configured adapter instance
    */
   public get adapter() {
@@ -183,7 +183,7 @@ export class Fluentity {
   /**
    * Initializes the Fluentity singleton instance.
    * Must be called before using any other Fluentity functionality.
-   * 
+   *
    * @param options - Configuration options for Fluentity
    * @returns The initialized Fluentity instance
    * @throws {Error} If Fluentity has already been initialized
@@ -205,7 +205,7 @@ export class Fluentity {
 
   /**
    * Gets the Fluentity singleton instance.
-   * 
+   *
    * @returns The Fluentity instance
    * @throws {Error} If Fluentity has not been initialized
    * @example

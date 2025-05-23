@@ -1,13 +1,12 @@
-import { RelationBuilder } from './RelationBuilder'
-import { Model } from './Model'
+import { RelationBuilder } from './RelationBuilder';
+import { Model } from './Model';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
-import { QueryBuilder } from './QueryBuilder';
 
 /**
  * Type representing a constructor function that creates instances of type T.
  * Used for type-safe instantiation of model classes.
- * 
+ *
  * @template T - The type that the constructor creates
  * @example
  * ```typescript
@@ -20,7 +19,7 @@ export type Constructor<T = any> = new (...args: any[]) => T;
 /**
  * Type for property decorator functions.
  * Defines the signature for decorators that modify class properties.
- * 
+ *
  * @example
  * ```typescript
  * const decorator: PropertyDecoratorType = (target, key) => {
@@ -28,12 +27,12 @@ export type Constructor<T = any> = new (...args: any[]) => T;
  * };
  * ```
  */
-export type PropertyDecoratorType = (target: Object, key: string | symbol) => void;
+export type PropertyDecoratorType = (target: object, key: string | symbol) => void;
 
 /**
  * Creates a relation decorator that sets up a relationship between models.
  * Internal factory function used by HasOne and HasMany decorators.
- * 
+ *
  * @template T - The type of model to create a relation for
  * @template R - The type of relation builder to use
  * @param model - Factory function that returns the related model constructor
@@ -43,26 +42,26 @@ export type PropertyDecoratorType = (target: Object, key: string | symbol) => vo
  * @private
  */
 const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
-    model: () => T,
-    relationBuilderFactory: Constructor<R>,
-    resource?: string
+  model: () => T,
+  relationBuilderFactory: Constructor<R>,
+  resource?: string
 ): PropertyDecoratorType => {
-    return function (target: Object, key: string | symbol): void {
-        // Initialize the property on the prototype
-        Object.defineProperty(target, key, {
-          get(this: Model<any>) {
-            return new relationBuilderFactory(model(), this.queryBuilder, resource);
-          },
-          enumerable: true,
-          configurable: true,
-        });
-    }
-}
+  return function (target: object, key: string | symbol): void {
+    // Initialize the property on the prototype
+    Object.defineProperty(target, key, {
+      get(this: Model<any>) {
+        return new relationBuilderFactory(model(), this.queryBuilder, resource);
+      },
+      enumerable: true,
+      configurable: true,
+    });
+  };
+};
 
 /**
  * Decorator for casting property values to model instances.
  * Automatically converts plain objects to model instances when accessed.
- * 
+ *
  * @param caster - Factory function that returns the model constructor to cast to
  * @returns A property decorator function
  * @example
@@ -74,55 +73,57 @@ const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
  * ```
  */
 export const Cast = (caster: () => Constructor<any>): PropertyDecoratorType => {
-    return function (target: Object, key: string | symbol): void {
-        // Create a unique symbol for each instance
-        const privateKey = Symbol(String(key));
+  return function (target: object, key: string | symbol): void {
+    // Create a unique symbol for each instance
+    const privateKey = Symbol(String(key));
 
-        // Initialize the property on the prototype
-        Object.defineProperty(target, key, {
-            get(this: any) {
-                if (!this[privateKey]) {
-                    this[privateKey] = undefined;
-                }
-                const value = this[privateKey];
-                if (!value) return value;
-                
-                const ModelClass = caster();
-                if (!ModelClass) return value;
+    // Initialize the property on the prototype
+    Object.defineProperty(target, key, {
+      get(this: any) {
+        if (!this[privateKey]) {
+          this[privateKey] = undefined;
+        }
+        const value = this[privateKey];
+        if (!value) return value;
 
-                if (Array.isArray(value)) {
-                    return value.map(item => item instanceof ModelClass ? item : new ModelClass(item));
-                } else if (value instanceof ModelClass) {
-                    return value;
-                } else {
-                    return new ModelClass(value);
-                }
-            },
-            set(this: any, value: any) {
-                const ModelClass = caster();
-                if (!ModelClass) {
-                    this[privateKey] = value;
-                    return;
-                }
+        const ModelClass = caster();
+        if (!ModelClass) return value;
 
-                if (Array.isArray(value)) {
-                    this[privateKey] = value.map(item => item instanceof ModelClass ? item : new ModelClass(item));
-                } else if (value instanceof ModelClass) {
-                    this[privateKey] = value;
-                } else {
-                    this[privateKey] = new ModelClass(value);
-                }
-            },
-            enumerable: true,
-            configurable: true,
-        });
-    };
+        if (Array.isArray(value)) {
+          return value.map(item => (item instanceof ModelClass ? item : new ModelClass(item)));
+        } else if (value instanceof ModelClass) {
+          return value;
+        } else {
+          return new ModelClass(value);
+        }
+      },
+      set(this: any, value: any) {
+        const ModelClass = caster();
+        if (!ModelClass) {
+          this[privateKey] = value;
+          return;
+        }
+
+        if (Array.isArray(value)) {
+          this[privateKey] = value.map(item =>
+            item instanceof ModelClass ? item : new ModelClass(item)
+          );
+        } else if (value instanceof ModelClass) {
+          this[privateKey] = value;
+        } else {
+          this[privateKey] = new ModelClass(value);
+        }
+      },
+      enumerable: true,
+      configurable: true,
+    });
+  };
 };
 
 /**
  * Decorator for creating a has-one relationship between models.
  * Sets up a one-to-one relationship where a model has exactly one related model.
- * 
+ *
  * @param model - Factory function that returns the related model constructor
  * @param resource - Optional custom resource name for the relation
  * @returns A property decorator function
@@ -135,13 +136,13 @@ export const Cast = (caster: () => Constructor<any>): PropertyDecoratorType => {
  * ```
  */
 export const HasOne = (model: () => Model<any>, resource?: string): PropertyDecoratorType => {
-    return makeRelation(model, HasOneRelationBuilder as Constructor<RelationBuilder<any>>, resource);
-}
+  return makeRelation(model, HasOneRelationBuilder as Constructor<RelationBuilder<any>>, resource);
+};
 
 /**
  * Decorator for creating a has-many relationship between models.
  * Sets up a one-to-many relationship where a model has multiple related models.
- * 
+ *
  * @param model - Factory function that returns the related model constructor
  * @param resource - Optional custom resource name for the relation
  * @returns A property decorator function
@@ -154,13 +155,13 @@ export const HasOne = (model: () => Model<any>, resource?: string): PropertyDeco
  * ```
  */
 export const HasMany = (model: () => Model<any>, resource?: string): PropertyDecoratorType => {
-    return makeRelation(model, HasManyRelationBuilder as Constructor<RelationBuilder<any>>, resource);
-}
+  return makeRelation(model, HasManyRelationBuilder as Constructor<RelationBuilder<any>>, resource);
+};
 
 /**
  * Alias for HasOne decorator.
  * Used for better semantic meaning in certain relationship contexts.
- * 
+ *
  * @example
  * ```typescript
  * class Post {
@@ -174,7 +175,7 @@ export const BelongsTo = HasOne;
 /**
  * Alias for HasMany decorator.
  * Used for better semantic meaning in certain relationship contexts.
- * 
+ *
  * @example
  * ```typescript
  * class User {

@@ -1,4 +1,4 @@
-import { Model } from "./Model"
+import { Model } from './Model';
 import { QueryBuilder } from './QueryBuilder';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';

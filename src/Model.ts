@@ -1,9 +1,9 @@
-import { RelationBuilder, type Relation } from './RelationBuilder'
-import { HasOneRelationBuilder } from './HasOneRelationBuilder'
-import { HasManyRelationBuilder } from './HasManyRelationBuilder'
-import { Constructor } from './decorators'
-import { Fluentity, Methods, MethodType } from './Fluentity'
-import { QueryBuilder } from './QueryBuilder'
+import { RelationBuilder } from './RelationBuilder';
+import { HasOneRelationBuilder } from './HasOneRelationBuilder';
+import { HasManyRelationBuilder } from './HasManyRelationBuilder';
+import { Constructor } from './decorators';
+import { Fluentity, Methods, MethodType } from './Fluentity';
+import { QueryBuilder } from './QueryBuilder';
 
 /**
  * Base interface for model attributes that all models must implement.
@@ -12,16 +12,16 @@ import { QueryBuilder } from './QueryBuilder'
  */
 export interface Attributes {
   /** Unique identifier for the model instance. Can be either a string or number. */
-  id?: string | number
+  id?: string | number;
   /** Index signature allowing for dynamic properties of any type */
-  [key: string]: any
+  [key: string]: any;
 }
 
 /**
  * Base class for all models in the ORM.
  * Provides core functionality for interacting with the API and managing model data.
  * Handles CRUD operations, relationships, and query building.
- * 
+ *
  * @template T - The type of attributes this model will have, must extend Attributes
  * @example
  * ```typescript
@@ -31,32 +31,32 @@ export interface Attributes {
  * ```
  */
 export class Model<T extends Attributes = Attributes> {
-  /** 
+  /**
    * Custom query scopes that can be applied to model queries.
    * Each scope is a function that modifies the query builder behavior.
    * @static
    */
-  static scopes?: Record<string, (query: RelationBuilder<any>) => RelationBuilder<any>>
+  static scopes?: Record<string, (query: RelationBuilder<any>) => RelationBuilder<any>>;
 
-  /** 
+  /**
    * Unique identifier for the model instance.
    * Can be either a string or number, depending on the API's ID format.
    */
-  id?: string | number
+  id?: string | number;
 
-  /** 
+  /**
    * Index signature for dynamic properties.
    * Allows models to have additional properties beyond their defined attributes.
    */
-  [key: string]: any
+  [key: string]: any;
 
-  /** 
+  /**
    * Internal query builder instance for constructing API requests.
    * @private
    */
-  #queryBuilder: QueryBuilder
+  #queryBuilder: QueryBuilder;
 
-  /** 
+  /**
    * Resource endpoint for the model, used to construct API URLs.
    * Must be set by subclasses to define the API endpoint.
    * @static
@@ -65,12 +65,12 @@ export class Model<T extends Attributes = Attributes> {
    * static resource = 'users';
    * ```
    */
-  static resource: string
+  static resource: string;
 
   /**
    * Creates a new model instance with the given attributes.
    * Initializes the query builder and sets up the model's state.
-   * 
+   *
    * @param attributes - The attributes to initialize the model with
    * @param queryBuilder - Optional query builder instance to use instead of creating a new one
    * @returns A new model instance
@@ -78,14 +78,14 @@ export class Model<T extends Attributes = Attributes> {
    */
   constructor(attributes: T, queryBuilder?: QueryBuilder) {
     if (attributes) {
-      Object.assign(this, attributes)
+      Object.assign(this, attributes);
     }
 
     this.#queryBuilder = queryBuilder ?? new QueryBuilder();
 
     this.#queryBuilder.resource = (this.constructor as any).resource;
-    this.#queryBuilder.id = this.id
-    return this
+    this.#queryBuilder.id = this.id;
+    return this;
   }
 
   /**
@@ -95,13 +95,13 @@ export class Model<T extends Attributes = Attributes> {
    * @protected
    */
   get queryBuilder() {
-    return this.#queryBuilder
+    return this.#queryBuilder;
   }
 
   /**
    * Gets the Fluentity instance for making API requests.
    * Provides access to the singleton instance that manages API communication.
-   * 
+   *
    * @protected
    * @returns The singleton Fluentity instance
    * @throws {Error} If Fluentity has not been initialized
@@ -113,7 +113,7 @@ export class Model<T extends Attributes = Attributes> {
   /**
    * Gets or creates a relation builder for the given model class.
    * Uses an internal cache to avoid creating duplicate relation builders.
-   * 
+   *
    * @param model - The model class to create a relation builder for
    * @param relationBuilderFactory - The factory class to create the relation builder
    * @returns A relation builder instance configured for the model
@@ -124,15 +124,15 @@ export class Model<T extends Attributes = Attributes> {
     model: Constructor<T>,
     relationBuilderFactory: Constructor<R>
   ): R {
-    const queryBuilder = new QueryBuilder()
+    const queryBuilder = new QueryBuilder();
 
-    return new relationBuilderFactory(model, queryBuilder, (model.constructor as any).resource)
+    return new relationBuilderFactory(model, queryBuilder, (model.constructor as any).resource);
   }
 
   /**
    * Creates a new model instance with the given ID.
    * Useful for creating model instances when only the ID is known.
-   * 
+   *
    * @param id - The ID to assign to the new model instance
    * @returns A new model instance with the specified ID
    * @static
@@ -148,7 +148,7 @@ export class Model<T extends Attributes = Attributes> {
   /**
    * Starts a new query builder for the model.
    * Returns a HasManyRelationBuilder for querying multiple records.
-   * 
+   *
    * @returns A HasManyRelationBuilder instance for building queries
    * @static
    * @example
@@ -157,13 +157,13 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   static query<T extends Model<Attributes>>(this: Constructor<T>): HasManyRelationBuilder<T> {
-    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder)
+    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder);
   }
 
   /**
    * Starts a query with a where clause.
    * Shorthand for query().where() for common filtering operations.
-   * 
+   *
    * @param where - Conditions to filter by, as field-value pairs
    * @returns A HasManyRelationBuilder instance with where conditions applied
    * @static
@@ -172,14 +172,20 @@ export class Model<T extends Attributes = Attributes> {
    * const activeUsers = await User.where({ active: true }).all();
    * ```
    */
-  static where<T extends Model<Attributes>>(this: Constructor<T>, where: Partial<Attributes>): HasManyRelationBuilder<T> {
-    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).where(where) as HasManyRelationBuilder<T>
+  static where<T extends Model<Attributes>>(
+    this: Constructor<T>,
+    where: Partial<Attributes>
+  ): HasManyRelationBuilder<T> {
+    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
+      this,
+      HasManyRelationBuilder
+    ).where(where) as HasManyRelationBuilder<T>;
   }
 
   /**
    * Starts a query with filter conditions.
    * Similar to where() but specifically for filter operations.
-   * 
+   *
    * @param filters - Filter conditions to apply, as field-value pairs
    * @returns A HasManyRelationBuilder instance with filters applied
    * @static
@@ -188,14 +194,20 @@ export class Model<T extends Attributes = Attributes> {
    * const users = await User.filter({ age: { gt: 18 } }).all();
    * ```
    */
-  static filter<T extends Model<Attributes>>(this: Constructor<T>, filters: Record<string, any>): HasManyRelationBuilder<T> {
-    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).filter(filters) as HasManyRelationBuilder<T>
+  static filter<T extends Model<Attributes>>(
+    this: Constructor<T>,
+    filters: Record<string, any>
+  ): HasManyRelationBuilder<T> {
+    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
+      this,
+      HasManyRelationBuilder
+    ).filter(filters) as HasManyRelationBuilder<T>;
   }
 
   /**
    * Starts a query with relations to include.
    * Specifies which related models should be loaded with the query.
-   * 
+   *
    * @param relations - Single relation or array of relations to include
    * @returns A HasManyRelationBuilder instance with relations included
    * @static
@@ -204,14 +216,20 @@ export class Model<T extends Attributes = Attributes> {
    * const users = await User.include(['posts', 'profile']).all();
    * ```
    */
-  static include<T extends Model<Attributes>>(this: Constructor<T>, relations: string | string[]): HasManyRelationBuilder<T> {
-    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).include(relations) as HasManyRelationBuilder<T>
+  static include<T extends Model<Attributes>>(
+    this: Constructor<T>,
+    relations: string | string[]
+  ): HasManyRelationBuilder<T> {
+    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
+      this,
+      HasManyRelationBuilder
+    ).include(relations) as HasManyRelationBuilder<T>;
   }
 
   /**
    * Retrieves all records for the model.
    * Fetches all records from the API without any filtering.
-   * 
+   *
    * @returns Promise resolving to an array of model instances
    * @static
    * @example
@@ -220,13 +238,16 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   static async all<T extends Model<Attributes>>(this: Constructor<T>): Promise<T[]> {
-    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).all()) as T[]
+    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
+      this,
+      HasManyRelationBuilder
+    ).all()) as T[];
   }
 
   /**
    * Finds a single record by ID.
    * Fetches a specific record from the API by its ID.
-   * 
+   *
    * @param id - The ID of the record to find
    * @returns Promise resolving to a model instance
    * @throws {Error} If the record is not found
@@ -236,14 +257,20 @@ export class Model<T extends Attributes = Attributes> {
    * const user = await User.find(123);
    * ```
    */
-  static async find<T extends Model<Attributes>>(this: Constructor<T>, id: string | number): Promise<T> {
-    return (await Model.getRelationBuilder<T, HasOneRelationBuilder<T>>(this, HasOneRelationBuilder).find(id)) as T
+  static async find<T extends Model<Attributes>>(
+    this: Constructor<T>,
+    id: string | number
+  ): Promise<T> {
+    return (await Model.getRelationBuilder<T, HasOneRelationBuilder<T>>(
+      this,
+      HasOneRelationBuilder
+    ).find(id)) as T;
   }
 
   /**
    * Creates a new record.
    * Sends a POST request to create a new record in the API.
-   * 
+   *
    * @param data - The data to create the record with
    * @returns Promise resolving to the created model instance
    * @throws {Error} If the creation fails
@@ -253,14 +280,20 @@ export class Model<T extends Attributes = Attributes> {
    * const user = await User.create({ name: 'John', email: 'john@example.com' });
    * ```
    */
-  static async create<A extends Partial<Attributes>, T extends Model<Attributes>>(this: Constructor<T>, data: A): Promise<T> {
-    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).create(data)) as T
+  static async create<A extends Partial<Attributes>, T extends Model<Attributes>>(
+    this: Constructor<T>,
+    data: A
+  ): Promise<T> {
+    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
+      this,
+      HasManyRelationBuilder
+    ).create(data)) as T;
   }
 
   /**
    * Updates an existing record.
    * Sends a PUT/PATCH request to update a record in the API.
-   * 
+   *
    * @param id - The ID of the record to update
    * @param data - The data to update the record with
    * @param method - The HTTP method to use for the update (PUT or PATCH)
@@ -273,18 +306,21 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   static async update<A extends Partial<Attributes>, T extends Model<Attributes>>(
-    this: Constructor<T>, 
-    id: string | number, 
-    data: A, 
+    this: Constructor<T>,
+    id: string | number,
+    data: A,
     method: MethodType = Methods.PUT
   ): Promise<T> {
-    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).update(id, data, method)) as T
+    return (await Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
+      this,
+      HasManyRelationBuilder
+    ).update(id, data, method)) as T;
   }
 
   /**
    * Deletes a record by ID.
    * Sends a DELETE request to remove a record from the API.
-   * 
+   *
    * @param id - The ID of the record to delete
    * @returns Promise that resolves when the deletion is complete
    * @throws {Error} If the deletion fails
@@ -294,14 +330,20 @@ export class Model<T extends Attributes = Attributes> {
    * await User.delete(123);
    * ```
    */
-  static async delete<T extends Model<Attributes>>(this: Constructor<T>, id: string | number): Promise<void> {
-    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(this, HasManyRelationBuilder).delete(id)
+  static async delete<T extends Model<Attributes>>(
+    this: Constructor<T>,
+    id: string | number
+  ): Promise<void> {
+    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
+      this,
+      HasManyRelationBuilder
+    ).delete(id);
   }
 
   /**
    * Retrieves the current model instance from the server.
    * Updates the local instance with fresh data from the API.
-   * 
+   *
    * @returns Promise resolving to the updated model instance
    * @throws {Error} If the record is not found
    * @example
@@ -310,18 +352,18 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   async get(): Promise<this> {
-    this.#queryBuilder.method = Methods.GET
-    const data = await this.fluentity.adapter.call(this.#queryBuilder)
+    this.#queryBuilder.method = Methods.GET;
+    const data = await this.fluentity.adapter.call(this.#queryBuilder);
 
-    Object.assign(this, data.data)
+    Object.assign(this, data.data);
 
-    return this
+    return this;
   }
 
   /**
    * Saves the current model instance to the server.
    * Creates a new record if the model doesn't have an ID, updates existing record otherwise.
-   * 
+   *
    * @returns Promise resolving to the saved model instance
    * @throws {Error} If the save operation fails
    * @example
@@ -332,20 +374,19 @@ export class Model<T extends Attributes = Attributes> {
    */
   async save(): Promise<this> {
     if (this.id) {
-      return this.update()
+      return this.update();
     }
 
-
-    this.#queryBuilder.method = Methods.POST
-    this.#queryBuilder.body = this.toObject()
-    const data = await this.fluentity.adapter.call(this.#queryBuilder)
-    Object.assign(this, data.data)
-    return this
+    this.#queryBuilder.method = Methods.POST;
+    this.#queryBuilder.body = this.toObject();
+    const data = await this.fluentity.adapter.call(this.#queryBuilder);
+    Object.assign(this, data.data);
+    return this;
   }
 
   /**
    * Updates the model instance with new attributes and saves to the server.
-   * 
+   *
    * @param attributes - Optional attributes to update before saving
    * @param method - The HTTP method to use for the update (PUT or PATCH)
    * @returns Promise resolving to the updated model instance
@@ -356,20 +397,20 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   async update(attributes?: Partial<T>, method: MethodType = Methods.PUT): Promise<this> {
-    if (attributes) Object.assign(this, attributes)
+    if (attributes) Object.assign(this, attributes);
 
-    this.#queryBuilder.method = method
-    this.#queryBuilder.body = this.toObject()
+    this.#queryBuilder.method = method;
+    this.#queryBuilder.body = this.toObject();
 
-    const updated = await this.fluentity.adapter.call(this.#queryBuilder)
-    Object.assign(this, updated.data)
+    const updated = await this.fluentity.adapter.call(this.#queryBuilder);
+    Object.assign(this, updated.data);
 
-    return this
+    return this;
   }
 
   /**
    * Deletes the model instance from the server.
-   * 
+   *
    * @returns Promise that resolves when the deletion is complete
    * @throws {Error} If the deletion fails
    * @example
@@ -378,14 +419,14 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   async delete(): Promise<void> {
-    this.#queryBuilder.method = Methods.DELETE
-    await this.fluentity.adapter.call(this.#queryBuilder)
+    this.#queryBuilder.method = Methods.DELETE;
+    await this.fluentity.adapter.call(this.#queryBuilder);
   }
 
   /**
    * Converts the model instance to a plain object.
    * Recursively converts nested model instances to plain objects.
-   * 
+   *
    * @returns A plain object representation of the model's attributes
    * @example
    * ```typescript
@@ -393,23 +434,25 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   toObject(): Record<string, any> {
-    const obj: Record<string, any> = {}
+    const obj: Record<string, any> = {};
 
     Object.keys(this).forEach(key => {
-      obj[key] = this[key as keyof this]
-    })
+      obj[key] = this[key as keyof this];
+    });
 
-    const descriptors = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this))
+    const descriptors = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this));
     for (const [key, descriptor] of Object.entries(descriptors)) {
       if (descriptor.get) {
-        const value = this[key as keyof this] as any
+        const value = this[key as keyof this] as any;
         if (value instanceof Model) {
-          obj[key] = value.toObject()
+          obj[key] = value.toObject();
         } else if (Array.isArray(value) && value.length > 0) {
-          obj[key] = value.filter((item: any) => item instanceof Model && typeof item.toObject === 'function').map((item: Model<any>) => item.toObject())
+          obj[key] = value
+            .filter((item: any) => item instanceof Model && typeof item.toObject === 'function')
+            .map((item: Model<any>) => item.toObject());
         }
       }
     }
-    return obj
+    return obj;
   }
 }
