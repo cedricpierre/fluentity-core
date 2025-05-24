@@ -1,6 +1,6 @@
-import { AdapterInterface, AdapterOptions, AdapterResponse, MethodType } from '../Fluentity';
+import { AdapterOptions, AdapterResponse, MethodType } from '../Fluentity';
 import { QueryBuilder } from '../QueryBuilder';
-import { HttpAdapter, HttpResponse } from './HttpAdapter';
+import { HttpAdapter, HttpAdapterOptions, HttpRequest, HttpResponse } from './HttpAdapter';
 
 /**
  * A static HTTP client class that provides methods for making HTTP requests with built-in caching,
@@ -103,87 +103,4 @@ export class RestAdapter extends HttpAdapter {
 /**
  * Configuration options for the HttpClient.
  */
-export interface RestAdapterOptions {
-  /** Base URL to prepend to all requests */
-  baseUrl?: string;
-  /** Default request options to apply to all requests */
-  options?: RequestOptions;
-  /** Interceptor to modify requests before they are sent */
-  requestInterceptor?: (request: HttpRequest) => HttpRequest;
-  /** Interceptor to modify responses after they are received */
-  responseInterceptor?: (response: HttpResponse) => HttpResponse;
-  /** Handler for request errors */
-  errorInterceptor?: (error: Error) => void;
-  /** Custom request handler function */
-  requestHandler?: (request: HttpRequest) => Promise<HttpResponse>;
-  /** Cache configuration options */
-  cacheOptions?: CacheOptions;
-}
-
-/**
- * Configuration options for response caching.
- */
-export interface CacheOptions {
-  /** Whether caching is enabled */
-  enabled: boolean;
-  /** Time-to-live for cached responses in milliseconds */
-  ttl?: number;
-}
-
-/**
- * Represents an HTTP request configuration.
- */
-export interface HttpRequest {
-  /** The full URL to send the request to */
-  url: string;
-  /** Request options including method, headers, body, etc. */
-  options?: RequestOptions;
-  /** HTTP method to use */
-  method?: MethodType;
-  /** Request body data */
-  body?: any;
-}
-
-/**
- * Represents an HTTP response, which can be a single item or an array.
- */
-export interface HttpResponse<T = any | any[]> extends AdapterResponse {
-  data: T;
-}
-
-/**
- * Configuration options for HTTP requests.
- * Extends the standard Fetch API RequestInit interface with additional options.
- */
-export interface RequestOptions extends AdapterOptions {
-  /** Request headers */
-  headers?: Record<string, string>;
-  /** Request credentials mode */
-  credentials?: RequestCredentials;
-  /** Request mode */
-  mode?: RequestMode;
-  /** How to handle redirects */
-  redirect?: RequestRedirect;
-  /** Referrer URL */
-  referrer?: string;
-  /** Referrer policy */
-  referrerPolicy?: ReferrerPolicy;
-  /** Subresource integrity value */
-  integrity?: string;
-  /** Cache mode */
-  cache?: RequestCache;
-  /** Whether to keep the connection alive */
-  keepalive?: boolean;
-  /** Abort signal for cancelling the request */
-  signal?: AbortSignal;
-}
-
-/**
- * Represents cached data with its timestamp.
- */
-export interface CacheData {
-  /** The cached response data */
-  data: any;
-  /** Timestamp when the data was cached (milliseconds since epoch) */
-  timestamp: number;
-}
+export type RestAdapterOptions = HttpAdapterOptions;

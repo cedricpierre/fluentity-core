@@ -80,7 +80,7 @@ export interface AdapterOptions {
  */
 export interface AdapterResponse {
   /** The response data from the API */
-  data: any;
+  data: any | any[];
 }
 
 /**

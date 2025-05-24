@@ -128,7 +128,7 @@ export interface HttpAdapterOptions {
   /** Base URL to prepend to all requests */
   baseUrl?: string;
   /** Default request options to apply to all requests */
-  options?: RequestOptions;
+  options?: HttpRequestOptions;
   /** Interceptor to modify requests before they are sent */
   requestInterceptor?: (request: HttpRequest) => HttpRequest;
   /** Interceptor to modify responses after they are received */
@@ -155,11 +155,11 @@ export interface HttpRequestInterface extends AdapterOptions {
   /** The full URL to send the request to */
   url: string;
   /** Request options including method, headers, body, etc. */
-  options?: RequestOptions;
+  options?: HttpRequestOptions;
   /** HTTP method to use */
   method?: MethodType;
   /** Request body data */
-  body?: any;
+  body?: string | object | object[] | undefined;
 }
 
 /**
@@ -168,12 +168,9 @@ export interface HttpRequestInterface extends AdapterOptions {
 export class HttpRequest implements HttpRequestInterface {
   /** The full URL to send the request to */
   url: string = '';
-  /** Request options including method, headers, body, etc. */
-  options?: RequestOptions;
-  /** HTTP method to use */
+  options?: HttpRequestOptions;
   method?: MethodType;
-  /** Request body data */
-  body?: object | object[];
+  body?: string | object | object[] | undefined;
 
   constructor(options?: Partial<HttpRequestInterface>) {
     if (options) {
@@ -182,11 +179,11 @@ export class HttpRequest implements HttpRequestInterface {
   }
 }
 
-export interface HttpResponseInterface<T = object | object[]> extends AdapterOptions {
-  data?: T;
-}
+export type HttpResponseInterface = AdapterResponse;
 
 export class HttpResponse implements HttpResponseInterface {
+  data: object | object[] = [];
+
   constructor(options?: Partial<HttpResponseInterface>) {
     if (options) {
       Object.assign(this, options);
@@ -198,7 +195,7 @@ export class HttpResponse implements HttpResponseInterface {
  * Configuration options for HTTP requests.
  * Extends the standard Fetch API RequestInit interface with additional options.
  */
-export interface RequestOptions extends AdapterOptions {
+export interface HttpRequestOptions extends AdapterOptions {
   /** Request headers */
   headers?: Record<string, string>;
   /** Request credentials mode */
