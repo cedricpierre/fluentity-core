@@ -1,147 +1,26 @@
 import { AdapterInterface, AdapterOptions, AdapterResponse, MethodType } from '../Fluentity';
 import { QueryBuilder } from '../QueryBuilder';
+import { HttpAdapter, HttpResponse } from './HttpAdapter';
 
 /**
  * A static HTTP client class that provides methods for making HTTP requests with built-in caching,
  * interceptors, and request/response handling capabilities.
  */
-export class RestAdapter implements AdapterInterface {
-  #cache: Map<string, CacheData> = new Map();
-  #url: string = '';
-
-  options: RestAdapterOptions = {
-    baseUrl: '',
-    options: {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-    requestInterceptor: undefined,
-    responseInterceptor: undefined,
-    errorInterceptor: undefined,
-    requestHandler: fetchRequestHandler,
-    cacheOptions: {
-      enabled: false,
-      ttl: 5 * 60 * 1000, // 5 minutes in milliseconds
-    },
-  };
-
+export class RestAdapter extends HttpAdapter {
   /**
    * Constructor for the RestAdapter class.
    * @param options - Partial configuration options to merge with existing options
    */
   constructor(options: Partial<RestAdapterOptions>) {
+    super(options);
     this.options = { ...this.options, ...options };
-  }
-
-  configure(options: Partial<RestAdapterOptions>) {
-    this.options = { ...this.options, ...options };
-  }
-
-  /**
-   * Removes a specific URL from the cache.
-   * @param url - The URL to remove from the cache
-   */
-  deleteCache(url: string) {
-    this.#cache.delete(url);
-  }
-
-  /**
-   * Clears all cached responses.
-   */
-  clearCache() {
-    this.#cache.clear();
-  }
-
-  /**
-   * Gets the current cache map containing all cached responses.
-   * @returns The cache map
-   */
-  get cache() {
-    return this.#cache;
-  }
-
-  /**
-   * Retrieves cached data for a specific URL.
-   * @param url - The URL to get cached data for
-   * @returns The cached data if it exists
-   */
-  getCache(url: string): CacheData {
-    return this.#cache.get(url) as CacheData;
-  }
-
-  get url(): string {
-    return this.#url;
-  }
-
-  /**
-   * Makes an HTTP request to the specified URL with optional request options.
-   * Handles caching, interceptors, and error handling.
-   * @param url - The endpoint URL to call (will be appended to baseUrl)
-   * @param queryBuilder - Optional request configuration
-   * @returns A promise that resolves to the response data
-   * @throws Error if baseUrl is not configured or if the request fails
-   */
-  async call<T = any>(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
-    try {
-      this.#url = this.buildUrl(queryBuilder);
-
-      if (!this.options.baseUrl) {
-        throw new Error('baseUrl is required');
-      }
-
-      // Check cache if enabled
-      if (this.options.cacheOptions?.enabled) {
-        const cachedData = this.#cache.get(this.#url);
-        if (cachedData) {
-          const now = Date.now();
-          if (now - cachedData.timestamp < (this.options.cacheOptions.ttl || 0)) {
-            return cachedData.data as HttpResponse<T>;
-          }
-          // Remove expired cache entry
-          this.#cache.delete(this.#url);
-        }
-      }
-
-      const request: HttpRequest = {
-        url: `${this.options.baseUrl}/${this.#url}`,
-        method: queryBuilder.method,
-        body: queryBuilder.body,
-        options: this.options?.options,
-      };
-
-      if (this.options.requestInterceptor) {
-        Object.assign(request, this.options.requestInterceptor.call(this, request));
-      }
-
-      let response = await this.options.requestHandler!.call(this, request);
-
-      if (this.options.responseInterceptor) {
-        response = this.options.responseInterceptor.call(this, response);
-      }
-
-      // Store in cache if enabled
-      if (this.options.cacheOptions?.enabled) {
-        this.#cache.set(this.#url, {
-          data: response,
-          timestamp: Date.now(),
-        });
-      }
-
-      return response;
-    } catch (error) {
-      if (this.options.errorInterceptor && error instanceof Error) {
-        this.options.errorInterceptor(error);
-      }
-      throw error;
-    }
   }
 
   /**
    * Builds the final URL for the API request.
    * @returns The constructed URL with query parameters
    */
-  private buildUrl(queryBuilder: QueryBuilder) {
+  protected buildUrl(queryBuilder: QueryBuilder): string {
     const queryString = this.toQueryString(queryBuilder);
 
     let segments: Array<string> = [];
@@ -153,7 +32,9 @@ export class RestAdapter implements AdapterInterface {
       url += `?${queryString}`;
     }
 
-    return decodeURIComponent(url);
+    this._url = url;
+
+    return decodeURIComponent(this._url);
   }
 
   private unwrapParents(queryBuilder: QueryBuilder, segments: Array<string>): Array<string> {
@@ -190,38 +71,32 @@ export class RestAdapter implements AdapterInterface {
       .map(([key, value]) => `${key}=${value}`)
       .join('&');
   }
-}
 
-/**
- * Default request handler that uses the Fetch API to make HTTP requests.
- * @param request - The HTTP request configuration
- * @returns A promise that resolves to the JSON response
- * @throws Error if the request fails
- */
-async function fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> {
-  if (request.options?.headers?.['Content-Type'] === 'application/json' && request.body) {
-    request.body = JSON.stringify(request.body);
-  }
+  protected async fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> {
+    if (request.options?.headers?.['Content-Type'] === 'application/json' && request.body) {
+      request.body = JSON.stringify(request.body);
+    }
 
-  try {
-    const response = await fetch(request.url, {
-      method: request.method,
-      body: ['PUT', 'POST', 'PATCH'].includes(request.method!) ? request.body : null,
-      headers: request.options?.headers,
-      credentials: request.options?.credentials,
-      mode: request.options?.mode,
-      redirect: request.options?.redirect,
-      referrer: request.options?.referrer,
-      cache: request.options?.cache,
-      keepalive: request.options?.keepalive,
-      signal: request.options?.signal,
-    } as RequestInit);
+    try {
+      const response = await fetch(`${this.options.baseUrl}/${request.url}`, {
+        method: request.method,
+        body: ['PUT', 'POST', 'PATCH'].includes(request.method!) ? request.body : null,
+        headers: request.options?.headers,
+        credentials: request.options?.credentials,
+        mode: request.options?.mode,
+        redirect: request.options?.redirect,
+        referrer: request.options?.referrer,
+        cache: request.options?.cache,
+        keepalive: request.options?.keepalive,
+        signal: request.options?.signal,
+      } as RequestInit);
 
-    return {
-      data: await response.json(),
-    } as HttpResponse;
-  } catch (error) {
-    throw new Error(`HTTP error: ${error}`);
+      return new HttpResponse({
+        data: await response.json(),
+      });
+    } catch (error) {
+      throw new Error(`HTTP error: ${error}`);
+    }
   }
 }
 

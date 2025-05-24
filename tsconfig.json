@@ -16,6 +16,6 @@
     "allowJs": false,
     "resolveJsonModule": true
   },
-  "include": ["./src/**/*.ts", "./examples/**/*.ts"],
+  "include": ["./src/**/*.ts", "./examples/**/*.ts", "./__tests__/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 } 

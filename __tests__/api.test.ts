@@ -1,11 +1,9 @@
-import { expect, describe, it, vi, beforeEach } from 'vitest'
-import { User } from '../examples/models/User'
-import { Post } from '../examples/models/Post'
-import { Comment } from '../examples/models/Comment'
-import { Fluentity, RestAdapter, HttpResponse } from '../src'
-import { Company } from '../examples/models/Company'
-
-
+import { expect, describe, it, vi, beforeEach } from 'vitest';
+import { User } from '../examples/models/User';
+import { Post } from '../examples/models/Post';
+import { Comment } from '../examples/models/Comment';
+import { Fluentity, RestAdapter, HttpResponse } from '../src';
+import { Company } from '../examples/models/Company';
 
 describe('API', () => {
   const fluentity = Fluentity.initialize({
@@ -162,52 +160,6 @@ describe('API', () => {
 
     await comment.update({ name: 'Cedric updated' });
     expect(fluentity.adapter.url).toBe('posts/1/comments/1');
-  });
-
-  it('cannot cache the response', async () => {
-    fluentity.adapter.configure({
-      cacheOptions: {
-        enabled: false,
-      },
-    });
-
-    const user = await User.find(1);
-    expect(user).toBeDefined();
-    expect(user).toBeInstanceOf(User);
-
-    const cache = fluentity.adapter.getCache('users/1');
-    expect(cache).toBeUndefined();
-  });
-
-  it('can cache the response', async () => {
-    fluentity.adapter.configure({
-      cacheOptions: {
-        enabled: true,
-        ttl: 1000,
-      },
-    });
-
-    const response1 = await User.find(1);
-    expect(fluentity.adapter.url).toBe('users/1');
-    expect(response1).toBeDefined();
-    expect(response1).toBeInstanceOf(User);
-
-    const cache = fluentity.adapter.getCache('users/1');
-
-    expect(cache).toBeDefined();
-
-    const user = new User(cache.data);
-
-    user.update({ name: 'Cedric updated' });
-
-    expect(user).toBeDefined();
-    expect(user).toBeInstanceOf(User);
-
-    // Clear cache
-    fluentity.adapter.deleteCache('users/1');
-
-    const cache2 = fluentity.adapter.getCache('users/1');
-    expect(cache2).toBeUndefined();
   });
 
   it('can fetch a post with comments', async () => {

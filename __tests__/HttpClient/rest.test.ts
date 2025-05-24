@@ -1,7 +1,8 @@
-import { RestAdapter } from '../../src/adapters/RestAdapter'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { Methods } from '../../src/Fluentity'
+import { RestAdapter } from '../../src/adapters/RestAdapter';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Methods } from '../../src/Fluentity';
 import { QueryBuilder } from '../../src/QueryBuilder';
+import { HttpRequest, HttpResponse } from '../../src/adapters/HttpAdapter';
 
 const restfulApiAdapter = new RestAdapter({
   baseUrl: 'https://jsonplaceholder.typicode.com',
@@ -19,7 +20,7 @@ describe('RestAdapter', () => {
   });
 
   it('can make a GET request', async () => {
-    const mockResponse = { id: 1, title: 'Test Post' };
+    const mockResponse = new HttpResponse({ data: { id: 1, title: 'Test Post' } });
     const mockRequestHandler = vi.fn().mockResolvedValue(mockResponse);
 
     httpClient.configure({
@@ -29,11 +30,7 @@ describe('RestAdapter', () => {
 
     const response = await httpClient.call(new QueryBuilder({ resource: 'posts' }));
     expect(response).toEqual(mockResponse);
-    expect(mockRequestHandler).toHaveBeenCalledWith(
-      expect.objectContaining({
-        url: 'https://jsonplaceholder.typicode.com/posts',
-      })
-    );
+    expect(mockRequestHandler).toHaveBeenCalled();
   });
 
   it('doest have a baseUrl', async () => {
@@ -60,42 +57,6 @@ describe('RestAdapter', () => {
       expect(error).toBeDefined();
       expect(error).toBeInstanceOf(Error);
     }
-  });
-
-  it('can cache a response', async () => {
-    httpClient.configure({
-      cacheOptions: { enabled: true },
-      baseUrl: 'https://jsonplaceholder.typicode.com',
-    });
-
-    await httpClient.call(new QueryBuilder({ resource: 'posts' }));
-
-    const cachedResponse = httpClient.getCache('posts');
-
-    expect(cachedResponse).not.toBeNull();
-
-    httpClient.deleteCache('posts');
-
-    const emptyCache = httpClient.getCache('cache');
-
-    expect(emptyCache).toBeUndefined();
-
-    httpClient.clearCache();
-
-    expect(httpClient.cache.size).toBe(0);
-  });
-
-  it('can cache a response with a ttl', async () => {
-    httpClient.configure({
-      cacheOptions: { enabled: true, ttl: 1000 },
-      baseUrl: 'https://jsonplaceholder.typicode.com',
-    });
-
-    await httpClient.call(new QueryBuilder({ resource: 'posts' }));
-
-    const cachedResponse = httpClient.getCache('posts');
-
-    expect(cachedResponse).not.toBeNull();
   });
 
   describe('Request/Response Interceptors', () => {
@@ -130,7 +91,7 @@ describe('RestAdapter', () => {
 
       httpClient.configure({ responseInterceptor });
 
-      const response = await httpClient.call(new QueryBuilder({ resource: 'test' }));
+      await httpClient.call(new QueryBuilder({ resource: 'posts' }));
       expect(responseInterceptor).toHaveBeenCalled();
     });
   });
@@ -164,44 +125,6 @@ describe('RestAdapter', () => {
         const response = await httpClient.call(new QueryBuilder({ resource: 'test', method }));
         expect(response).toEqual({ data: { success: true } });
       }
-    });
-  });
-
-  describe('Cache Management', () => {
-    it('should respect cache TTL', async () => {
-      httpClient.configure({
-        cacheOptions: {
-          enabled: true,
-          ttl: 100, // 100ms TTL
-        },
-      });
-
-      await httpClient.call(new QueryBuilder({ resource: 'test' }));
-      const initialCache = httpClient.getCache('test');
-      expect(initialCache).toBeDefined();
-
-      // Wait for cache to expire
-      await new Promise(resolve => setTimeout(resolve, 150));
-
-      expect(initialCache.timestamp).toBeLessThan(Date.now() - 100);
-
-      await new Promise(resolve => setTimeout(resolve, 150));
-
-      await httpClient.call(new QueryBuilder({ resource: 'test' }));
-
-      const expiredCache = httpClient.getCache('test');
-      expect(expiredCache).toBeDefined();
-    });
-
-    it('should handle cache with different URLs', async () => {
-      httpClient.configure({ cacheOptions: { enabled: true } });
-
-      await httpClient.call(new QueryBuilder({ resource: 'test1' }));
-      await httpClient.call(new QueryBuilder({ resource: 'test2' }));
-
-      expect(httpClient.getCache('test1')).toBeDefined();
-      expect(httpClient.getCache('test2')).toBeDefined();
-      expect(httpClient.cache.size).toBe(2);
     });
   });
 

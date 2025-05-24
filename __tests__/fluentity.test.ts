@@ -61,7 +61,7 @@ describe('Fluentity Class', () => {
 
     it('can configure the request handler', async () => {
       const handler = (request: HttpRequest) => {
-        expect(request.url).toBe('https://api.example.com/');
+        expect(request.url).toBe('users');
         expect(request).toBeDefined();
         expect(request.method).toBe(Methods.GET);
         return Promise.resolve<HttpResponse>({ data: true });
@@ -70,6 +70,7 @@ describe('Fluentity Class', () => {
       fluentity.adapter.configure({ requestHandler: handler });
       const queryBuilder = new QueryBuilder();
       queryBuilder.method = Methods.GET;
+      queryBuilder.resource = 'users';
       const response = await fluentity.adapter.call(queryBuilder);
       expect(response).toBeDefined();
       expect(response.data).toBe(true);
