@@ -1,4 +1,4 @@
-import { Model } from './Model';
+import { Attributes, Model } from './Model';
 import { QueryBuilder } from './QueryBuilder';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
@@ -18,9 +18,9 @@ import { Fluentity, Methods } from './Fluentity';
  * ```
  */
 export type Relation<T> =
-  T extends Model<any>
+  T extends Model<Attributes>
     ? HasOneRelationBuilder<T>
-    : T extends Array<Model<any>>
+    : T extends Array<Model<Attributes>>
       ? HasManyRelationBuilder<T[number]>
       : never;
 
@@ -38,7 +38,7 @@ export type Relation<T> =
  * }
  * ```
  */
-export class RelationBuilder<T extends Model<any>> {
+export class RelationBuilder<T extends Model<Attributes>> {
   /**
    * Query builder instance for constructing API URLs and managing query parameters.
    * Used internally to build the request URL and parameters.

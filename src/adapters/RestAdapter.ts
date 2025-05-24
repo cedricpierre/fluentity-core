@@ -66,11 +66,11 @@ export class RestAdapter implements AdapterInterface {
    * @param url - The URL to get cached data for
    * @returns The cached data if it exists
    */
-  getCache<T = any>(url: string): CacheData {
+  getCache(url: string): CacheData {
     return this.#cache.get(url) as CacheData;
   }
 
-  get url() {
+  get url(): string {
     return this.#url;
   }
 
@@ -186,7 +186,7 @@ export class RestAdapter implements AdapterInterface {
     obj.offset = queryBuilder.offset;
 
     return Object.entries(obj)
-      .filter(([key, value]) => value !== undefined)
+      .filter(([_key, value]) => value !== undefined)
       .map(([key, value]) => `${key}=${value}`)
       .join('&');
   }

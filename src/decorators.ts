@@ -1,5 +1,5 @@
 import { RelationBuilder } from './RelationBuilder';
-import { Model } from './Model';
+import { Attributes, Model } from './Model';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
 
@@ -41,7 +41,7 @@ export type PropertyDecoratorType = (target: object, key: string | symbol) => vo
  * @returns A property decorator function
  * @private
  */
-const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
+const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>(
   model: () => Constructor<T>,
   relationBuilderFactory: Constructor<R>,
   resource?: string
@@ -49,7 +49,7 @@ const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
   return function (target: object, key: string | symbol): void {
     // Initialize the property on the prototype
     Object.defineProperty(target, key, {
-      get(this: Model<any>) {
+      get(this: Model<Attributes>) {
         return new relationBuilderFactory(model(), this.queryBuilder, resource);
       },
       enumerable: true,
@@ -72,7 +72,9 @@ const makeRelation = <T extends Model<any>, R extends RelationBuilder<T>>(
  * }
  * ```
  */
-export const Cast = (caster: () => Constructor<any>): PropertyDecoratorType => {
+export const Cast = <T extends Model<Attributes>>(
+  caster: () => Constructor<T>
+): PropertyDecoratorType => {
   return function (target: object, key: string | symbol): void {
     // Create a unique symbol for each instance
     const privateKey = Symbol(String(key));
@@ -136,7 +138,7 @@ export const Cast = (caster: () => Constructor<any>): PropertyDecoratorType => {
  * ```
  */
 export const HasOne = (
-  model: () => Constructor<Model<any>>,
+  model: () => Constructor<Model<Attributes>>,
   resource?: string
 ): PropertyDecoratorType => {
   return makeRelation(model, HasOneRelationBuilder as Constructor<RelationBuilder<any>>, resource);
@@ -158,7 +160,7 @@ export const HasOne = (
  * ```
  */
 export const HasMany = (
-  model: () => Constructor<Model<any>>,
+  model: () => Constructor<Model<Attributes>>,
   resource?: string
 ): PropertyDecoratorType => {
   return makeRelation(model, HasManyRelationBuilder as Constructor<RelationBuilder<any>>, resource);

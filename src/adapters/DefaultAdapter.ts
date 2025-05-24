@@ -1,7 +1,7 @@
 import { AdapterInterface, AdapterResponse, AdapterOptions } from '../Fluentity';
 
 export class DefaultAdapter implements AdapterInterface {
-  async call(options: AdapterOptions): Promise<AdapterResponse> {
+  async call(_options: AdapterOptions): Promise<AdapterResponse> {
     return { data: {} };
   }
 

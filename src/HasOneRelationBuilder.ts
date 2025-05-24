@@ -16,7 +16,7 @@ import { RelationBuilder } from './RelationBuilder';
  * }
  * ```
  */
-export class HasOneRelationBuilder<T extends Model<any>> extends RelationBuilder<T> {
+export class HasOneRelationBuilder<T extends Model<Attributes>> extends RelationBuilder<T> {
   /**
    * Fetches the related model instance.
    * Makes a GET request to retrieve the single related model.

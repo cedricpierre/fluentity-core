@@ -62,7 +62,9 @@ export interface AdapterInterface {
  * }
  * ```
  */
-export interface AdapterOptions {}
+export interface AdapterOptions {
+  [key: string]: unknown | any;
+}
 
 /**
  * Interface for adapter responses.

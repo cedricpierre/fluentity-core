@@ -120,7 +120,7 @@ export class Model<T extends Attributes = Attributes> {
    * @private
    * @static
    */
-  private static getRelationBuilder<T extends Model<any>, R extends RelationBuilder<T>>(
+  private static getRelationBuilder<T extends Model<Attributes>, R extends RelationBuilder<T>>(
     model: Constructor<T>,
     relationBuilderFactory: Constructor<R>
   ): R {
@@ -141,7 +141,7 @@ export class Model<T extends Attributes = Attributes> {
    * const user = User.id(123);
    * ```
    */
-  static id<T extends Model<any>>(this: Constructor<T>, id: string | number): T {
+  static id<T extends Model<Attributes>>(this: Constructor<T>, id: string | number): T {
     return new this({ id });
   }
 
@@ -449,7 +449,7 @@ export class Model<T extends Attributes = Attributes> {
         } else if (Array.isArray(value) && value.length > 0) {
           obj[key] = value
             .filter((item: any) => item instanceof Model && typeof item.toObject === 'function')
-            .map((item: Model<any>) => item.toObject());
+            .map((item: Model<Attributes>) => item.toObject());
         }
       }
     }
