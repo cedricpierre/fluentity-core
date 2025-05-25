@@ -198,7 +198,7 @@ describe('Fluentity Class', () => {
   it('can use a custom request handler', async () => {
     fluentity.adapter.configure({
       baseUrl: 'https://jsonplaceholder.typicode.com',
-      requestHandler: async _request => {
+      requestHandler: async (_request: HttpRequest) => {
         return new HttpResponse({ data: { id: 1, name: 'John Doe' } });
       },
     });
