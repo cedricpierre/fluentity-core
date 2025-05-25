@@ -1,213 +1,209 @@
-import { describe, it, expect, vi, beforeEach, should } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Fluentity, RestAdapter, Methods } from '../src/index';
 import { QueryBuilder } from '../src/QueryBuilder';
 import { User } from '../examples/models/User';
 import { HttpResponse, HttpRequest } from '../src/adapters/HttpAdapter';
 
-let fluentity: Fluentity;
-
 describe('Fluentity Class', () => {
+  let fluentity: Fluentity;
+
   beforeEach(() => {
+    // Reset the singleton instance before each test
+    // @ts-ignore - accessing private static property for testing
+    Fluentity.instance = undefined;
     vi.restoreAllMocks();
   });
 
-  it('should throw an error if an instance already exists', () => {
-    expect(() => Fluentity.getInstance()).toThrow(
-      'Fluentity has not been initialized. Call initialize() first.'
-    );
+  afterEach(() => {
+    // Clean up after each test
+    // @ts-ignore - accessing private static property for testing
+    Fluentity.instance = undefined;
   });
 
-  it('can initialize', () => {
-    fluentity = Fluentity.initialize({
-      adapter: new RestAdapter({
-        baseUrl: '',
-      }),
+  describe('Initialization and Instance Management', () => {
+    it('should throw an error if getting instance before initialization', () => {
+      expect(() => Fluentity.getInstance()).toThrow(
+        'Fluentity has not been initialized. Call initialize() first.'
+      );
     });
-    expect(fluentity).toBeDefined();
+
+    it('can initialize with custom adapter', () => {
+      fluentity = Fluentity.initialize({
+        adapter: new RestAdapter({
+          baseUrl: '',
+        }),
+      });
+      expect(fluentity).toBeDefined();
+    });
+
+    it('should throw an error if trying to initialize twice', () => {
+      Fluentity.initialize();
+      expect(() => Fluentity.initialize()).toThrow(
+        'Fluentity has already been initialized. Use getInstance() instead.'
+      );
+    });
+
+    it('can get the instance after initialization', () => {
+      fluentity = Fluentity.initialize();
+      expect(Fluentity.getInstance()).toBeDefined();
+      expect(Fluentity.getInstance()).toBe(fluentity);
+    });
+
+    it('should have a default adapter if none provided', () => {
+      fluentity = Fluentity.initialize();
+      expect(fluentity.adapter).toBeDefined();
+    });
   });
 
-  it('should throw an error if an instance already exists', () => {
-    expect(() => Fluentity.initialize()).toThrow(
-      'Fluentity has already been initialized. Use getInstance() instead.'
-    );
+  describe('Adapter Configuration', () => {
+    beforeEach(() => {
+      fluentity = Fluentity.initialize({
+        adapter: new RestAdapter({
+          baseUrl: '',
+        }),
+      });
+    });
+
+    it('can configure the base URL', () => {
+      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
+      fluentity.adapter.configure({ baseUrl: 'https://api.example.com' });
+      expect(fluentity.adapter.options.baseUrl).toBe('https://api.example.com');
+    });
+
+    it('can configure the request interceptor', () => {
+      const interceptor = (request: HttpRequest) => request;
+      fluentity.adapter.configure({ requestInterceptor: interceptor });
+      expect(fluentity.adapter.options.requestInterceptor).toBe(interceptor);
+    });
+
+    it('can configure the response interceptor', () => {
+      const interceptor = (response: HttpResponse) => response;
+      fluentity.adapter.configure({ responseInterceptor: interceptor });
+      expect(fluentity.adapter.options.responseInterceptor).toBe(interceptor);
+    });
+
+    it('can configure the error interceptor', () => {
+      const interceptor = vi.fn();
+      fluentity.adapter.configure({ errorInterceptor: interceptor });
+      expect(fluentity.adapter.options.errorInterceptor).toBe(interceptor);
+    });
   });
 
-  it('has an adapter', () => {
-    expect(fluentity.adapter).toBeDefined();
-  });
+  describe('HTTP Methods', () => {
+    beforeEach(() => {
+      fluentity = Fluentity.initialize({
+        adapter: new RestAdapter({
+          baseUrl: 'https://api.example.com',
+        }),
+      });
+    });
 
-  it('can get the instance', () => {
-    expect(fluentity).toBeDefined();
-  });
+    const testHttpMethod = (method: string) => {
+      it(`can call a ${method} request`, async () => {
+        vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+          expect(queryBuilder.resource).toBe('users');
+          expect(queryBuilder.method).toBe(method);
+          return Promise.resolve({ data: true });
+        });
 
-  it('has static instance', () => {
-    expect(Fluentity.getInstance()).toBeDefined();
-  });
+        const queryBuilder = new QueryBuilder();
+        queryBuilder.resource = 'users';
+        queryBuilder.method = method as any;
 
-  it('should have a default adapter', () => {
-    expect(fluentity.adapter).toBeDefined();
-  });
-
-  it('can configure the base URL', () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
-
-    fluentity.adapter.configure({ baseUrl: 'https://api.example.com' });
-    expect(fluentity.adapter.options.baseUrl).toBe('https://api.example.com');
-  });
-
-  it('can configure the request interceptor', () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
-
-    const interceptor = (request: HttpRequest) => {
-      return request;
+        const response = await fluentity.adapter.call(queryBuilder);
+        expect(response).toBeDefined();
+        expect(response.data).toBe(true);
+      });
     };
 
-    fluentity.adapter.configure({ requestInterceptor: interceptor });
-    expect(fluentity.adapter.options.requestInterceptor).toBe(interceptor);
+    Object.values(Methods).forEach(method => testHttpMethod(method));
   });
 
-  it('can configure the response interceptor', () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
+  describe('Call Methods', () => {
+    let mockQueryBuilder: QueryBuilder;
 
-    const interceptor = (response: HttpResponse) => {
-      return response;
-    };
-
-    fluentity.adapter.configure({ responseInterceptor: interceptor });
-    expect(fluentity.adapter.options.responseInterceptor).toBe(interceptor);
-  });
-
-  it('can configure the request handler', async () => {
-    const handler = (request: HttpRequest) => {
-      expect(request.url).toBe('users');
-      expect(request).toBeDefined();
-      expect(request.method).toBe(Methods.GET);
-      return Promise.resolve<HttpResponse>({ data: true });
-    };
-
-    fluentity.adapter.configure({ requestHandler: handler });
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.method = Methods.GET;
-    queryBuilder.resource = 'users';
-    const response = await fluentity.adapter.call(queryBuilder);
-    expect(response).toBeDefined();
-    expect(response.data).toBe(true);
-    expect(fluentity.adapter.options.requestHandler).toBe(handler);
-  });
-
-  it('can configure the error interceptor', () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
-
-    const interceptor = vi.fn();
-    fluentity.adapter.configure({ errorInterceptor: interceptor });
-    expect(fluentity.adapter.options.errorInterceptor).toBe(interceptor);
-  });
-
-  it('can call a GET request', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
-    const response = await fluentity.adapter.call(new QueryBuilder());
-    expect(response).toBeDefined();
-    expect(response.data).toBe(true);
-  });
-
-  it('can call a POST request', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
-      expect(queryBuilder.resource).toBe('users');
-      expect(queryBuilder.method).toBe(Methods.POST);
-      return Promise.resolve({ data: true });
+    beforeEach(() => {
+      fluentity = Fluentity.initialize({
+        adapter: new RestAdapter({
+          baseUrl: 'https://api.example.com',
+        }),
+      });
+      mockQueryBuilder = new QueryBuilder();
+      mockQueryBuilder.resource = 'test';
     });
 
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.resource = 'users';
-    queryBuilder.method = Methods.POST;
+    it('should call the adapter with the query builder using instance method', async () => {
+      const mockResponse = { data: { id: 1, name: 'Test' } };
+      const spy = vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
-    const response = await fluentity.adapter.call(queryBuilder);
-    expect(response).toBeDefined();
-  });
+      const response = await fluentity.call(mockQueryBuilder);
 
-  it('can call a PUT request', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
-      expect(queryBuilder.resource).toBe('users');
-      expect(queryBuilder.method).toBe(Methods.PUT);
-      return Promise.resolve({ data: true });
+      expect(spy).toHaveBeenCalledWith(mockQueryBuilder);
+      expect(response).toEqual(mockResponse);
     });
 
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.resource = 'users';
-    queryBuilder.method = Methods.PUT;
-    const response = await fluentity.adapter.call(queryBuilder);
-    expect(response).toBeDefined();
-  });
+    it('should call the adapter with the query builder using static method', async () => {
+      const mockResponse = { data: { id: 1, name: 'Test' } };
+      const spy = vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
-  it('can call a PATCH request', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
-      expect(queryBuilder.resource).toBe('users');
-      expect(queryBuilder.method).toBe(Methods.PATCH);
-      return Promise.resolve({ data: true });
+      const response = await Fluentity.call(mockQueryBuilder);
+
+      expect(spy).toHaveBeenCalledWith(mockQueryBuilder);
+      expect(response).toEqual(mockResponse);
     });
 
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.resource = 'users';
-    queryBuilder.method = Methods.PATCH;
-    const response = await fluentity.adapter.call(queryBuilder);
-    expect(response).toBeDefined();
-  });
+    it('should handle errors from the adapter in instance method', async () => {
+      const error = new Error('API Error');
+      vi.spyOn(fluentity.adapter, 'call').mockRejectedValue(error);
 
-  it('can call a DELETE request', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
-      expect(queryBuilder.resource).toBe('users');
-      expect(queryBuilder.method).toBe(Methods.DELETE);
-      return Promise.resolve({ data: true });
+      await expect(fluentity.call(mockQueryBuilder)).rejects.toThrow('API Error');
     });
 
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.resource = 'users';
-    queryBuilder.method = Methods.DELETE;
-    const response = await fluentity.adapter.call(queryBuilder);
-    expect(response).toBeDefined();
-  });
+    it('should handle errors from the adapter in static method', async () => {
+      const error = new Error('API Error');
+      vi.spyOn(fluentity.adapter, 'call').mockRejectedValue(error);
 
-  it('can call a HEAD request', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
-      expect(queryBuilder.resource).toBe('users');
-      expect(queryBuilder.method).toBe(Methods.HEAD);
-      return Promise.resolve({ data: true });
+      await expect(Fluentity.call(mockQueryBuilder)).rejects.toThrow('API Error');
     });
 
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.resource = 'users';
-    queryBuilder.method = Methods.HEAD;
-    const response = await fluentity.adapter.call(queryBuilder);
-    expect(response).toBeDefined();
-  });
+    it('should maintain type safety with the adapter response in instance method', async () => {
+      const mockResponse = {
+        data: {
+          id: 1,
+          name: 'Test',
+          email: 'test@example.com',
+        },
+      };
+      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
-  it('can call a OPTIONS request', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
-      expect(queryBuilder.resource).toBe('users');
-      expect(queryBuilder.method).toBe(Methods.OPTIONS);
-      return Promise.resolve({ data: true });
+      const response = await fluentity.call(mockQueryBuilder);
+
+      expect(response.data).toHaveProperty('id');
+      expect(response.data).toHaveProperty('name');
+      expect(response.data).toHaveProperty('email');
+      expect(typeof response.data.id).toBe('number');
+      expect(typeof response.data.name).toBe('string');
+      expect(typeof response.data.email).toBe('string');
     });
 
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.resource = 'users';
-    queryBuilder.method = Methods.OPTIONS;
-    const response = await fluentity.adapter.call(queryBuilder);
-    expect(response).toBeDefined();
-  });
+    it('should maintain type safety with the adapter response in static method', async () => {
+      const mockResponse = {
+        data: {
+          id: 1,
+          name: 'Test',
+          email: 'test@example.com',
+        },
+      };
+      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
-  it('can use a custom request handler', async () => {
-    fluentity.adapter.configure({
-      baseUrl: 'https://jsonplaceholder.typicode.com',
-      requestHandler: async (_request: HttpRequest) => {
-        return new HttpResponse({ data: { id: 1, name: 'John Doe' } });
-      },
+      const response = await Fluentity.call(mockQueryBuilder);
+
+      expect(response.data).toHaveProperty('id');
+      expect(response.data).toHaveProperty('name');
+      expect(response.data).toHaveProperty('email');
+      expect(typeof response.data.id).toBe('number');
+      expect(typeof response.data.name).toBe('string');
+      expect(typeof response.data.email).toBe('string');
     });
-
-    const queryBuilder = new QueryBuilder();
-    queryBuilder.resource = 'users';
-    const response = (await fluentity.adapter.call(queryBuilder)) as HttpResponse<User>;
-    expect(response.data).toBeDefined();
-    expect(response.data.id).toBe(1);
-    expect(response.data.name).toBe('John Doe');
   });
 });

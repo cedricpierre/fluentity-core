@@ -253,6 +253,26 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
     }
     return Fluentity.instance as Fluentity<A>;
   }
+
+  /**
+   * Calls the adapter with the given query builder.
+   * @param queryBuilder - The query builder to use
+   * @returns The adapter response
+   * @public
+   */
+  call(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
+    return this.#adapter.call(queryBuilder);
+  }
+
+  /**
+   * Calls the adapter with the given query builder.
+   * @param queryBuilder - The query builder to use
+   * @returns The adapter response
+   * @static
+   */
+  static call(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
+    return Fluentity.getInstance().call(queryBuilder);
+  }
 }
 
 // Export QueryBuilder type

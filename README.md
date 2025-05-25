@@ -252,6 +252,25 @@ const cache = fluentity.adapter.getCache("users/1");
 
 The QueryBuilder class is used under the hood the create the queries. It can be used by any Adapter. The query builder can also be instantiated in a Model and make queries using `Model.call(queryBuilder)`.
 
+### Nesting query builer
+
+This is the core of Fluentity, you can nest different query builders and the adapter will manage that. That's how relations are built:
+
+```typescript
+    const queryBuilder = new QueryBuilder({
+      resource: 'medias',
+      id: 2,
+      parent: new QueryBuilder({
+        resource: 'users',
+        id: 1
+      })
+    });
+
+    Fluentity.adapter.call(queryBuilder); // Will create a Get /users/1/medias/2
+```
+
+That's what Models decorators are doing under the hood.
+
 
 ## Decorators
 
