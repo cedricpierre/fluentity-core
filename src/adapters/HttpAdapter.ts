@@ -5,6 +5,7 @@ import {
   AdapterResponse,
   MethodType,
 } from '../Fluentity';
+import { Model } from '../Model';
 import { QueryBuilder } from '../QueryBuilder';
 
 /**
@@ -65,7 +66,7 @@ export abstract class HttpAdapter implements AdapterInterface {
    * @returns A promise that resolves to the response data
    * @throws Error if baseUrl is not configured or if the request fails
    */
-  async call(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
+  async call(queryBuilder: QueryBuilder): Promise<HttpResponse> {
     try {
       if (!this.options.baseUrl) {
         throw new Error('baseUrl is required');
