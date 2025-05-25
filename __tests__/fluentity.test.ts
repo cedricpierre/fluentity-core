@@ -1,18 +1,35 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, should } from 'vitest';
 import { Fluentity, RestAdapter, Methods } from '../src/index';
 import { QueryBuilder } from '../src/QueryBuilder';
 import { User } from '../examples/models/User';
 import { HttpResponse, HttpRequest } from '../src/adapters/HttpAdapter';
 
-const fluentity = Fluentity.initialize({
-  adapter: new RestAdapter({
-    baseUrl: '',
-  }),
-});
+let fluentity: Fluentity;
 
 describe('Fluentity Class', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+
+  it('should throw an error if an instance already exists', () => {
+    expect(() => Fluentity.getInstance()).toThrow(
+      'Fluentity has not been initialized. Call initialize() first.'
+    );
+  });
+
+  it('can initialize', () => {
+    fluentity = Fluentity.initialize({
+      adapter: new RestAdapter({
+        baseUrl: '',
+      }),
+    });
+    expect(fluentity).toBeDefined();
+  });
+
+  it('should throw an error if an instance already exists', () => {
+    expect(() => Fluentity.initialize()).toThrow(
+      'Fluentity has already been initialized. Use getInstance() instead.'
+    );
   });
 
   it('has an adapter', () => {
