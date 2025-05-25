@@ -93,7 +93,14 @@ describe('QueryBuilder', () => {
 
       queryBuilder.reset();
 
-      expect(queryBuilder.toObject()).toEqual({ query: {} });
+      expect(queryBuilder.query).toEqual({});
+      expect(queryBuilder.sort).toEqual(undefined);
+      expect(queryBuilder.direction).toEqual(undefined);
+      expect(queryBuilder.limit).toEqual(undefined);
+      expect(queryBuilder.offset).toEqual(undefined);
+      expect(queryBuilder.page).toEqual(undefined);
+      expect(queryBuilder.perPage).toEqual(undefined);
+      expect(queryBuilder.id).toEqual(undefined);
     });
   });
 

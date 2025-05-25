@@ -23,7 +23,7 @@ export interface AdapterInterface {
    * The options for the adapter.
    * Contains configuration settings specific to the adapter implementation.
    */
-  options?: AdapterOptions;
+  options: AdapterOptions;
 
   /**
    * Makes an API request using the adapter's implementation.

@@ -205,28 +205,6 @@ export class Model<T extends Attributes = Attributes> {
   }
 
   /**
-   * Starts a query with relations to include.
-   * Specifies which related models should be loaded with the query.
-   *
-   * @param relations - Single relation or array of relations to include
-   * @returns A HasManyRelationBuilder instance with relations included
-   * @static
-   * @example
-   * ```typescript
-   * const users = await User.include(['posts', 'profile']).all();
-   * ```
-   */
-  static include<T extends Model<Attributes>>(
-    this: Constructor<T>,
-    relations: string | string[]
-  ): HasManyRelationBuilder<T> {
-    return Model.getRelationBuilder<T, HasManyRelationBuilder<T>>(
-      this,
-      HasManyRelationBuilder
-    ).include(relations) as HasManyRelationBuilder<T>;
-  }
-
-  /**
    * Retrieves all records for the model.
    * Fetches all records from the API without any filtering.
    *
