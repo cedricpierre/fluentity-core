@@ -248,6 +248,11 @@ fluentity.adapter.deleteCache("users/1");
 const cache = fluentity.adapter.getCache("users/1");
 ```
 
+## Query builder
+
+The QueryBuilder class is used under the hood the create the queries. It can be used by any Adapter. The query builder can also be instantiated in a Model and make queries using `Model.call(queryBuilder)`.
+
+
 ## Decorators
 
 Fluentity provides several decorators to define relationships and type casting:
@@ -344,6 +349,12 @@ class User extends Model<UserAttributes> {
     return new this(response.data);
   }
 }
+```
+
+Usage:
+
+```typescript
+const user = await User.login(username, password);
 ```
 
 ## Static Methods
