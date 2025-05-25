@@ -110,6 +110,13 @@ describe('API', () => {
     expect(comment.name).toBe('Cedric');
   });
 
+  it('should create a comment with a custom method', async () => {
+    const response = await User.login('cedric', 'password');
+    expect(fluentity.adapter.url).toBe('login');
+    expect(response).toBeDefined();
+    expect(response).toBeInstanceOf(User);
+  });
+
   it('can transform the response', async () => {
     fluentity.adapter.configure({
       responseInterceptor: (response: HttpResponse<User>) => {

@@ -2,7 +2,7 @@ import { RelationBuilder } from './RelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { Constructor } from './decorators';
-import { Fluentity, Methods, MethodType } from './Fluentity';
+import { AdapterResponse, Fluentity, Methods, MethodType } from './Fluentity';
 import { QueryBuilder } from './QueryBuilder';
 
 /**
@@ -399,6 +399,20 @@ export class Model<T extends Attributes = Attributes> {
   async delete(): Promise<void> {
     this.#queryBuilder.method = Methods.DELETE;
     await this.fluentity.adapter.call(this.#queryBuilder);
+  }
+
+  /**
+   * Calls the adapter with the given query builder.
+   * @param queryBuilder - The query builder to use
+   * @returns The adapter response
+   * @protected
+   */
+  protected async call(queryBuilder: QueryBuilder): Promise<AdapterResponse<T>> {
+    return this.constructor.call(queryBuilder);
+  }
+
+  static async call(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
+    return (await Fluentity.getInstance().adapter.call(queryBuilder)) as AdapterResponse;
   }
 
   /**

@@ -6,12 +6,16 @@ import {
   Cast,
   HasOne,
   RelationBuilder,
+  Methods,
+  AdapterResponse,
 } from '../../src/index';
 
 import { Company } from './Company';
 
 import { Media } from './Media';
 import { Thumbnail } from './Thumbnail';
+
+import { QueryBuilder } from '../../src/QueryBuilder';
 
 interface UserAttributes extends Attributes {
   name: string;
@@ -55,4 +59,19 @@ export class User extends Model<UserAttributes> implements UserAttributes {
   static scopes = {
     active: (query: RelationBuilder<User>) => query.where({ status: 'active' }),
   };
+
+  static async login(username: string, password: string) {
+    const queryBuilder = new QueryBuilder({
+      resource: 'login',
+      body: {
+        username,
+        password,
+      },
+      method: Methods.POST,
+    });
+
+    const response = await this.call(queryBuilder);
+
+    return new this(response.data);
+  }
 }

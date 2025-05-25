@@ -318,6 +318,34 @@ class User extends Model<UserAttributes> {
 }
 ```
 
+## Custom methods
+
+You can also declare custom methods in the models.
+The idea is to abstract the query using QueryBuilder, that way it's not dependant of the selected Adapter.
+
+```typescript
+class User extends Model<UserAttributes> {
+  static async login(username: string, password: string) {
+
+    // The query builder will be used by the current adapter.
+    const queryBuilder = new QueryBuilder({
+      resource: 'login',
+      body: {
+        username,
+        password,
+      },
+      method: Methods.POST,
+    });
+
+    // Model has a static method "call" that uses the adapter.
+    const response = await this.call(queryBuilder);
+
+    // We are are to create a new instance of User
+    return new this(response.data);
+  }
+}
+```
+
 ## Static Methods
 
 Models come with several static methods for querying and manipulating data:

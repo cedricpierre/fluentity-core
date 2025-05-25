@@ -1,14 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { User } from '../examples/models/User'
-import { Fluentity } from '../src/index'
-import { Media } from '../examples/models/Media'
-import { Thumbnail } from '../examples/models/Thumbnail'
-import { QueryBuilder } from '../src/QueryBuilder'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { User } from '../examples/models/User';
+import { Fluentity } from '../src/index';
+import { Media } from '../examples/models/Media';
+import { Thumbnail } from '../examples/models/Thumbnail';
+import { QueryBuilder } from '../src/QueryBuilder';
+import { Model } from '../src/Model';
 
-let user: User
-let medias: Media[]
+let user: User;
+let medias: Media[];
 
-const fluentity = Fluentity.initialize()
+const fluentity = Fluentity.initialize();
 
 describe('Models', () => {
   beforeEach(() => {
@@ -393,4 +394,86 @@ describe('Models', () => {
     expect(users[0]).toBeInstanceOf(User);
     expect(users[0].name).toBe('Cedric');
   });
-})
+});
+
+describe('Model protected methods', () => {
+  let testUser: User;
+  let mockQueryBuilder: QueryBuilder;
+
+  beforeEach(() => {
+    testUser = new User({
+      id: '123',
+      name: 'Test User',
+      email: 'test@example.com',
+      phone: 1234567890,
+    });
+    mockQueryBuilder = new QueryBuilder();
+    mockQueryBuilder.resource = 'users';
+    mockQueryBuilder.id = '123';
+    vi.restoreAllMocks();
+  });
+
+  it('should call the adapter with the query builder', async () => {
+    const mockResponse = { data: { id: '123', name: 'Updated User' } };
+    const spy = vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
+
+    // Access the protected call method through a test subclass
+    class TestModel extends Model {
+      public testCall() {
+        return this.call(mockQueryBuilder);
+      }
+    }
+
+    const testModel = new TestModel({ id: '123' });
+    const result = await testModel.testCall();
+
+    expect(spy).toHaveBeenCalledWith(mockQueryBuilder);
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('should handle adapter errors gracefully', async () => {
+    const error = new Error('API Error');
+    vi.spyOn(fluentity.adapter, 'call').mockRejectedValue(error);
+
+    class TestModel extends Model {
+      public testCall(qb: QueryBuilder) {
+        return this.call(qb);
+      }
+    }
+
+    const testModel = new TestModel({ id: '123' });
+
+    await expect(testModel.testCall(mockQueryBuilder)).rejects.toThrow('API Error');
+  });
+
+  it('should maintain type safety with the adapter response', async () => {
+    const mockResponse = {
+      data: {
+        id: '123',
+        name: 'Test User',
+        email: 'test@example.com',
+        phone: 1234567890,
+      },
+    };
+    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
+
+    class TestModel extends Model {
+      public testCall(qb: QueryBuilder) {
+        return this.call(qb);
+      }
+    }
+
+    const testModel = new TestModel({ id: '123' });
+    const result = await testModel.testCall(mockQueryBuilder);
+
+    // Verify the response maintains the correct type structure
+    expect(result.data).toHaveProperty('id');
+    expect(result.data).toHaveProperty('name');
+    expect(result.data).toHaveProperty('email');
+    expect(result.data).toHaveProperty('phone');
+    expect(typeof result.data.id).toBe('string');
+    expect(typeof result.data.name).toBe('string');
+    expect(typeof result.data.email).toBe('string');
+    expect(typeof result.data.phone).toBe('number');
+  });
+});
