@@ -2,8 +2,9 @@ import { expect, describe, it, vi, beforeEach } from 'vitest';
 import { User } from '../examples/models/User';
 import { Post } from '../examples/models/Post';
 import { Comment } from '../examples/models/Comment';
-import { Fluentity, RestAdapter, HttpResponse } from '../src';
+import { Fluentity, RestAdapter } from '../src';
 import { Company } from '../examples/models/Company';
+import { HttpResponse } from '../src/adapters/HttpAdapter';
 
 describe('API', () => {
   const fluentity = Fluentity.initialize({
@@ -111,7 +112,7 @@ describe('API', () => {
 
   it('can transform the response', async () => {
     fluentity.adapter.configure({
-      responseInterceptor: (response: HttpResponse) => {
+      responseInterceptor: (response: HttpResponse<User>) => {
         response.data.name = 'Cedric';
         return response;
       },
@@ -198,7 +199,7 @@ describe('API', () => {
   });
 
   it('can fetch one and all posts and comments', async () => {
-    const post = await Post.find(1);
-    const posts = await Post.all();
+    await Post.find(1);
+    await Post.all();
   });
 });

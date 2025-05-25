@@ -1,4 +1,3 @@
-import { AdapterOptions, AdapterResponse, MethodType } from '../Fluentity';
 import { QueryBuilder } from '../QueryBuilder';
 import { HttpAdapter, HttpAdapterOptions, HttpRequest, HttpResponse } from './HttpAdapter';
 
@@ -57,7 +56,7 @@ export class RestAdapter extends HttpAdapter {
    * @returns The constructed query string
    */
   private toQueryString(queryBuilder: QueryBuilder): string {
-    const obj: Record<string, any> = { ...queryBuilder.query };
+    const obj: Record<string, unknown> = { ...queryBuilder.query };
 
     obj.page = queryBuilder.page;
     obj.perPage = queryBuilder.perPage;

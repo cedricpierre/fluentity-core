@@ -62,9 +62,9 @@ export interface AdapterInterface {
  * }
  * ```
  */
-export interface AdapterOptions {
-  [key: string]: unknown | any;
-}
+export type AdapterOptions = Record<string, unknown>;
+
+export interface AdapterRequest {}
 
 /**
  * Interface for adapter responses.
@@ -73,15 +73,21 @@ export interface AdapterOptions {
  * @interface
  * @example
  * ```typescript
- * const response: AdapterResponse = {
+ * // For a single object response
+ * const response: AdapterResponse<User> = {
  *   data: { id: 1, name: 'John' }
+ * };
+ *
+ * // For an array response
+ * const response: AdapterResponse<User[]> = {
+ *   data: [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]
  * };
  * ```
  */
-export interface AdapterResponse {
+export type AdapterResponse<T = unknown | any> = {
   /** The response data from the API */
-  data: any | any[];
-}
+  data: T;
+};
 
 /**
  * HTTP method constants for use in requests.
@@ -119,16 +125,17 @@ export type MethodType = keyof typeof Methods;
  * Configuration options for initializing Fluentity.
  *
  * @interface
+ * @template A - The type of adapter to use
  * @example
  * ```typescript
- * const options: FluentityOptions = {
+ * const options: FluentityOptions<RestAdapter> = {
  *   adapter: new RestAdapter()
  * };
  * ```
  */
-export interface FluentityOptions {
+export interface FluentityOptions<A extends AdapterInterface = DefaultAdapter> {
   /** The adapter instance to use for API communication */
-  adapter: AdapterInterface;
+  adapter?: A;
 }
 
 /**
@@ -136,6 +143,8 @@ export interface FluentityOptions {
  * Implements the singleton pattern to ensure a single instance is used throughout the application.
  * Handles adapter management and provides a central point for API communication.
  *
+ * @class
+ * @template A - The type of adapter being used
  * @example
  * ```typescript
  * // Initialize with custom adapter
@@ -145,40 +154,51 @@ export interface FluentityOptions {
  *
  * // Get instance
  * const fluentity = Fluentity.getInstance();
+ *
+ * // Use the adapter
+ * const response = await fluentity.adapter.call(queryBuilder);
  * ```
  */
-export class Fluentity {
-  /** Singleton instance of Fluentity */
-  private static instance: Fluentity;
+export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
+  /**
+   * Singleton instance of Fluentity.
+   * @private
+   * @static
+   */
+  private static instance: Fluentity<any>;
 
   /**
    * The adapter instance used for API communication.
    * @private
+   * @readonly
    */
-  #adapter: AdapterInterface;
+  #adapter: A;
 
   /**
    * Creates a new Fluentity instance.
    * Private constructor to enforce singleton pattern.
    *
-   * @param options - Configuration options for Fluentity
+   * @param {FluentityOptions<A>} [options] - Configuration options for Fluentity
    * @throws {Error} If a Fluentity instance already exists
    * @private
    */
-  private constructor(options?: FluentityOptions) {
+  private constructor(options?: FluentityOptions<A>) {
     if (Fluentity.instance) {
       throw new Error('Fluentity instance already exists. Use getInstance() instead.');
     }
-    this.#adapter = options?.adapter ?? new DefaultAdapter();
+    this.#adapter = (options?.adapter ?? new DefaultAdapter()) as A;
+
     Fluentity.instance = this;
   }
 
   /**
    * Gets the adapter instance used for API communication.
    *
-   * @returns The configured adapter instance
+   * @returns {A} The configured adapter instance
+   * @public
+   * @readonly
    */
-  public get adapter() {
+  public get adapter(): A {
     return this.#adapter;
   }
 
@@ -186,11 +206,16 @@ export class Fluentity {
    * Initializes the Fluentity singleton instance.
    * Must be called before using any other Fluentity functionality.
    *
-   * @param options - Configuration options for Fluentity
-   * @returns The initialized Fluentity instance
+   * @param {FluentityOptions<A>} [options] - Configuration options for Fluentity
+   * @returns {Fluentity<A>} The initialized Fluentity instance
    * @throws {Error} If Fluentity has already been initialized
+   * @static
    * @example
    * ```typescript
+   * // Initialize with default adapter
+   * Fluentity.initialize();
+   *
+   * // Initialize with custom adapter
    * Fluentity.initialize({
    *   adapter: new RestAdapter({
    *     baseURL: 'https://api.example.com'
@@ -198,27 +223,37 @@ export class Fluentity {
    * });
    * ```
    */
-  public static initialize(options?: FluentityOptions): Fluentity {
+  public static initialize<A extends AdapterInterface = DefaultAdapter>(
+    options?: FluentityOptions<A>
+  ): Fluentity<A> {
     if (Fluentity.instance) {
       throw new Error('Fluentity has already been initialized. Use getInstance() instead.');
     }
-    return new Fluentity(options);
+    return new Fluentity<A>(options);
   }
 
   /**
    * Gets the Fluentity singleton instance.
    *
-   * @returns The Fluentity instance
+   * @returns {Fluentity<A>} The Fluentity instance
    * @throws {Error} If Fluentity has not been initialized
+   * @static
    * @example
    * ```typescript
-   * const fluentity = Fluentity.getInstance();
+   * // Get the instance after initialization
+   * const fluentity = Fluentity.getInstance<CustomAdapter>();
+   *
+   * // The adapter type is automatically inferred
+   * const adapter = fluentity.adapter;
    * ```
    */
-  public static getInstance(): Fluentity {
+  public static getInstance<A extends AdapterInterface = DefaultAdapter>(): Fluentity<A> {
     if (!Fluentity.instance) {
       throw new Error('Fluentity has not been initialized. Call initialize() first.');
     }
-    return Fluentity.instance;
+    return Fluentity.instance as Fluentity<A>;
   }
 }
+
+// Export QueryBuilder type
+export type { QueryBuilder } from './QueryBuilder';

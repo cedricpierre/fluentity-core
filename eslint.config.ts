@@ -25,6 +25,7 @@ export default tseslint.config(
       'prettier/prettier': 'error',
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-empty-interface': ['error', { allowInterfaces: true }],
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': 'warn',
       'no-duplicate-imports': 'error',

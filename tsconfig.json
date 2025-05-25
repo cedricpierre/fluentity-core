@@ -11,7 +11,7 @@
     "rootDir": ".",
     "declaration": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "useDefineForClassFields": false,
     "allowJs": false,
     "resolveJsonModule": true

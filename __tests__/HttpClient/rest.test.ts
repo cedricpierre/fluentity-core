@@ -2,9 +2,9 @@ import { RestAdapter } from '../../src/adapters/RestAdapter';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Methods } from '../../src/Fluentity';
 import { QueryBuilder } from '../../src/QueryBuilder';
-import { HttpRequest, HttpResponse } from '../../src/adapters/HttpAdapter';
+import { HttpResponse } from '../../src/adapters/HttpAdapter';
 
-const restfulApiAdapter = new RestAdapter({
+new RestAdapter({
   baseUrl: 'https://jsonplaceholder.typicode.com',
 });
 

@@ -1,4 +1,10 @@
-import { AdapterInterface, AdapterOptions, AdapterResponse, MethodType } from '../Fluentity';
+import {
+  AdapterInterface,
+  AdapterOptions,
+  AdapterRequest,
+  AdapterResponse,
+  MethodType,
+} from '../Fluentity';
 import { QueryBuilder } from '../QueryBuilder';
 
 /**
@@ -124,7 +130,7 @@ export abstract class HttpAdapter implements AdapterInterface {
 /**
  * Configuration options for the HttpClient.
  */
-export interface HttpAdapterOptions {
+export interface HttpAdapterOptions<T = unknown | any> extends AdapterOptions {
   /** Base URL to prepend to all requests */
   baseUrl?: string;
   /** Default request options to apply to all requests */
@@ -132,7 +138,7 @@ export interface HttpAdapterOptions {
   /** Interceptor to modify requests before they are sent */
   requestInterceptor?: (request: HttpRequest) => HttpRequest;
   /** Interceptor to modify responses after they are received */
-  responseInterceptor?: (response: HttpResponse) => HttpResponse;
+  responseInterceptor?: (response: HttpResponse<T>) => HttpResponse<T>;
   /** Handler for request errors */
   errorInterceptor?: (error: Error) => void;
   /** Custom request handler function */
@@ -151,7 +157,7 @@ export interface CacheOptions {
   ttl?: number;
 }
 
-export interface HttpRequestInterface extends AdapterOptions {
+export interface HttpRequestInterface {
   /** The full URL to send the request to */
   url: string;
   /** Request options including method, headers, body, etc. */
@@ -165,12 +171,12 @@ export interface HttpRequestInterface extends AdapterOptions {
 /**
  * Represents an HTTP request configuration.
  */
-export class HttpRequest implements HttpRequestInterface {
+export class HttpRequest implements HttpRequestInterface, AdapterRequest {
   /** The full URL to send the request to */
   url: string = '';
   options?: HttpRequestOptions;
   method?: MethodType;
-  body?: string | object | object[] | undefined;
+  body?: string;
 
   constructor(options?: Partial<HttpRequestInterface>) {
     if (options) {
@@ -179,10 +185,12 @@ export class HttpRequest implements HttpRequestInterface {
   }
 }
 
-export type HttpResponseInterface = AdapterResponse;
+export interface HttpResponseInterface<T = unknown> {
+  data: T;
+}
 
-export class HttpResponse implements HttpResponseInterface {
-  data: object | object[] = [];
+export class HttpResponse<T = unknown> implements HttpResponseInterface<T>, AdapterResponse<T> {
+  data: T = {} as T;
 
   constructor(options?: Partial<HttpResponseInterface>) {
     if (options) {
