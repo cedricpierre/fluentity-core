@@ -29,11 +29,12 @@ interface UserAttributes extends Attributes {
 export class User extends Model<UserAttributes> implements UserAttributes {
   static resource = 'users';
 
-  name!: string;
-  email!: string;
-  phone!: number;
-  created_at?: string;
-  updated_at?: string;
+  declare name: string;
+  declare email: string;
+  declare phone: number;
+
+  declare created_at?: string;
+  declare updated_at?: string;
 
   @HasMany(() => Media)
   medias!: Relation<Media[]>;

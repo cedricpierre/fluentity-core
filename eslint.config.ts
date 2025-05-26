@@ -1,12 +1,9 @@
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import prettier from 'eslint-config-prettier';
-import eslintPluginPrettier from 'eslint-plugin-prettier';
 
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
-  prettier,
   {
     files: ['**/src/**/*.ts', '**/examples/**/*.ts', '**/__tests__/**/*.ts'],
     languageOptions: {
@@ -19,10 +16,8 @@ export default tseslint.config(
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      prettier: eslintPluginPrettier,
     },
     rules: {
-      'prettier/prettier': 'error',
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-empty-interface': ['error', { allowInterfaces: true }],
@@ -36,4 +31,4 @@ export default tseslint.config(
     },
     ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
   }
-);
+); 

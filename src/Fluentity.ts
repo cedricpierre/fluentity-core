@@ -165,7 +165,7 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    * @private
    * @static
    */
-  private static instance: Fluentity<any>;
+  private static instance: Fluentity<any> | undefined;
 
   /**
    * The adapter instance used for API communication.
@@ -173,6 +173,8 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    * @readonly
    */
   #adapter: A;
+
+  #options: FluentityOptions<A> | undefined;
 
   /**
    * Creates a new Fluentity instance.
@@ -186,9 +188,17 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
     if (Fluentity.instance) {
       throw new Error('Fluentity instance already exists. Use getInstance() instead.');
     }
+    this.#options = options;
     this.#adapter = (options?.adapter ?? new DefaultAdapter()) as A;
-
     Fluentity.instance = this;
+  }
+
+  public configure(options?: FluentityOptions<A>): void {
+    if (!Fluentity.instance) {
+      throw new Error('Fluentity has not been initialized. Call initialize() first.');
+    }
+    this.#options = options as unknown as FluentityOptions<A>;
+    this.#adapter = (options?.adapter ?? new DefaultAdapter()) as A;
   }
 
   /**
@@ -232,6 +242,10 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
     return new Fluentity<A>(options);
   }
 
+  public static reset(): void {
+    console.log('resetting fluentity')
+    Fluentity.instance = undefined;
+  }
   /**
    * Gets the Fluentity singleton instance.
    *

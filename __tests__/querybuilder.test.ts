@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { expect, describe, it, beforeEach, mock, spyOn } from 'bun:test';
 import { QueryBuilder } from '../src/QueryBuilder';
 
 describe('QueryBuilder', () => {
@@ -6,6 +6,7 @@ describe('QueryBuilder', () => {
 
   beforeEach(() => {
     queryBuilder = new QueryBuilder();
+    mock.restore();
   });
 
   describe('constructor', () => {

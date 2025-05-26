@@ -1,22 +1,25 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { expect, describe, it, beforeEach, mock, spyOn, beforeAll } from 'bun:test'
 import { Fluentity } from '../src/index'
 import { User } from '../examples/models/User'
 import { Media } from '../examples/models/Media'
-import { Thumbnail } from '../examples/models/Thumbnail'
 
 const user: User = new User({ id: '123', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 })
 
-const fluentity = Fluentity.initialize()
+let fluentity: Fluentity;
+beforeAll(() => {
+  Fluentity.reset();
+  fluentity = Fluentity.initialize()
+});
+
 
 describe('Models', () => {
+  
   beforeEach(() => {
-    vi.restoreAllMocks()
+    mock.restore()
   })
 
   it('can save a user', async () => {
-
-
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric created' } })
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric created' } })
 
     await user.save()
 
@@ -26,7 +29,7 @@ describe('Models', () => {
   })
 
   it('can set the id of an instance and fetch the instance', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric' } })
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric' } })
 
     const user = await User.id(123).get()
 
@@ -35,7 +38,7 @@ describe('Models', () => {
   })
 
   it('can update an instance of a user', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric updated' } })
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', name: 'Cedric updated' } })
 
     await user.update({ name: 'Cedric updated' })
 
@@ -43,14 +46,13 @@ describe('Models', () => {
   })
 
   it('can delete an instance of a user', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true })
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true })
 
     await user.delete()
   })
 
   it('can have a relation HasOne', async () => {
-
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', url: 'https://example.com/thumbnail.jpg' } })
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', url: 'https://example.com/thumbnail.jpg' } })
 
     const picture = await user.picture.get()
 
@@ -60,7 +62,7 @@ describe('Models', () => {
   })
 
   it('can update a relation HasOne', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', url: 'https://example.com/thumbnail-updated.jpg' } })
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: { id: '123', url: 'https://example.com/thumbnail-updated.jpg' } })
 
     const picture = await user.picture.update({ url: 'https://example.com/thumbnail-updated.jpg' })
 
@@ -70,15 +72,14 @@ describe('Models', () => {
   })
 
   it('can delete a relation HasOne', async () => {
-
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true })
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true })
 
     await user.picture.delete()
   })
 
   it('can have a relation HasMany', async () => {
 
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ 
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ 
       data: [
         { id: '1', name: 'Photo 1', url: 'https://example.com/photo1.jpg' },
         { id: '2', name: 'Photo 2', url: 'https://example.com/photo2.jpg' }

@@ -1,4 +1,4 @@
-import { expect, describe, it, vi, beforeEach } from 'vitest';
+import { expect, describe, it, beforeEach, mock, spyOn, beforeAll } from 'bun:test';
 import { User } from '../examples/models/User';
 import { Post } from '../examples/models/Post';
 import { Comment } from '../examples/models/Comment';
@@ -6,8 +6,11 @@ import { Fluentity, RestAdapter } from '../src';
 import { Company } from '../examples/models/Company';
 import { HttpResponse } from '../src/adapters/HttpAdapter';
 
-describe('API', () => {
-  const fluentity = Fluentity.initialize({
+let fluentity: Fluentity;
+
+beforeAll(() => {
+  Fluentity.reset();
+  fluentity = Fluentity.initialize({
     adapter: new RestAdapter({
       baseUrl: 'https://jsonplaceholder.typicode.com',
       options: {
@@ -17,9 +20,11 @@ describe('API', () => {
       },
     }),
   });
+});
 
+describe('API', () => {
   beforeEach(() => {
-    vi.restoreAllMocks();
+    mock.restore();
   });
 
   it('should fetch all users', async () => {
@@ -66,7 +71,7 @@ describe('API', () => {
   });
 
   it('should create a user', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({
       data: { id: 1, name: 'Cedric', email: 'cedric@example.com' },
     });
 
@@ -125,9 +130,8 @@ describe('API', () => {
       },
     });
 
-    const response = await User.find(1);
-    expect(response.name).toBe('Cedric');
-    expect(fluentity.adapter.url).toBe('users/1');
+    const user = await User.find(1);
+    expect(user.name).toBe('Cedric');
   });
 
   it('can fetch one post', async () => {

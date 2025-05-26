@@ -80,9 +80,9 @@ export class Model<T extends Attributes = Attributes> {
     if (attributes) {
       Object.assign(this, attributes);
     }
-
+    
     this.#queryBuilder = queryBuilder ?? new QueryBuilder();
-
+    
     this.#queryBuilder.resource = (this.constructor as any).resource;
     this.#queryBuilder.id = this.id;
     return this;

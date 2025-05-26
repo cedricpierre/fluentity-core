@@ -1,0 +1,14 @@
+[lint]
+rules = "recommended"
+
+[format]
+indent = "  " # 2 spaces
+quotes = "single" 
+
+[test]
+coverage = true
+coverage-dir = "coverage"
+coverage-reporter = ["text", "html", "lcov"]
+coverage-exclude = ["examples/**/*.ts"]
+coverage-include = ["src/**/*.ts"]
+environment = "node" 

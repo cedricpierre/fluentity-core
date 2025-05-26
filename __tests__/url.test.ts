@@ -1,7 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, mock, spyOn } from 'bun:test'
 import { QueryBuilder } from '../src/QueryBuilder'
 
 describe('QueryBuilder', () => {
+
+  beforeEach(() => {
+    mock.restore();
+  });
 
   it('can build a query string', () => {
     const queryBuilder = new QueryBuilder()
@@ -45,7 +49,6 @@ describe('QueryBuilder', () => {
     const queryBuilder = new QueryBuilder()
     queryBuilder.sort = 'name'
     queryBuilder.direction = 'desc'
-    console.log(queryBuilder.toObject())
     expect(queryBuilder.toObject()).toEqual({ sort: 'name', direction: 'desc', query: {} })
   })  
   

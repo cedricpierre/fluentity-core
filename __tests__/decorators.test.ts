@@ -1,21 +1,33 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { expect, describe, it, beforeEach, beforeAll, mock, spyOn } from 'bun:test'
 import { User } from '../examples/models/User'
 import { Fluentity, RestAdapter } from '../src/index'
 import { Media } from '../examples/models/Media'
 import { Thumbnail } from '../examples/models/Thumbnail'
 import { QueryBuilder } from '../src/QueryBuilder'
 
-const fluentity = Fluentity.initialize()
+
+let fluentity: Fluentity;
+beforeAll(() => {
+  Fluentity.reset();
+  fluentity = Fluentity.initialize({
+    adapter: new RestAdapter({
+      baseUrl: 'https://jsonplaceholder.typicode.com',
+    }),
+  })
+});
+
+
 
 describe('Models', () => {
+  
   beforeEach(() => {
-    vi.restoreAllMocks()
+    mock.restore()
   })
 
   
   it('should be able to get medias from a user', async () => {
 
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({
         data: [
           { id: 1, name: 'Media 1' },
           { id: 2, name: 'Media 2' },
@@ -30,7 +42,7 @@ describe('Models', () => {
   })
   
   it('should be able to get libraries (custom name) from a user', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+    spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
       expect(queryBuilder.resource).toBe('medias');
       expect(queryBuilder.id).toBeUndefined();
       expect(queryBuilder.parent?.resource).toBe('users');
@@ -51,7 +63,7 @@ describe('Models', () => {
   });
 
   it('should be able to cast thumbnail', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({
       data: {
         id: 1,
         thumbnail: {
@@ -78,8 +90,7 @@ describe('Models', () => {
   });
 
   it('should construct correct path with custom resource name', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      console.log(queryBuilder);
+    spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
       expect(queryBuilder.resource).toBe('custom-resource');
       expect(queryBuilder.id).toBeUndefined();
       expect(queryBuilder.parent?.resource).toBe('users');
@@ -92,7 +103,7 @@ describe('Models', () => {
   });
 
   it('should construct correct path with default resource name', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+    spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
       expect(queryBuilder.resource).toBe('medias');
       expect(queryBuilder.id).toBeUndefined();
       expect(queryBuilder.parent?.resource).toBe('users');
@@ -105,7 +116,7 @@ describe('Models', () => {
   });
 
   it('should handle nested paths correctly', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+    spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
       expect(queryBuilder.resource).toBe('thumbnails');
       expect(queryBuilder.id).toBeUndefined();
       expect(queryBuilder.parent?.resource).toBe('medias');
@@ -119,7 +130,7 @@ describe('Models', () => {
   });
 
   it('should handle empty path correctly', async () => {
-    vi.spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
+    spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
       expect(queryBuilder.resource).toBe('users');
       expect(queryBuilder.id).toBe(1);
       return Promise.resolve({ data: { id: 1, name: 'Cedric' } });

@@ -1,8 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, beforeAll, afterEach, mock, spyOn } from 'bun:test';
 import { Fluentity, RestAdapter, Methods } from '../src/index';
 import { QueryBuilder } from '../src/QueryBuilder';
 import { User } from '../examples/models/User';
 import { HttpResponse, HttpRequest } from '../src/adapters/HttpAdapter';
+
+beforeAll(() => {
+  Fluentity.reset();
+});
 
 describe('Fluentity Class', () => {
   let fluentity: Fluentity;
@@ -11,7 +15,7 @@ describe('Fluentity Class', () => {
     // Reset the singleton instance before each test
     // @ts-ignore - accessing private static property for testing
     Fluentity.instance = undefined;
-    vi.restoreAllMocks();
+    mock.restore();
   });
 
   afterEach(() => {
@@ -65,7 +69,7 @@ describe('Fluentity Class', () => {
     });
 
     it('can configure the base URL', () => {
-      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
+      spyOn(fluentity.adapter, 'call').mockResolvedValue({ data: true });
       fluentity.adapter.configure({ baseUrl: 'https://api.example.com' });
       expect(fluentity.adapter.options.baseUrl).toBe('https://api.example.com');
     });
@@ -83,7 +87,7 @@ describe('Fluentity Class', () => {
     });
 
     it('can configure the error interceptor', () => {
-      const interceptor = vi.fn();
+      const interceptor = mock(() => {});
       fluentity.adapter.configure({ errorInterceptor: interceptor });
       expect(fluentity.adapter.options.errorInterceptor).toBe(interceptor);
     });
@@ -98,9 +102,9 @@ describe('Fluentity Class', () => {
       });
     });
 
-    const testHttpMethod = (method: string) => {
+    const testHttpMethod = (method: typeof Methods[keyof typeof Methods]) => {
       it(`can call a ${method} request`, async () => {
-        vi.spyOn(fluentity.adapter, 'call').mockImplementation(queryBuilder => {
+        spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
           expect(queryBuilder.resource).toBe('users');
           expect(queryBuilder.method).toBe(method);
           return Promise.resolve({ data: true });
@@ -108,7 +112,7 @@ describe('Fluentity Class', () => {
 
         const queryBuilder = new QueryBuilder();
         queryBuilder.resource = 'users';
-        queryBuilder.method = method as any;
+        queryBuilder.method = method;
 
         const response = await fluentity.adapter.call(queryBuilder);
         expect(response).toBeDefined();
@@ -134,7 +138,7 @@ describe('Fluentity Class', () => {
 
     it('should call the adapter with the query builder using instance method', async () => {
       const mockResponse = { data: { id: 1, name: 'Test' } };
-      const spy = vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
+      const spy = spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
       const response = await fluentity.call(mockQueryBuilder);
 
@@ -144,7 +148,7 @@ describe('Fluentity Class', () => {
 
     it('should call the adapter with the query builder using static method', async () => {
       const mockResponse = { data: { id: 1, name: 'Test' } };
-      const spy = vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
+      const spy = spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
       const response = await Fluentity.call(mockQueryBuilder);
 
@@ -154,14 +158,14 @@ describe('Fluentity Class', () => {
 
     it('should handle errors from the adapter in instance method', async () => {
       const error = new Error('API Error');
-      vi.spyOn(fluentity.adapter, 'call').mockRejectedValue(error);
+      spyOn(fluentity.adapter, 'call').mockRejectedValue(error);
 
       await expect(fluentity.call(mockQueryBuilder)).rejects.toThrow('API Error');
     });
 
     it('should handle errors from the adapter in static method', async () => {
       const error = new Error('API Error');
-      vi.spyOn(fluentity.adapter, 'call').mockRejectedValue(error);
+      spyOn(fluentity.adapter, 'call').mockRejectedValue(error);
 
       await expect(Fluentity.call(mockQueryBuilder)).rejects.toThrow('API Error');
     });
@@ -174,7 +178,7 @@ describe('Fluentity Class', () => {
           email: 'test@example.com',
         },
       };
-      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
+      spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
       const response = await fluentity.call(mockQueryBuilder);
 
@@ -194,7 +198,7 @@ describe('Fluentity Class', () => {
           email: 'test@example.com',
         },
       };
-      vi.spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
+      spyOn(fluentity.adapter, 'call').mockResolvedValue(mockResponse);
 
       const response = await Fluentity.call(mockQueryBuilder);
 

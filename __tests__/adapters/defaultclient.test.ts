@@ -1,12 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { expect, describe, it, beforeEach, mock, spyOn } from 'bun:test';
 import { DefaultAdapter } from '../../src/adapters/DefaultAdapter';
 import { QueryBuilder } from '../../src/QueryBuilder';
 
 const defaultAdapter = new DefaultAdapter();
 
+
 describe('DefaultAdapter', () => {
   beforeEach(() => {
-    vi.restoreAllMocks();
+    mock.restore();
   });
 
   it('should make a request', async () => {
