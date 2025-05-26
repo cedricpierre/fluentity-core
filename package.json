@@ -33,7 +33,7 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target node",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
-    "docs": "typedoc --out docs src/index.ts",
+    "docs": "typedoc",
     "dev": "bun --watch src/index.ts",
     "lint": "bun lint",
     "format": "bun fmt"
