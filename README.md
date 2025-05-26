@@ -31,6 +31,14 @@ Run tests
 npm test
 ```
 
+### Development
+
+Fluentity Core uses Bun.
+
+```bash
+bun install
+```
+
 ## Configuration
 
 In JavaScript, property decorators are not natively supported yet (as of 2025), but they can be enabled using transpilers like Babel or TypeScript with experimental support.
