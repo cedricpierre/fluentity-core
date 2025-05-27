@@ -2,8 +2,7 @@ node_modules
 coverage
 .DS_Store
 .env
-dist
-docs
+disttype
 .vite
 .vscode
 .idea
