@@ -17,15 +17,33 @@ export interface QueryBuilderOptions {
 
 /**
  * Builder class for constructing URL query strings and API requests.
- * Provides methods for building and managing query parameters for API requests.
+ * Provides a fluent interface for building and managing query parameters for API requests.
  * Used internally by models and relation builders to construct API calls.
+ * 
+ * The QueryBuilder supports:
+ * - Resource path construction
+ * - Query parameter management
+ * - Sorting and pagination
+ * - HTTP method specification
+ * - Request body handling
  *
  * @example
  * ```typescript
+ * // Basic query with filters and pagination
  * const query = new QueryBuilder()
  *   .where({ status: 'active' })
  *   .orderBy('created_at', 'desc')
- *   .limit(10);
+ *   .limit(10)
+ *   .offset(20);
+ *
+ * // Complex query with multiple conditions
+ * const query = new QueryBuilder()
+ *   .filter({
+ *     age: { gt: 18, lt: 65 },
+ *     status: ['active', 'pending']
+ *   })
+ *   .orderBy('name', 'asc')
+ *   .page(2, 25);
  * ```
  */
 export class QueryBuilder {
@@ -62,12 +80,18 @@ export class QueryBuilder {
   /**
    * Adds where conditions to the query.
    * Shorthand for filter() that adds exact field-value matches.
+   * Multiple calls to where() will merge the conditions.
    *
    * @param where - Object containing field-value pairs to filter by
-   * @returns The QueryBuilder instance for chaining
+   * @returns The QueryBuilder instance for method chaining
    * @example
    * ```typescript
+   * // Simple equality conditions
    * query.where({ status: 'active', type: 'user' });
+   *
+   * // Multiple where calls are merged
+   * query.where({ status: 'active' })
+   *      .where({ type: 'user' });
    * ```
    */
   where(where: Record<string, any>): this {
@@ -78,14 +102,30 @@ export class QueryBuilder {
   /**
    * Adds filter conditions to the query.
    * Supports more complex filtering operations than where().
+   * Can handle comparison operators, arrays, and nested conditions.
    *
    * @param filters - Object containing filter conditions
-   * @returns The QueryBuilder instance for chaining
+   * @returns The QueryBuilder instance for method chaining
    * @example
    * ```typescript
+   * // Comparison operators
    * query.filter({
    *   age: { gt: 18, lt: 65 },
-   *   status: ['active', 'pending']
+   *   price: { gte: 10, lte: 100 }
+   * });
+   *
+   * // Array conditions
+   * query.filter({
+   *   status: ['active', 'pending'],
+   *   tags: { in: ['featured', 'popular'] }
+   * });
+   *
+   * // Nested conditions
+   * query.filter({
+   *   user: {
+   *     profile: { verified: true },
+   *     role: 'admin'
+   *   }
    * });
    * ```
    */
@@ -97,12 +137,21 @@ export class QueryBuilder {
 
   /**
    * Resets the query builder to its initial state.
-   * Clears all query parameters and options.
+   * Clears all query parameters, pagination settings, and request options.
+   * Useful for reusing a query builder instance with different parameters.
    *
-   * @returns The QueryBuilder instance for chaining
+   * @returns The QueryBuilder instance for method chaining
    * @example
    * ```typescript
-   * query.reset(); // Clear all query parameters
+   * // Reset after a complex query
+   * query.where({ status: 'active' })
+   *      .orderBy('created_at', 'desc')
+   *      .limit(10)
+   *      .reset();
+   *
+   * // Reuse for a new query
+   * query.where({ type: 'user' })
+   *      .orderBy('name', 'asc');
    * ```
    */
   reset(): this {
@@ -120,13 +169,21 @@ export class QueryBuilder {
 
   /**
    * Converts the query builder to a plain object.
-   * Used internally to construct the final query parameters.
+   * Used internally to construct the final query parameters for API requests.
+   * Only includes non-undefined values in the output.
    *
    * @returns A plain object containing all non-undefined query parameters
    * @example
    * ```typescript
+   * const query = new QueryBuilder()
+   *   .where({ status: 'active' })
+   *   .limit(10);
+   *
    * const params = query.toObject();
-   * // { query: { status: 'active' }, limit: 10 }
+   * // {
+   * //   query: { status: 'active' },
+   * //   limit: 10
+   * // }
    * ```
    */
   toObject(): Record<string, any> {
