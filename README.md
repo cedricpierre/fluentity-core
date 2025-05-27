@@ -1,9 +1,12 @@
-![Coverage](https://codecov.io/gh/cedricpierre/fluentity-core/core/branch/main/graph/badge.svg)
 ![npm](https://img.shields.io/npm/v/@fluentity/core)
 ![CI](https://github.com/cedricpierre/fluentity-core/actions/workflows/ci.yml/badge.svg)
 ![TypeScript](https://img.shields.io/badge/typed-TypeScript-blue.svg)
 ![tree-shakable](https://img.shields.io/badge/tree--shakable-yes-brightgreen)
+![GitHub file size in bytes](https://img.shields.io/github/size/cedricpierre/fluentity-core/dist%2Findex.js)
 ![Tests](https://img.shields.io/badge/tests-100%25-brightgreen)
+![NPM License](https://img.shields.io/npm/l/%40fluentity%2Fcore)
+
+
 
 
 
