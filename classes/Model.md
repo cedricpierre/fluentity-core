@@ -6,17 +6,36 @@
 
 # Class: Model\<T\>
 
-Defined in: [Model.ts:33](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L33)
+Defined in: [Model.ts:64](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L64)
 
 Base class for all models in the ORM.
 Provides core functionality for interacting with the API and managing model data.
 Handles CRUD operations, relationships, and query building.
 
+Features:
+- Automatic API request handling
+- Relationship management
+- Query building and filtering
+- Data validation and transformation
+- Dynamic property access
+
 ## Example
 
 ```typescript
+// Basic model definition
 class User extends Model<UserAttributes> {
   static resource = 'users';
+}
+
+// Model with relationships
+class Post extends Model<PostAttributes> {
+  static resource = 'posts';
+
+  @HasOne(() => User)
+  author: User;
+
+  @HasMany(() => Comment)
+  comments: Comment[];
 }
 ```
 
@@ -41,10 +60,11 @@ Allows models to have additional properties beyond their defined attributes.
 
 > **new Model**\<`T`\>(`attributes`, `queryBuilder?`): `Model`\<`T`\>
 
-Defined in: [Model.ts:79](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L79)
+Defined in: [Model.ts:120](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L120)
 
 Creates a new model instance with the given attributes.
 Initializes the query builder and sets up the model's state.
+Can optionally accept an existing query builder instance.
 
 #### Parameters
 
@@ -70,13 +90,24 @@ A new model instance
 
 If required attributes are missing
 
+#### Example
+
+```typescript
+// Create with basic attributes
+const user = new User({ name: 'John', email: 'john@example.com' });
+
+// Create with existing query builder
+const query = new QueryBuilder().where({ status: 'active' });
+const user = new User({ name: 'John' }, query);
+```
+
 ## Properties
 
 ### id?
 
 > `optional` **id**: `string` \| `number`
 
-Defined in: [Model.ts:45](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L45)
+Defined in: [Model.ts:76](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L76)
 
 Unique identifier for the model instance.
 Can be either a string or number, depending on the API's ID format.
@@ -87,7 +118,7 @@ Can be either a string or number, depending on the API's ID format.
 
 > `static` **resource**: `string`
 
-Defined in: [Model.ts:68](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L68)
+Defined in: [Model.ts:99](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L99)
 
 Resource endpoint for the model, used to construct API URLs.
 Must be set by subclasses to define the API endpoint.
@@ -106,7 +137,7 @@ static resource = 'users';
 
 > `static` `optional` **scopes**: `Record`\<`string`, (`query`) => [`RelationBuilder`](RelationBuilder.md)\<`any`\>\>
 
-Defined in: [Model.ts:39](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L39)
+Defined in: [Model.ts:70](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L70)
 
 Custom query scopes that can be applied to model queries.
 Each scope is a function that modifies the query builder behavior.
@@ -119,9 +150,11 @@ Each scope is a function that modifies the query builder behavior.
 
 > **delete**(): `Promise`\<`void`\>
 
-Defined in: [Model.ts:399](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L399)
+Defined in: [Model.ts:683](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L683)
 
 Deletes the model instance from the server.
+Sends a DELETE request to remove the record.
+The local instance remains but becomes detached from the server.
 
 #### Returns
 
@@ -136,7 +169,20 @@ If the deletion fails
 #### Example
 
 ```typescript
+// Delete the user
 await user.delete();
+
+// Delete with error handling
+try {
+  await user.delete();
+  console.log('User deleted successfully');
+} catch (error) {
+  if (error.status === 404) {
+    console.log('User no longer exists');
+  } else {
+    console.error('Error deleting user:', error);
+  }
+}
 ```
 
 ***
@@ -145,10 +191,11 @@ await user.delete();
 
 > **get**(): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:332](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L332)
+Defined in: [Model.ts:557](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L557)
 
 Retrieves the current model instance from the server.
 Updates the local instance with fresh data from the API.
+Useful for refreshing model data or after updates.
 
 #### Returns
 
@@ -163,7 +210,21 @@ If the record is not found
 #### Example
 
 ```typescript
-await user.get(); // Refreshes user data from the server
+// Refresh user data
+await user.get();
+console.log(`User name: ${user.name}`);
+
+// Refresh with error handling
+try {
+  await user.get();
+  console.log('User data refreshed');
+} catch (error) {
+  if (error.status === 404) {
+    console.log('User no longer exists');
+  } else {
+    console.error('Error refreshing user:', error);
+  }
+}
 ```
 
 ***
@@ -172,10 +233,11 @@ await user.get(); // Refreshes user data from the server
 
 > **save**(): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:353](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L353)
+Defined in: [Model.ts:596](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L596)
 
 Saves the current model instance to the server.
 Creates a new record if the model doesn't have an ID, updates existing record otherwise.
+Automatically determines whether to use POST or PUT/PATCH.
 
 #### Returns
 
@@ -190,8 +252,25 @@ If the save operation fails
 #### Example
 
 ```typescript
+// Create a new user
+const user = new User({ name: 'John', email: 'john@example.com' });
+await user.save();
+
+// Update existing user
 user.name = 'John Doe';
-await user.save(); // Creates or updates the user
+await user.save();
+
+// Save with error handling
+try {
+  await user.save();
+  console.log(`User saved with ID: ${user.id}`);
+} catch (error) {
+  if (error.status === 422) {
+    console.log('Validation failed:', error.errors);
+  } else {
+    console.error('Error saving user:', error);
+  }
+}
 ```
 
 ***
@@ -200,10 +279,11 @@ await user.save(); // Creates or updates the user
 
 > **toObject**(): `Record`\<`string`, `any`\>
 
-Defined in: [Model.ts:428](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L428)
+Defined in: [Model.ts:730](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L730)
 
 Converts the model instance to a plain object.
 Recursively converts nested model instances to plain objects.
+Useful for serialization or sending data to the server.
 
 #### Returns
 
@@ -214,7 +294,24 @@ A plain object representation of the model's attributes
 #### Example
 
 ```typescript
+// Convert to plain object
 const userData = user.toObject();
+console.log(JSON.stringify(userData));
+
+// Convert with nested models
+const post = await Post.find(123);
+const postData = post.toObject();
+// {
+//   id: 123,
+//   title: 'My Post',
+//   author: {
+//     id: 456,
+//     name: 'John Doe'
+//   },
+//   comments: [
+//     { id: 789, content: 'Great post!' }
+//   ]
+// }
 ```
 
 ***
@@ -223,9 +320,11 @@ const userData = user.toObject();
 
 > **update**(`attributes?`, `method?`): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:377](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L377)
+Defined in: [Model.ts:646](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L646)
 
 Updates the model instance with new attributes and saves to the server.
+Can use either PUT (full update) or PATCH (partial update).
+Updates the local instance with the server response.
 
 #### Parameters
 
@@ -254,7 +353,31 @@ If the update fails
 #### Example
 
 ```typescript
-await user.update({ name: 'John Doe' });
+// Full update with PUT
+await user.update({
+  name: 'John Doe',
+  email: 'john@example.com',
+  role: 'admin'
+});
+
+// Partial update with PATCH
+await user.update({
+  name: 'John Doe'
+}, Methods.PATCH);
+
+// Update with error handling
+try {
+  await user.update({ name: 'John Doe' });
+  console.log(`User updated: ${user.name}`);
+} catch (error) {
+  if (error.status === 404) {
+    console.log('User no longer exists');
+  } else if (error.status === 422) {
+    console.log('Validation failed:', error.errors);
+  } else {
+    console.error('Error updating user:', error);
+  }
+}
 ```
 
 ***
@@ -263,10 +386,11 @@ await user.update({ name: 'John Doe' });
 
 > `static` **all**\<`T`\>(`this`): `Promise`\<`T`[]\>
 
-Defined in: [Model.ts:218](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L218)
+Defined in: [Model.ts:352](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L352)
 
 Retrieves all records for the model.
 Fetches all records from the API without any filtering.
+Use with caution for large datasets - consider using pagination.
 
 #### Type Parameters
 
@@ -291,7 +415,16 @@ Promise resolving to an array of model instances
 #### Example
 
 ```typescript
+// Get all users
 const allUsers = await User.all();
+
+// Get all users with error handling
+try {
+  const users = await User.all();
+  console.log(`Found ${users.length} users`);
+} catch (error) {
+  console.error('Failed to fetch users:', error);
+}
 ```
 
 ***
@@ -300,7 +433,7 @@ const allUsers = await User.all();
 
 > `static` **call**(`queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\>
 
-Defined in: [Model.ts:414](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L414)
+Defined in: [Model.ts:698](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L698)
 
 #### Parameters
 
@@ -318,10 +451,11 @@ Defined in: [Model.ts:414](https://github.com/cedricpierre/fluentity-core/blob/a
 
 > `static` **create**\<`A`, `T`\>(`this`, `data`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:261](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L261)
+Defined in: [Model.ts:430](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L430)
 
 Creates a new record.
 Sends a POST request to create a new record in the API.
+Returns the created record with any server-generated fields.
 
 #### Type Parameters
 
@@ -360,7 +494,27 @@ If the creation fails
 #### Example
 
 ```typescript
-const user = await User.create({ name: 'John', email: 'john@example.com' });
+// Create a new user
+const user = await User.create({
+  name: 'John Doe',
+  email: 'john@example.com',
+  role: 'user'
+});
+
+// Create with error handling
+try {
+  const user = await User.create({
+    name: 'John Doe',
+    email: 'john@example.com'
+  });
+  console.log(`Created user with ID: ${user.id}`);
+} catch (error) {
+  if (error.status === 422) {
+    console.log('Validation failed:', error.errors);
+  } else {
+    console.error('Error creating user:', error);
+  }
+}
 ```
 
 ***
@@ -369,10 +523,11 @@ const user = await User.create({ name: 'John', email: 'john@example.com' });
 
 > `static` **delete**\<`T`\>(`this`, `id`): `Promise`\<`void`\>
 
-Defined in: [Model.ts:311](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L311)
+Defined in: [Model.ts:521](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L521)
 
 Deletes a record by ID.
 Sends a DELETE request to remove a record from the API.
+Returns void on success, throws an error on failure.
 
 #### Type Parameters
 
@@ -407,7 +562,20 @@ If the deletion fails
 #### Example
 
 ```typescript
+// Delete a user
 await User.delete(123);
+
+// Delete with error handling
+try {
+  await User.delete(123);
+  console.log('User deleted successfully');
+} catch (error) {
+  if (error.status === 404) {
+    console.log('User not found');
+  } else {
+    console.error('Error deleting user:', error);
+  }
+}
 ```
 
 ***
@@ -416,10 +584,11 @@ await User.delete(123);
 
 > `static` **filter**\<`T`\>(`this`, `filters`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:197](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L197)
+Defined in: [Model.ts:321](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L321)
 
 Starts a query with filter conditions.
 Similar to where() but specifically for filter operations.
+Supports more complex filtering operations and operators.
 
 #### Type Parameters
 
@@ -450,7 +619,25 @@ A HasManyRelationBuilder instance with filters applied
 #### Example
 
 ```typescript
-const users = await User.filter({ age: { gt: 18 } }).all();
+// Comparison operators
+const users = await User.filter({
+  age: { gt: 18, lt: 65 },
+  score: { gte: 1000 }
+}).all();
+
+// Array conditions
+const users = await User.filter({
+  role: { in: ['admin', 'moderator'] },
+  status: ['active', 'pending']
+}).all();
+
+// Nested conditions
+const users = await User.filter({
+  profile: {
+    verified: true,
+    location: { ne: 'unknown' }
+  }
+}).all();
 ```
 
 ***
@@ -459,10 +646,11 @@ const users = await User.filter({ age: { gt: 18 } }).all();
 
 > `static` **find**\<`T`\>(`this`, `id`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:238](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L238)
+Defined in: [Model.ts:386](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L386)
 
 Finds a single record by ID.
 Fetches a specific record from the API by its ID.
+Throws an error if the record is not found.
 
 #### Type Parameters
 
@@ -497,7 +685,20 @@ If the record is not found
 #### Example
 
 ```typescript
+// Find a user by ID
 const user = await User.find(123);
+
+// Find with error handling
+try {
+  const user = await User.find(123);
+  console.log(`Found user: ${user.name}`);
+} catch (error) {
+  if (error.status === 404) {
+    console.log('User not found');
+  } else {
+    console.error('Error fetching user:', error);
+  }
+}
 ```
 
 ***
@@ -506,10 +707,11 @@ const user = await User.find(123);
 
 > `static` **id**\<`T`\>(`this`, `id`): `T`
 
-Defined in: [Model.ts:144](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L144)
+Defined in: [Model.ts:224](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L224)
 
 Creates a new model instance with the given ID.
 Useful for creating model instances when only the ID is known.
+The instance can be used for operations that only require the ID.
 
 #### Type Parameters
 
@@ -540,7 +742,15 @@ A new model instance with the specified ID
 #### Example
 
 ```typescript
+// Create a reference to an existing user
 const user = User.id(123);
+await user.get(); // Fetch full user data
+
+// Use for relationship operations
+const post = await Post.create({
+  title: 'New Post',
+  author: User.id(123)
+});
 ```
 
 ***
@@ -549,10 +759,11 @@ const user = User.id(123);
 
 > `static` **query**\<`T`\>(`this`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:159](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L159)
+Defined in: [Model.ts:255](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L255)
 
 Starts a new query builder for the model.
 Returns a HasManyRelationBuilder for querying multiple records.
+Provides a fluent interface for building complex queries.
 
 #### Type Parameters
 
@@ -577,7 +788,22 @@ A HasManyRelationBuilder instance for building queries
 #### Example
 
 ```typescript
-const users = await User.query().where({ active: true }).all();
+// Basic query with filters
+const users = await User.query()
+  .where({ status: 'active' })
+  .orderBy('created_at', 'desc')
+  .all();
+
+// Complex query with multiple conditions
+const users = await User.query()
+  .filter({
+    age: { gt: 18 },
+    role: ['admin', 'moderator']
+  })
+  .orderBy('name', 'asc')
+  .limit(50)
+  .offset(100)
+  .all();
 ```
 
 ***
@@ -586,10 +812,11 @@ const users = await User.query().where({ active: true }).all();
 
 > `static` **update**\<`A`, `T`\>(`this`, `id`, `data`, `method`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:286](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L286)
+Defined in: [Model.ts:482](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L482)
 
 Updates an existing record.
 Sends a PUT/PATCH request to update a record in the API.
+Can use either PUT (full update) or PATCH (partial update).
 
 #### Type Parameters
 
@@ -640,7 +867,33 @@ If the update fails
 #### Example
 
 ```typescript
-const user = await User.update(123, { name: 'John Doe' });
+// Full update with PUT
+const user = await User.update(123, {
+  name: 'John Doe',
+  email: 'john@example.com',
+  role: 'admin'
+});
+
+// Partial update with PATCH
+const user = await User.update(123, {
+  name: 'John Doe'
+}, Methods.PATCH);
+
+// Update with error handling
+try {
+  const user = await User.update(123, {
+    email: 'new@example.com'
+  });
+  console.log(`Updated user: ${user.name}`);
+} catch (error) {
+  if (error.status === 404) {
+    console.log('User not found');
+  } else if (error.status === 422) {
+    console.log('Validation failed:', error.errors);
+  } else {
+    console.error('Error updating user:', error);
+  }
+}
 ```
 
 ***
@@ -649,10 +902,11 @@ const user = await User.update(123, { name: 'John Doe' });
 
 > `static` **where**\<`T`\>(`this`, `where`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:175](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L175)
+Defined in: [Model.ts:280](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L280)
 
 Starts a query with a where clause.
 Shorthand for query().where() for common filtering operations.
+Useful for simple equality-based queries.
 
 #### Type Parameters
 
@@ -683,5 +937,13 @@ A HasManyRelationBuilder instance with where conditions applied
 #### Example
 
 ```typescript
+// Simple equality conditions
 const activeUsers = await User.where({ active: true }).all();
+
+// Multiple conditions
+const users = await User.where({
+  role: 'admin',
+  status: 'active',
+  verified: true
+}).all();
 ```

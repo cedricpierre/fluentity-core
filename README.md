@@ -16,7 +16,7 @@ Fluentity is a lightweight and flexible library for TypeScript/JavaScript applic
 ## Quality & Reliability
 
 - 💯 Written in TypeScript
-- 🧪 test coverage with Vitest
+- 🧪 test coverage with Bun:test
 - ⚡️ Designed for fast, type-safe API interactions
 
 ## Installation

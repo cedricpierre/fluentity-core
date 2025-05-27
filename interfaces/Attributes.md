@@ -6,10 +6,23 @@
 
 # Interface: Attributes
 
-Defined in: [Model.ts:13](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L13)
+Defined in: [Model.ts:25](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L25)
 
 Base interface for model attributes that all models must implement.
 Provides the basic structure for model data and allows for dynamic properties.
+All model attributes must extend this interface to ensure type safety.
+
+## Example
+
+```typescript
+interface UserAttributes extends Attributes {
+  name: string;
+  email: string;
+  age?: number;
+  // Dynamic properties are allowed
+  [key: string]: any;
+}
+```
 
 ## Indexable
 
@@ -23,6 +36,6 @@ Index signature allowing for dynamic properties of any type
 
 > `optional` **id**: `string` \| `number`
 
-Defined in: [Model.ts:15](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/Model.ts#L15)
+Defined in: [Model.ts:27](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/Model.ts#L27)
 
 Unique identifier for the model instance. Can be either a string or number.

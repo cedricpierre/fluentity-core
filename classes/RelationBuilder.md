@@ -6,19 +6,33 @@
 
 # Class: RelationBuilder\<T\>
 
-Defined in: [RelationBuilder.ts:41](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L41)
+Defined in: [RelationBuilder.ts:69](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L69)
 
 Base class for building and managing relationships between models.
 Provides methods for querying related models and building API requests.
 This class is extended by HasOneRelationBuilder and HasManyRelationBuilder
 to implement specific relationship behaviors.
 
+Features:
+- Query building and filtering
+- Sorting and pagination
+- Relationship traversal
+- Custom query scopes
+
 ## Example
 
 ```typescript
-class UserPosts extends RelationBuilder<Post> {
+// Basic usage with a has-one relationship
+class UserProfile extends RelationBuilder<Profile> {
   // Custom relationship logic
 }
+
+// Usage with query building
+const posts = await user.posts
+  .where({ status: 'published' })
+  .orderBy('created_at', 'desc')
+  .limit(10)
+  .all();
 ```
 
 ## Type Parameters
@@ -42,10 +56,11 @@ Allows for custom query scopes to be added to the builder.
 
 > **new RelationBuilder**\<`T`\>(`model`, `queryBuilder`, `resource?`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:64](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L64)
+Defined in: [RelationBuilder.ts:105](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L105)
 
 Creates a new relation builder instance.
 Sets up the query builder and configures the resource path.
+Handles inheritance of parent query parameters and custom scopes.
 
 #### Parameters
 
@@ -75,13 +90,27 @@ Optional custom resource name for the relation
 
 If the model or query builder is invalid
 
+#### Example
+
+```typescript
+// Create a basic relation builder
+const builder = new RelationBuilder(User, new QueryBuilder());
+
+// Create with custom resource
+const builder = new RelationBuilder(User, new QueryBuilder(), 'custom-users');
+
+// Create with parent query
+const parentQuery = new QueryBuilder().where({ active: true });
+const builder = new RelationBuilder(User, parentQuery);
+```
+
 ## Properties
 
 ### queryBuilder
 
 > **queryBuilder**: [`QueryBuilder`](QueryBuilder.md)
 
-Defined in: [RelationBuilder.ts:46](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L46)
+Defined in: [RelationBuilder.ts:74](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L74)
 
 Query builder instance for constructing API URLs and managing query parameters.
 Used internally to build the request URL and parameters.
@@ -92,10 +121,11 @@ Used internally to build the request URL and parameters.
 
 > **filter**(`filters`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:168](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L168)
+Defined in: [RelationBuilder.ts:272](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L272)
 
 Adds filter conditions to the query.
 Supports more complex filtering operations than where().
+Can handle comparison operators, arrays, and nested conditions.
 
 #### Parameters
 
@@ -109,15 +139,36 @@ Object containing filter conditions
 
 `RelationBuilder`\<`T`\>
 
-The relation builder instance for chaining
+The relation builder instance for method chaining
 
 #### Example
 
 ```typescript
-const posts = await user.posts.filter({
-  created_at: { gt: '2023-01-01' },
-  status: ['published', 'draft']
-}).all();
+// Comparison operators
+const posts = await user.posts
+  .filter({
+    views: { gt: 1000 },
+    rating: { gte: 4.5 }
+  })
+  .all();
+
+// Array conditions
+const posts = await user.posts
+  .filter({
+    tags: { in: ['featured', 'popular'] },
+    status: ['published', 'draft']
+  })
+  .all();
+
+// Nested conditions
+const posts = await user.posts
+  .filter({
+    author: {
+      role: 'admin',
+      status: 'active'
+    }
+  })
+  .all();
 ```
 
 ***
@@ -126,10 +177,11 @@ const posts = await user.posts.filter({
 
 > **find**(`id`): `Promise`\<`T`\>
 
-Defined in: [RelationBuilder.ts:128](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L128)
+Defined in: [RelationBuilder.ts:191](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L191)
 
 Fetches a model instance by ID from the API.
 Makes a GET request to retrieve the model data.
+Throws an error if the model is not found.
 
 #### Parameters
 
@@ -152,7 +204,20 @@ If the model is not found
 #### Example
 
 ```typescript
+// Fetch a post by ID
 const post = await user.posts.find(123);
+
+// Fetch with error handling
+try {
+  const post = await user.posts.find(123);
+  console.log(`Found post: ${post.title}`);
+} catch (error) {
+  if (error.status === 404) {
+    console.log('Post not found');
+  } else {
+    console.error('Error fetching post:', error);
+  }
+}
 ```
 
 ***
@@ -161,10 +226,11 @@ const post = await user.posts.find(123);
 
 > **id**(`id`): `T`
 
-Defined in: [RelationBuilder.ts:112](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L112)
+Defined in: [RelationBuilder.ts:161](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L161)
 
 Gets a model instance by ID without making an API request.
 Creates a new model instance with the given ID for local operations.
+Useful for setting up relationships or references.
 
 #### Parameters
 
@@ -183,7 +249,14 @@ A new model instance with the given ID
 #### Example
 
 ```typescript
+// Get a reference to a post
 const post = user.posts.id(123);
+
+// Use in relationship setup
+const comment = await Comment.create({
+  content: 'Great post!',
+  post: user.posts.id(123)
+});
 ```
 
 ***
@@ -192,10 +265,11 @@ const post = user.posts.id(123);
 
 > **limit**(`n`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:202](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L202)
+Defined in: [RelationBuilder.ts:331](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L331)
 
 Limits the number of results returned.
 Restricts the query to return at most n results.
+Useful for pagination or limiting large result sets.
 
 #### Parameters
 
@@ -209,12 +283,21 @@ The maximum number of results to return
 
 `RelationBuilder`\<`T`\>
 
-The relation builder instance for chaining
+The relation builder instance for method chaining
 
 #### Example
 
 ```typescript
-const posts = await user.posts.limit(10).all();
+// Get only 10 posts
+const posts = await user.posts
+  .limit(10)
+  .all();
+
+// Use with pagination
+const posts = await user.posts
+  .limit(20)
+  .offset(40) // Get posts 41-60
+  .all();
 ```
 
 ***
@@ -223,10 +306,11 @@ const posts = await user.posts.limit(10).all();
 
 > **offset**(`n`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:218](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L218)
+Defined in: [RelationBuilder.ts:357](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L357)
 
 Sets the offset for pagination in the query results.
 Skips n records before starting to return results.
+Often used with limit() for pagination.
 
 #### Parameters
 
@@ -240,12 +324,21 @@ The number of records to skip
 
 `RelationBuilder`\<`T`\>
 
-The relation builder instance for chaining
+The relation builder instance for method chaining
 
 #### Example
 
 ```typescript
-const posts = await user.posts.offset(20).limit(10).all(); // Get posts 21-30
+// Skip first 20 posts
+const posts = await user.posts
+  .offset(20)
+  .all();
+
+// Use with limit for pagination
+const posts = await user.posts
+  .limit(10)
+  .offset(30) // Get posts 31-40
+  .all();
 ```
 
 ***
@@ -254,10 +347,11 @@ const posts = await user.posts.offset(20).limit(10).all(); // Get posts 21-30
 
 > **orderBy**(`sort`, `direction`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:185](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L185)
+Defined in: [RelationBuilder.ts:304](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L304)
 
 Adds an order by clause to the query.
 Sorts the results by the specified field and direction.
+Multiple calls to orderBy() will use the last one.
 
 #### Parameters
 
@@ -277,12 +371,26 @@ The direction to order in ('asc' or 'desc', default: 'asc')
 
 `RelationBuilder`\<`T`\>
 
-The relation builder instance for chaining
+The relation builder instance for method chaining
 
 #### Example
 
 ```typescript
-const posts = await user.posts.orderBy('created_at', 'desc').all();
+// Sort by single field
+const posts = await user.posts
+  .orderBy('created_at', 'desc')
+  .all();
+
+// Sort by multiple fields
+const posts = await user.posts
+  .orderBy('status', 'asc')
+  .orderBy('created_at', 'desc')
+  .all();
+
+// Default sorting
+const posts = await user.posts
+  .orderBy() // Sorts by 'id' in ascending order
+  .all();
 ```
 
 ***
@@ -291,10 +399,11 @@ const posts = await user.posts.orderBy('created_at', 'desc').all();
 
 > **where**(`where`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:149](https://github.com/cedricpierre/fluentity-core/blob/a7a49050b32c98a8003b6a47c54c291aedc4cf3f/src/RelationBuilder.ts#L149)
+Defined in: [RelationBuilder.ts:231](https://github.com/cedricpierre/fluentity-core/blob/53497371d67800ca7958c21aa29051901836b6ff/src/RelationBuilder.ts#L231)
 
 Adds a where clause to the query.
 Filters results based on exact field-value matches.
+Multiple calls to where() will merge the conditions.
 
 #### Parameters
 
@@ -308,10 +417,28 @@ Object containing field-value pairs to filter by
 
 `RelationBuilder`\<`T`\>
 
-The relation builder instance for chaining
+The relation builder instance for method chaining
 
 #### Example
 
 ```typescript
-const posts = await user.posts.where({ published: true }).all();
+// Simple equality conditions
+const posts = await user.posts
+  .where({ status: 'published' })
+  .all();
+
+// Multiple conditions
+const posts = await user.posts
+  .where({
+    status: 'published',
+    type: 'article',
+    featured: true
+  })
+  .all();
+
+// Multiple where calls
+const posts = await user.posts
+  .where({ status: 'published' })
+  .where({ type: 'article' })
+  .all();
 ```
