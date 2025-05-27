@@ -8,7 +8,7 @@
 
 > `const` **BelongsToMany**: (`model`, `resource?`) => [`PropertyDecoratorType`](../type-aliases/PropertyDecoratorType.md) = `HasMany`
 
-Defined in: [decorators.ts:195](https://github.com/cedricpierre/fluentity-core/blob/ceb8c2e825283d4d38a656900543c3fd011cff75/src/decorators.ts#L195)
+Defined in: [decorators.ts:195](https://github.com/cedricpierre/fluentity-core/blob/2ccafd8d5a02651a7a61215667003025bf50857e/src/decorators.ts#L195)
 
 Alias for HasMany decorator.
 Used for better semantic meaning in certain relationship contexts.
