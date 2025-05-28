@@ -6,7 +6,7 @@
 
 # Class: DefaultAdapter
 
-Defined in: [adapters/DefaultAdapter.ts:3](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/adapters/DefaultAdapter.ts#L3)
+Defined in: [adapters/DefaultAdapter.ts:3](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/adapters/DefaultAdapter.ts#L3)
 
 Interface for adapters that handle API communication.
 Adapters must implement methods for making HTTP requests and configuration.
@@ -44,7 +44,7 @@ class CustomAdapter implements AdapterInterface {
 
 > **options**: [`AdapterOptions`](../interfaces/AdapterOptions.md) = `{}`
 
-Defined in: [adapters/DefaultAdapter.ts:4](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/adapters/DefaultAdapter.ts#L4)
+Defined in: [adapters/DefaultAdapter.ts:4](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/adapters/DefaultAdapter.ts#L4)
 
 The options for the adapter.
 Contains configuration settings specific to the adapter implementation.
@@ -59,7 +59,7 @@ Contains configuration settings specific to the adapter implementation.
 
 > **call**(`_queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\>
 
-Defined in: [adapters/DefaultAdapter.ts:5](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/adapters/DefaultAdapter.ts#L5)
+Defined in: [adapters/DefaultAdapter.ts:5](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/adapters/DefaultAdapter.ts#L5)
 
 Makes an API request using the adapter's implementation.
 
@@ -89,7 +89,7 @@ If the request fails
 
 > **configure**(`_options`): `void`
 
-Defined in: [adapters/DefaultAdapter.ts:9](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/adapters/DefaultAdapter.ts#L9)
+Defined in: [adapters/DefaultAdapter.ts:9](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/adapters/DefaultAdapter.ts#L9)
 
 Configures the adapter with additional options.
 
