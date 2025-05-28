@@ -6,7 +6,7 @@
 
 # Class: Model\<T\>
 
-Defined in: [Model.ts:64](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L64)
+Defined in: [Model.ts:64](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L64)
 
 Base class for all models in the ORM.
 Provides core functionality for interacting with the API and managing model data.
@@ -60,7 +60,7 @@ Allows models to have additional properties beyond their defined attributes.
 
 > **new Model**\<`T`\>(`attributes`, `queryBuilder?`): `Model`\<`T`\>
 
-Defined in: [Model.ts:120](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L120)
+Defined in: [Model.ts:120](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L120)
 
 Creates a new model instance with the given attributes.
 Initializes the query builder and sets up the model's state.
@@ -107,7 +107,7 @@ const user = new User({ name: 'John' }, query);
 
 > `optional` **id**: `string` \| `number`
 
-Defined in: [Model.ts:76](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L76)
+Defined in: [Model.ts:76](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L76)
 
 Unique identifier for the model instance.
 Can be either a string or number, depending on the API's ID format.
@@ -118,7 +118,7 @@ Can be either a string or number, depending on the API's ID format.
 
 > `static` **resource**: `string`
 
-Defined in: [Model.ts:99](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L99)
+Defined in: [Model.ts:99](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L99)
 
 Resource endpoint for the model, used to construct API URLs.
 Must be set by subclasses to define the API endpoint.
@@ -137,7 +137,7 @@ static resource = 'users';
 
 > `static` `optional` **scopes**: `Record`\<`string`, (`query`) => [`RelationBuilder`](RelationBuilder.md)\<`any`\>\>
 
-Defined in: [Model.ts:70](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L70)
+Defined in: [Model.ts:70](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L70)
 
 Custom query scopes that can be applied to model queries.
 Each scope is a function that modifies the query builder behavior.
@@ -150,7 +150,7 @@ Each scope is a function that modifies the query builder behavior.
 
 > **delete**(): `Promise`\<`void`\>
 
-Defined in: [Model.ts:683](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L683)
+Defined in: [Model.ts:683](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L683)
 
 Deletes the model instance from the server.
 Sends a DELETE request to remove the record.
@@ -191,7 +191,7 @@ try {
 
 > **get**(): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:557](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L557)
+Defined in: [Model.ts:557](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L557)
 
 Retrieves the current model instance from the server.
 Updates the local instance with fresh data from the API.
@@ -233,7 +233,7 @@ try {
 
 > **save**(): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:596](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L596)
+Defined in: [Model.ts:596](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L596)
 
 Saves the current model instance to the server.
 Creates a new record if the model doesn't have an ID, updates existing record otherwise.
@@ -279,7 +279,7 @@ try {
 
 > **toObject**(): `Record`\<`string`, `any`\>
 
-Defined in: [Model.ts:730](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L730)
+Defined in: [Model.ts:730](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L730)
 
 Converts the model instance to a plain object.
 Recursively converts nested model instances to plain objects.
@@ -320,7 +320,7 @@ const postData = post.toObject();
 
 > **update**(`attributes?`, `method?`): `Promise`\<`Model`\<`T`\>\>
 
-Defined in: [Model.ts:646](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L646)
+Defined in: [Model.ts:646](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L646)
 
 Updates the model instance with new attributes and saves to the server.
 Can use either PUT (full update) or PATCH (partial update).
@@ -386,7 +386,7 @@ try {
 
 > `static` **all**\<`T`\>(`this`): `Promise`\<`T`[]\>
 
-Defined in: [Model.ts:352](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L352)
+Defined in: [Model.ts:352](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L352)
 
 Retrieves all records for the model.
 Fetches all records from the API without any filtering.
@@ -433,7 +433,7 @@ try {
 
 > `static` **call**(`queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\>
 
-Defined in: [Model.ts:698](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L698)
+Defined in: [Model.ts:698](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L698)
 
 #### Parameters
 
@@ -451,7 +451,7 @@ Defined in: [Model.ts:698](https://github.com/cedricpierre/fluentity-core/blob/1
 
 > `static` **create**\<`A`, `T`\>(`this`, `data`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:430](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L430)
+Defined in: [Model.ts:430](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L430)
 
 Creates a new record.
 Sends a POST request to create a new record in the API.
@@ -523,7 +523,7 @@ try {
 
 > `static` **delete**\<`T`\>(`this`, `id`): `Promise`\<`void`\>
 
-Defined in: [Model.ts:521](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L521)
+Defined in: [Model.ts:521](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L521)
 
 Deletes a record by ID.
 Sends a DELETE request to remove a record from the API.
@@ -584,7 +584,7 @@ try {
 
 > `static` **filter**\<`T`\>(`this`, `filters`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:321](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L321)
+Defined in: [Model.ts:321](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L321)
 
 Starts a query with filter conditions.
 Similar to where() but specifically for filter operations.
@@ -646,7 +646,7 @@ const users = await User.filter({
 
 > `static` **find**\<`T`\>(`this`, `id`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:386](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L386)
+Defined in: [Model.ts:386](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L386)
 
 Finds a single record by ID.
 Fetches a specific record from the API by its ID.
@@ -707,7 +707,7 @@ try {
 
 > `static` **id**\<`T`\>(`this`, `id`): `T`
 
-Defined in: [Model.ts:224](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L224)
+Defined in: [Model.ts:224](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L224)
 
 Creates a new model instance with the given ID.
 Useful for creating model instances when only the ID is known.
@@ -759,7 +759,7 @@ const post = await Post.create({
 
 > `static` **query**\<`T`\>(`this`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:255](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L255)
+Defined in: [Model.ts:255](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L255)
 
 Starts a new query builder for the model.
 Returns a HasManyRelationBuilder for querying multiple records.
@@ -812,7 +812,7 @@ const users = await User.query()
 
 > `static` **update**\<`A`, `T`\>(`this`, `id`, `data`, `method`): `Promise`\<`T`\>
 
-Defined in: [Model.ts:482](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L482)
+Defined in: [Model.ts:482](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L482)
 
 Updates an existing record.
 Sends a PUT/PATCH request to update a record in the API.
@@ -902,7 +902,7 @@ try {
 
 > `static` **where**\<`T`\>(`this`, `where`): `HasManyRelationBuilder`\<`T`\>
 
-Defined in: [Model.ts:280](https://github.com/cedricpierre/fluentity-core/blob/1d3603d30dbf2f38409faffae8314939f23fc811/src/Model.ts#L280)
+Defined in: [Model.ts:280](https://github.com/cedricpierre/fluentity-core/blob/c320ba12f5df20a74e195f3fa6edef8576093d87/src/Model.ts#L280)
 
 Starts a query with a where clause.
 Shorthand for query().where() for common filtering operations.

@@ -113,33 +113,86 @@ const adapter = new RestAdapter({
 Models are the core of Fluentity. Here's how to create a model:
 
 ```typescript
-import { Model, Attributes } from '@fluentity/core';
+import {
+  Model,
+  HasMany,
+  Relation,
+  Attributes,
+  Cast,
+  HasOne,
+  RelationBuilder,
+  Methods,
+  AdapterResponse,
+} from '../../src/index';
 
-/**
- * Interface defining the attributes for a User model
- * @interface UserAttributes
- * @extends {Attributes}
- */
+import { Company } from './Company';
+
+import { Media } from './Media';
+import { Thumbnail } from './Thumbnail';
+
+import { QueryBuilder } from '../../src/QueryBuilder';
+
 interface UserAttributes extends Attributes {
-  /** The user's full name */
   name: string;
-  /** The user's email address */
+  phone: number;
   email: string;
-  /** Optional phone number */
-  phone?: number;
-  /** Optional associated company */
-  company?: Company;
+  created_at?: string;
+  updated_at?: string;
+  thumbnail?: Thumbnail;
 }
 
-/**
- * User model class for interacting with the users API endpoint
- * @class User
- * @extends {Model<UserAttributes>}
- */
-export class User extends Model<UserAttributes> {
-  /** The API endpoint resource name for this model */
+export class User extends Model<UserAttributes> implements UserAttributes {
   static resource = 'users';
+
+  declare name: string;
+  declare email: string;
+  declare phone: number;
+
+  declare created_at?: string;
+  declare updated_at?: string;
+
+  @HasMany(() => Media)
+  medias!: Relation<Media[]>;
+
+  @HasMany(() => Media, 'medias')
+  libraries!: Relation<Media[]>;
+
+  @HasMany(() => Media, 'custom-resource')
+  customResource!: Relation<Media[]>;
+
+  @HasOne(() => Media)
+  picture!: Relation<Media>;
+
+  @Cast(() => Thumbnail)
+  thumbnail!: Thumbnail;
+
+  @Cast(() => Thumbnail)
+  thumbnails!: Thumbnail[];
+
+  @Cast(() => Company)
+  company!: Company;
+
+  static scopes = {
+    active: (query: RelationBuilder<User>) => query.where({ status: 'active' }),
+  };
+
+  // Custom reusable method: User.login(username, password)
+  static async login(username: string, password: string) {
+    const queryBuilder = new QueryBuilder({
+      resource: 'login',
+      body: {
+        username,
+        password,
+      },
+      method: Methods.POST,
+    });
+
+    const response = await this.call(queryBuilder);
+
+    return new this(response.data);
+  }
 }
+
 ```
 
 ### Using the official CLI tool :
