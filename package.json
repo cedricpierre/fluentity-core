@@ -1,6 +1,6 @@
 {
   "name": "@fluentity/core",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "description": "Fluentity is a fluent, model-oriented, typed HTTP client for TypeScript and framework agnostic.",
   "main": "./dist/fluentity.js",
   "types": "./dist/fluentity.d.ts",
