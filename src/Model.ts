@@ -85,7 +85,7 @@ export class Model<T extends Attributes = Attributes> {
    * Internal query builder instance for constructing API requests.
    * @private
    */
-  #queryBuilder: QueryBuilder;
+  readonly#queryBuilder: QueryBuilder;
 
   /**
    * Resource endpoint for the model, used to construct API URLs.

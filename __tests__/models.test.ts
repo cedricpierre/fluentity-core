@@ -27,6 +27,7 @@ describe('Models', () => {
   it('can create a user', async () => {
 
     user = new User({ name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 })
+
     expect(user).toBeInstanceOf(User)
     expect(user.name).toBe('Cedric')
   })

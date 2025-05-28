@@ -7,7 +7,6 @@ import {
   HasOne,
   RelationBuilder,
   Methods,
-  AdapterResponse,
 } from '../../src/index';
 
 import { Company } from './Company';
@@ -26,15 +25,8 @@ interface UserAttributes extends Attributes {
   thumbnail?: Thumbnail;
 }
 
-export class User extends Model<UserAttributes> implements UserAttributes {
+export class User extends Model<UserAttributes> implements Partial<UserAttributes> {
   static resource = 'users';
-
-  declare name: string;
-  declare email: string;
-  declare phone: number;
-
-  declare created_at?: string;
-  declare updated_at?: string;
 
   @HasMany(() => Media)
   medias!: Relation<Media[]>;
