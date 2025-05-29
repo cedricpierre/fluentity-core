@@ -6,7 +6,7 @@
 
 # Class: Fluentity\<A\>
 
-Defined in: [Fluentity.ts:162](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L162)
+Defined in: [Fluentity.ts:162](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L162)
 
 Main Fluentity class that manages API communication.
 Implements the singleton pattern to ensure a single instance is used throughout the application.
@@ -43,7 +43,7 @@ The type of adapter being used
 
 > **get** **adapter**(): `A`
 
-Defined in: [Fluentity.ts:211](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L211)
+Defined in: [Fluentity.ts:210](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L210)
 
 Gets the adapter instance used for API communication.
 
@@ -59,7 +59,7 @@ The configured adapter instance
 
 > **call**(`queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\<`any`\>\>
 
-Defined in: [Fluentity.ts:277](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L277)
+Defined in: [Fluentity.ts:274](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L274)
 
 Calls the adapter with the given query builder.
 
@@ -83,7 +83,7 @@ The adapter response
 
 > **configure**(`options?`): `void`
 
-Defined in: [Fluentity.ts:196](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L196)
+Defined in: [Fluentity.ts:195](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L195)
 
 #### Parameters
 
@@ -101,7 +101,7 @@ Defined in: [Fluentity.ts:196](https://github.com/cedricpierre/fluentity-core/bl
 
 > `static` **call**(`queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\<`any`\>\>
 
-Defined in: [Fluentity.ts:287](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L287)
+Defined in: [Fluentity.ts:283](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L283)
 
 Calls the adapter with the given query builder.
 
@@ -119,15 +119,13 @@ The query builder to use
 
 The adapter response
 
-#### Static
-
 ***
 
 ### getInstance()
 
 > `static` **getInstance**\<`A`\>(): `Fluentity`\<`A`\>
 
-Defined in: [Fluentity.ts:264](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L264)
+Defined in: [Fluentity.ts:261](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L261)
 
 Gets the Fluentity singleton instance.
 
@@ -147,8 +145,6 @@ The Fluentity instance
 
 If Fluentity has not been initialized
 
-#### Static
-
 #### Example
 
 ```typescript
@@ -165,7 +161,7 @@ const adapter = fluentity.adapter;
 
 > `static` **initialize**\<`A`\>(`options?`): `Fluentity`\<`A`\>
 
-Defined in: [Fluentity.ts:236](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L236)
+Defined in: [Fluentity.ts:234](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L234)
 
 Initializes the Fluentity singleton instance.
 Must be called before using any other Fluentity functionality.
@@ -194,8 +190,6 @@ The initialized Fluentity instance
 
 If Fluentity has already been initialized
 
-#### Static
-
 #### Example
 
 ```typescript
@@ -216,7 +210,7 @@ Fluentity.initialize({
 
 > `static` **reset**(): `void`
 
-Defined in: [Fluentity.ts:245](https://github.com/cedricpierre/fluentity-core/blob/e69b5ec0e02f4965a6853e60ab7e5019d15e99ca/src/Fluentity.ts#L245)
+Defined in: [Fluentity.ts:243](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L243)
 
 #### Returns
 
