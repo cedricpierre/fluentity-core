@@ -8,6 +8,6 @@
 
 > **RestAdapterOptions** = `HttpAdapterOptions`
 
-Defined in: [adapters/RestAdapter.ts:102](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/adapters/RestAdapter.ts#L102)
+Defined in: [adapters/RestAdapter.ts:102](https://github.com/cedricpierre/fluentity-core/blob/01d0ed1acedc93a7d834b9e01e72077ff528193c/src/adapters/RestAdapter.ts#L102)
 
 Configuration options for the HttpClient.

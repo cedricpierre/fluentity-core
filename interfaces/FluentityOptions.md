@@ -6,7 +6,7 @@
 
 # Interface: FluentityOptions\<A\>
 
-Defined in: [Fluentity.ts:136](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L136)
+Defined in: [Fluentity.ts:136](https://github.com/cedricpierre/fluentity-core/blob/01d0ed1acedc93a7d834b9e01e72077ff528193c/src/Fluentity.ts#L136)
 
 Configuration options for initializing Fluentity.
 
@@ -32,6 +32,6 @@ The type of adapter to use
 
 > `optional` **adapter**: `A`
 
-Defined in: [Fluentity.ts:138](https://github.com/cedricpierre/fluentity-core/blob/c66aa7b53f67991fe1e6a5b8d69453cb8e881a43/src/Fluentity.ts#L138)
+Defined in: [Fluentity.ts:138](https://github.com/cedricpierre/fluentity-core/blob/01d0ed1acedc93a7d834b9e01e72077ff528193c/src/Fluentity.ts#L138)
 
 The adapter instance to use for API communication
