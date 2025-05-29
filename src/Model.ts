@@ -4,6 +4,7 @@ import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { Constructor } from './decorators';
 import { AdapterResponse, Fluentity, Methods, MethodType } from './Fluentity';
 import { QueryBuilder } from './QueryBuilder';
+import { RestAdapter } from './adapters/RestAdapter';
 
 /**
  * Base interface for model attributes that all models must implement.
@@ -170,8 +171,8 @@ export class Model<T extends Attributes = Attributes> {
    * }
    * ```
    */
-  protected get fluentity() {
-    return Fluentity.getInstance();
+  protected get fluentity(): Fluentity<RestAdapter> {
+    return Fluentity.getInstance<RestAdapter>();
   }
 
   /**

@@ -133,7 +133,7 @@ export type MethodType = keyof typeof Methods;
  * };
  * ```
  */
-export interface FluentityOptions<A extends AdapterInterface = DefaultAdapter> {
+export interface FluentityOptions<A extends AdapterInterface> {
   /** The adapter instance to use for API communication */
   adapter?: A;
 }
@@ -209,7 +209,7 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    * @readonly
    */
   public get adapter(): A {
-    return this.#adapter;
+    return this.#adapter as A;
   }
 
   /**

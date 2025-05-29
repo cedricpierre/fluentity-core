@@ -4,12 +4,18 @@ import { QueryBuilder } from '../src/QueryBuilder';
 import { User } from '../examples/models/User';
 import { HttpResponse, HttpRequest } from '../src/adapters/HttpAdapter';
 
+let fluentity: Fluentity<RestAdapter>;
+
 beforeAll(() => {
   Fluentity.reset();
+  fluentity = Fluentity.initialize<RestAdapter>({
+    adapter: new RestAdapter({
+      baseUrl: 'https://jsonplaceholder.typicode.com'
+    }),
+  });
 });
 
 describe('Fluentity Class', () => {
-  let fluentity: Fluentity;
 
   beforeEach(() => {
     // Reset the singleton instance before each test

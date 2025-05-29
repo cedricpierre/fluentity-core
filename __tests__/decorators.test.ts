@@ -6,14 +6,15 @@ import { Thumbnail } from '../examples/models/Thumbnail'
 import { QueryBuilder } from '../src/QueryBuilder'
 
 
-let fluentity: Fluentity;
+let fluentity: Fluentity<RestAdapter>;
+
 beforeAll(() => {
   Fluentity.reset();
-  fluentity = Fluentity.initialize({
+  fluentity = Fluentity.initialize<RestAdapter>({
     adapter: new RestAdapter({
-      baseUrl: 'https://jsonplaceholder.typicode.com',
+      baseUrl: 'https://jsonplaceholder.typicode.com'
     }),
-  })
+  });
 });
 
 

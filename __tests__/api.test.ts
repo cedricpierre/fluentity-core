@@ -6,11 +6,11 @@ import { Fluentity, RestAdapter } from '../src';
 import { Company } from '../examples/models/Company';
 import { HttpResponse } from '../src/adapters/HttpAdapter';
 
-let fluentity: Fluentity;
+let fluentity: Fluentity<RestAdapter>;
 
 beforeAll(() => {
   Fluentity.reset();
-  fluentity = Fluentity.initialize({
+  fluentity = Fluentity.initialize<RestAdapter>({
     adapter: new RestAdapter({
       baseUrl: 'https://jsonplaceholder.typicode.com',
       options: {
@@ -29,13 +29,13 @@ describe('API', () => {
 
   it('should fetch all users', async () => {
     const users = await User.all();
-    expect(fluentity.adapter.url).toBe('users');
+    expect(fluentity.adapter.request.url).toBe('users');
     expect(users).toBeDefined();
   });
 
   it('can get a user by id', async () => {
     const user = await User.id(1).get();
-    expect(fluentity.adapter.url).toBe('users/1');
+    expect(fluentity.adapter.request.url).toBe('users/1');
     expect(user).toBeDefined();
   });
 
@@ -54,7 +54,7 @@ describe('API', () => {
 
   it('should fetch a user by id', async () => {
     const user = await User.find(1);
-    expect(fluentity.adapter.url).toBe('users/1');
+    expect(fluentity.adapter.request.url).toBe('users/1');
     expect(user).toBeDefined();
 
     expect(user.company).toBeDefined();
@@ -63,7 +63,7 @@ describe('API', () => {
 
   it('should get a user by id', async () => {
     const user = await User.id(1).get();
-    expect(fluentity.adapter.url).toBe('users/1');
+    expect(fluentity.adapter.request.url).toBe('users/1');
     expect(user).toBeDefined();
 
     expect(user.company).toBeDefined();
@@ -85,7 +85,7 @@ describe('API', () => {
 
   it('should update a user', async () => {
     const user = await User.update(1, { name: 'Cedric updated' });
-    expect(fluentity.adapter.url).toBe('users/1');
+    expect(fluentity.adapter.request.url).toBe('users/1');
     expect(user).toBeDefined();
     expect(user).toBeInstanceOf(User);
     expect(user.name).toBe('Cedric updated');
@@ -93,12 +93,12 @@ describe('API', () => {
 
   it('should delete a user', async () => {
     await User.delete(1);
-    expect(fluentity.adapter.url).toBe('users/1');
+    expect(fluentity.adapter.request.url).toBe('users/1');
   });
 
   it('Should fetch all comments from a post', async () => {
     const comments = await Post.id(1).comments.all();
-    expect(fluentity.adapter.url).toBe('posts/1/comments');
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments');
     expect(comments).toBeDefined();
     expect(comments).toBeInstanceOf(Array);
     expect(comments.length).toBeGreaterThan(0);
@@ -109,7 +109,9 @@ describe('API', () => {
       name: 'Cedric',
       email: 'cedric@example.com',
     });
-    expect(fluentity.adapter.url).toBe('posts/1/comments');
+
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments');
+    
     expect(comment).toBeDefined();
     expect(comment).toBeInstanceOf(Comment);
     expect(comment.name).toBe('Cedric');
@@ -117,7 +119,7 @@ describe('API', () => {
 
   it('should create a comment with a custom method', async () => {
     const response = await User.login('cedric', 'password');
-    expect(fluentity.adapter.url).toBe('login');
+    expect(fluentity.adapter.request.url).toBe('login');
     expect(response).toBeDefined();
     expect(response).toBeInstanceOf(User);
   });
@@ -136,29 +138,29 @@ describe('API', () => {
 
   it('can fetch one post', async () => {
     const post = await Post.find(1);
-    expect(fluentity.adapter.url).toBe('posts/1');
+    expect(fluentity.adapter.request.url).toBe('posts/1');
     expect(post).toBeDefined();
     expect(post).toBeInstanceOf(Post);
 
     let comments = await post.comments.limit(10).offset(10).all();
-    expect(fluentity.adapter.url).toBe('posts/1/comments?limit=10&offset=10');
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments?limit=10&offset=10');
     expect(comments).toBeDefined();
     expect(comments).toBeInstanceOf(Array);
     expect(comments.length).toBeGreaterThan(0);
 
     post.update({ title: 'Cedric updated' });
-    expect(fluentity.adapter.url).toBe('posts/1');
+    expect(fluentity.adapter.request.url).toBe('posts/1');
     expect(post.title).toBe('Cedric updated');
 
     post.title = 'Cedric updated 2';
     await post.save();
-    expect(fluentity.adapter.url).toBe('posts/1');
+    expect(fluentity.adapter.request.url).toBe('posts/1');
     expect(post.title).toBe('Cedric updated 2');
 
     post.comments.create({ name: 'Cedric', email: 'cedric@example.com' });
-    expect(fluentity.adapter.url).toBe('posts/1/comments');
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments');
     comments = await post.comments.all();
-    expect(fluentity.adapter.url).toBe('posts/1/comments');
+    expect(fluentity.adapter.request.method).toBe('GET');
     expect(comments).toBeDefined();
     expect(comments).toBeInstanceOf(Array);
     expect(comments.length).toBeGreaterThan(0);
@@ -168,15 +170,15 @@ describe('API', () => {
     expect(comment).toBeInstanceOf(Comment);
 
     await Comment.update(1, { name: 'Cedric updated 2' });
-    expect(fluentity.adapter.url).toBe('comments/1');
+    expect(fluentity.adapter.request.url).toBe('comments/1');
 
     await comment.update({ name: 'Cedric updated' });
-    expect(fluentity.adapter.url).toBe('posts/1/comments/1');
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments/1');
   });
 
   it('can fetch a post with comments', async () => {
     const comments = await Post.id(1).comments.all();
-    expect(fluentity.adapter.url).toBe('posts/1/comments');
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments');
     expect(comments).toBeDefined();
 
     const comment = comments[0];
@@ -189,13 +191,13 @@ describe('API', () => {
 
   it('can fetch all posts and all comments then update a comment', async () => {
     const posts = await Post.all();
-    expect(fluentity.adapter.url).toBe('posts');
+    expect(fluentity.adapter.request.url).toBe('posts');
     expect(posts).toBeDefined();
     expect(posts).toBeInstanceOf(Array);
     expect(posts.length).toBeGreaterThan(0);
 
     const comments = await posts[0].comments.all();
-    expect(fluentity.adapter.url).toBe('posts/1/comments');
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments');
     expect(comments).toBeDefined();
     expect(comments).toBeInstanceOf(Array);
     expect(comments.length).toBeGreaterThan(0);
@@ -205,7 +207,7 @@ describe('API', () => {
     expect(comment).toBeInstanceOf(Comment);
 
     comment.update({ name: 'Cedric updated lol' });
-    expect(fluentity.adapter.url).toBe('posts/1/comments/1');
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments/1');
     expect(comment.name).toBe('Cedric updated lol');
   });
 

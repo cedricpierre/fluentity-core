@@ -14,7 +14,6 @@ import { QueryBuilder } from '../QueryBuilder';
  */
 export abstract class HttpAdapter implements AdapterInterface {
   protected _cache: WeakMap<HttpRequest, CacheData> = new WeakMap();
-  protected _url: string = '';
 
   options: HttpAdapterOptions = {
     baseUrl: '',
@@ -32,6 +31,10 @@ export abstract class HttpAdapter implements AdapterInterface {
       ttl: 5 * 60 * 1000, // 5 minutes in milliseconds
     },
   };
+  /**
+   * The request object.
+   */
+  private _request: HttpRequest;
 
   /**
    * Constructor for the RestAdapter class.
@@ -46,8 +49,11 @@ export abstract class HttpAdapter implements AdapterInterface {
     return this;
   }
 
-  get url(): string {
-    return this._url;
+  /**
+   * The request object.
+   */
+  get request(): HttpRequest {
+    return this._request;
   }
 
   /**
@@ -72,7 +78,7 @@ export abstract class HttpAdapter implements AdapterInterface {
         throw new Error('baseUrl is required');
       }
 
-      const request: HttpRequest = new HttpRequest({
+      this._request = new HttpRequest({
         url: this.buildUrl(queryBuilder),
         method: queryBuilder.method,
         body: queryBuilder.body,
@@ -81,22 +87,22 @@ export abstract class HttpAdapter implements AdapterInterface {
 
       // Check cache if enabled
       if (this.options.cacheOptions?.enabled) {
-        const cachedData = this._cache.get(request);
+        const cachedData = this._cache.get(this._request);
         if (cachedData) {
           const now = Date.now();
           if (now - cachedData.timestamp < (this.options.cacheOptions.ttl || 0)) {
             return cachedData;
           }
           // Remove expired cache entry
-          this._cache.delete(request);
+          this._cache.delete(this._request);
         }
       }
 
       if (this.options.requestInterceptor) {
-        Object.assign(request, this.options.requestInterceptor.call(this, request));
+        Object.assign(this._request, this.options.requestInterceptor.call(this, this._request));
       }
 
-      let response = await this.options.requestHandler!.call(this, request);
+      let response = await this.options.requestHandler!.call(this, this._request);
 
       if (this.options.responseInterceptor) {
         response = this.options.responseInterceptor.call(this, response);
@@ -104,7 +110,7 @@ export abstract class HttpAdapter implements AdapterInterface {
 
       // Store in cache if enabled
       if (this.options.cacheOptions?.enabled) {
-        this._cache.set(request, {
+        this._cache.set(this._request, {
           data: response,
           timestamp: Date.now(),
         });

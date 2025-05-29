@@ -3,6 +3,7 @@ import { QueryBuilder } from './QueryBuilder';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
 import { Fluentity, Methods } from './Fluentity';
+import { RestAdapter } from './adapters/RestAdapter';
 
 /**
  * Type that determines the appropriate relation builder based on the model type.
@@ -135,8 +136,8 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * @returns The singleton Fluentity instance
    * @throws {Error} If Fluentity has not been initialized
    */
-  protected get fluentity() {
-    return Fluentity.getInstance();
+  protected get fluentity(): Fluentity<RestAdapter> {
+    return Fluentity.getInstance<RestAdapter>();
   }
 
   /**
