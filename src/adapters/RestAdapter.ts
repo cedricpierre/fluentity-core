@@ -30,10 +30,7 @@ export class RestAdapter extends HttpAdapter {
     if (queryString) {
       url += `?${queryString}`;
     }
-
-    this._url = url;
-
-    return decodeURIComponent(this._url);
+    return decodeURIComponent(url);
   }
 
   private unwrapParents(queryBuilder: QueryBuilder, segments: Array<string>): Array<string> {

@@ -163,7 +163,6 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
   /**
    * Singleton instance of Fluentity.
    * @private
-   * @static
    */
   private static instance: Fluentity<any> | undefined;
 
@@ -219,7 +218,6 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    * @param {FluentityOptions<A>} [options] - Configuration options for Fluentity
    * @returns {Fluentity<A>} The initialized Fluentity instance
    * @throws {Error} If Fluentity has already been initialized
-   * @static
    * @example
    * ```typescript
    * // Initialize with default adapter
@@ -251,7 +249,6 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    *
    * @returns {Fluentity<A>} The Fluentity instance
    * @throws {Error} If Fluentity has not been initialized
-   * @static
    * @example
    * ```typescript
    * // Get the instance after initialization
@@ -282,7 +279,6 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    * Calls the adapter with the given query builder.
    * @param queryBuilder - The query builder to use
    * @returns The adapter response
-   * @static
    */
   static call(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
     return Fluentity.getInstance().call(queryBuilder);

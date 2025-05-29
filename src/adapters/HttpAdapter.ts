@@ -67,7 +67,6 @@ export abstract class HttpAdapter implements AdapterInterface {
   /**
    * Makes an HTTP request to the specified URL with optional request options.
    * Handles caching, interceptors, and error handling.
-   * @param url - The endpoint URL to call (will be appended to baseUrl)
    * @param queryBuilder - Optional request configuration
    * @returns A promise that resolves to the response data
    * @throws Error if baseUrl is not configured or if the request fails
@@ -192,12 +191,12 @@ export class HttpRequest implements HttpRequestInterface, AdapterRequest {
   }
 }
 
-export interface HttpResponseInterface<T = unknown> {
-  data: T;
+export interface HttpResponseInterface {
+  data: any
 }
 
-export class HttpResponse<T = unknown> implements HttpResponseInterface<T>, AdapterResponse<T> {
-  data: T = {} as T;
+export class HttpResponse<T = any> implements HttpResponseInterface, AdapterResponse<T> {
+  data: T
 
   constructor(options?: Partial<HttpResponseInterface>) {
     if (options) {

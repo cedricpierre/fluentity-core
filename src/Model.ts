@@ -66,7 +66,6 @@ export class Model<T extends Attributes = Attributes> {
   /**
    * Custom query scopes that can be applied to model queries.
    * Each scope is a function that modifies the query builder behavior.
-   * @static
    */
   static scopes?: Record<string, (query: RelationBuilder<any>) => RelationBuilder<any>>;
 
@@ -91,7 +90,6 @@ export class Model<T extends Attributes = Attributes> {
   /**
    * Resource endpoint for the model, used to construct API URLs.
    * Must be set by subclasses to define the API endpoint.
-   * @static
    * @example
    * ```typescript
    * static resource = 'users';
@@ -184,7 +182,6 @@ export class Model<T extends Attributes = Attributes> {
    * @param relationBuilderFactory - The factory class to create the relation builder
    * @returns A relation builder instance configured for the model
    * @private
-   * @static
    * @example
    * ```typescript
    * // Internal usage in relationship decorators
@@ -208,7 +205,6 @@ export class Model<T extends Attributes = Attributes> {
    *
    * @param id - The ID to assign to the new model instance
    * @returns A new model instance with the specified ID
-   * @static
    * @example
    * ```typescript
    * // Create a reference to an existing user
@@ -232,7 +228,6 @@ export class Model<T extends Attributes = Attributes> {
    * Provides a fluent interface for building complex queries.
    *
    * @returns A HasManyRelationBuilder instance for building queries
-   * @static
    * @example
    * ```typescript
    * // Basic query with filters
@@ -264,7 +259,6 @@ export class Model<T extends Attributes = Attributes> {
    *
    * @param where - Conditions to filter by, as field-value pairs
    * @returns A HasManyRelationBuilder instance with where conditions applied
-   * @static
    * @example
    * ```typescript
    * // Simple equality conditions
@@ -295,7 +289,6 @@ export class Model<T extends Attributes = Attributes> {
    *
    * @param filters - Filter conditions to apply, as field-value pairs
    * @returns A HasManyRelationBuilder instance with filters applied
-   * @static
    * @example
    * ```typescript
    * // Comparison operators
@@ -335,7 +328,6 @@ export class Model<T extends Attributes = Attributes> {
    * Use with caution for large datasets - consider using pagination.
    *
    * @returns Promise resolving to an array of model instances
-   * @static
    * @example
    * ```typescript
    * // Get all users
@@ -365,7 +357,6 @@ export class Model<T extends Attributes = Attributes> {
    * @param id - The ID of the record to find
    * @returns Promise resolving to a model instance
    * @throws {Error} If the record is not found
-   * @static
    * @example
    * ```typescript
    * // Find a user by ID
@@ -402,7 +393,6 @@ export class Model<T extends Attributes = Attributes> {
    * @param data - The data to create the record with
    * @returns Promise resolving to the created model instance
    * @throws {Error} If the creation fails
-   * @static
    * @example
    * ```typescript
    * // Create a new user
@@ -448,7 +438,6 @@ export class Model<T extends Attributes = Attributes> {
    * @param method - The HTTP method to use for the update (PUT or PATCH)
    * @returns Promise resolving to the updated model instance
    * @throws {Error} If the update fails
-   * @static
    * @example
    * ```typescript
    * // Full update with PUT
@@ -500,7 +489,6 @@ export class Model<T extends Attributes = Attributes> {
    * @param id - The ID of the record to delete
    * @returns Promise that resolves when the deletion is complete
    * @throws {Error} If the deletion fails
-   * @static
    * @example
    * ```typescript
    * // Delete a user
