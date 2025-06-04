@@ -8,7 +8,7 @@
 
 > **HasMany**(`model`, `resource?`): [`PropertyDecoratorType`](../type-aliases/PropertyDecoratorType.md)
 
-Defined in: [decorators.ts:162](https://github.com/cedricpierre/fluentity-core/blob/0f9d23c0b479e3579d4f9ba1781ac36b1a5404af/src/decorators.ts#L162)
+Defined in: [decorators.ts:162](https://github.com/cedricpierre/fluentity-core/blob/1a5599702fb6e6426747ef36eca57c789075c598/src/decorators.ts#L162)
 
 Decorator for creating a has-many relationship between models.
 Sets up a one-to-many relationship where a model has multiple related models.
