@@ -34,7 +34,7 @@ export abstract class HttpAdapter implements AdapterInterface {
   /**
    * The request object.
    */
-  private _request: HttpRequest;
+  private _request: HttpRequest = new HttpRequest();
 
   /**
    * Constructor for the RestAdapter class.
@@ -196,7 +196,7 @@ export interface HttpResponseInterface {
 }
 
 export class HttpResponse<T = any> implements HttpResponseInterface, AdapterResponse<T> {
-  data: T
+  data: T = {} as T;
 
   constructor(options?: Partial<HttpResponseInterface>) {
     if (options) {

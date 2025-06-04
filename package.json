@@ -30,7 +30,8 @@
   "author": "Cedric Pierre",
   "email": "jirotoh@gmail.com",
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --minify --target node",
+    "build": "bun build ./src/index.ts --outdir ./dist --minify --target node && bun run build:dts",
+    "build:dts": "bunx tsc -p tsconfig.build.json",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
     "docs": "typedoc",
