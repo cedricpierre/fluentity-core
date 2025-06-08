@@ -6,7 +6,7 @@
 
 # Class: RestAdapter
 
-Defined in: [adapters/RestAdapter.ts:8](https://github.com/cedricpierre/fluentity-core/blob/768ceed3962a4ca4f908cd1b97071617753a9137/src/adapters/RestAdapter.ts#L8)
+Defined in: [adapters/RestAdapter.ts:8](https://github.com/cedricpierre/fluentity-core/blob/dd49dcf5b1debdac859ec47df4dfdcbe1a5885d8/src/adapters/RestAdapter.ts#L8)
 
 A static HTTP client class that provides methods for making HTTP requests with built-in caching,
 interceptors, and request/response handling capabilities.
@@ -21,7 +21,7 @@ interceptors, and request/response handling capabilities.
 
 > **new RestAdapter**(`options`): `RestAdapter`
 
-Defined in: [adapters/RestAdapter.ts:13](https://github.com/cedricpierre/fluentity-core/blob/768ceed3962a4ca4f908cd1b97071617753a9137/src/adapters/RestAdapter.ts#L13)
+Defined in: [adapters/RestAdapter.ts:13](https://github.com/cedricpierre/fluentity-core/blob/dd49dcf5b1debdac859ec47df4dfdcbe1a5885d8/src/adapters/RestAdapter.ts#L13)
 
 Constructor for the RestAdapter class.
 
@@ -47,7 +47,7 @@ Partial configuration options to merge with existing options
 
 > **options**: `HttpAdapterOptions`
 
-Defined in: [adapters/HttpAdapter.ts:18](https://github.com/cedricpierre/fluentity-core/blob/768ceed3962a4ca4f908cd1b97071617753a9137/src/adapters/HttpAdapter.ts#L18)
+Defined in: [adapters/HttpAdapter.ts:18](https://github.com/cedricpierre/fluentity-core/blob/dd49dcf5b1debdac859ec47df4dfdcbe1a5885d8/src/adapters/HttpAdapter.ts#L18)
 
 The options for the adapter.
 Contains configuration settings specific to the adapter implementation.
@@ -64,7 +64,7 @@ Contains configuration settings specific to the adapter implementation.
 
 > **get** **request**(): `HttpRequest`
 
-Defined in: [adapters/HttpAdapter.ts:55](https://github.com/cedricpierre/fluentity-core/blob/768ceed3962a4ca4f908cd1b97071617753a9137/src/adapters/HttpAdapter.ts#L55)
+Defined in: [adapters/HttpAdapter.ts:55](https://github.com/cedricpierre/fluentity-core/blob/dd49dcf5b1debdac859ec47df4dfdcbe1a5885d8/src/adapters/HttpAdapter.ts#L55)
 
 The request object.
 
@@ -82,7 +82,7 @@ The request object.
 
 > **call**(`queryBuilder`): `Promise`\<`HttpResponse`\<`any`\>\>
 
-Defined in: [adapters/HttpAdapter.ts:74](https://github.com/cedricpierre/fluentity-core/blob/768ceed3962a4ca4f908cd1b97071617753a9137/src/adapters/HttpAdapter.ts#L74)
+Defined in: [adapters/HttpAdapter.ts:74](https://github.com/cedricpierre/fluentity-core/blob/dd49dcf5b1debdac859ec47df4dfdcbe1a5885d8/src/adapters/HttpAdapter.ts#L74)
 
 Makes an HTTP request to the specified URL with optional request options.
 Handles caching, interceptors, and error handling.
@@ -115,7 +115,7 @@ Error if baseUrl is not configured or if the request fails
 
 > **clearCache**(): `this`
 
-Defined in: [adapters/HttpAdapter.ts:62](https://github.com/cedricpierre/fluentity-core/blob/768ceed3962a4ca4f908cd1b97071617753a9137/src/adapters/HttpAdapter.ts#L62)
+Defined in: [adapters/HttpAdapter.ts:62](https://github.com/cedricpierre/fluentity-core/blob/dd49dcf5b1debdac859ec47df4dfdcbe1a5885d8/src/adapters/HttpAdapter.ts#L62)
 
 Clears all cached responses.
 
@@ -133,7 +133,7 @@ Clears all cached responses.
 
 > **configure**(`options`): `this`
 
-Defined in: [adapters/HttpAdapter.ts:47](https://github.com/cedricpierre/fluentity-core/blob/768ceed3962a4ca4f908cd1b97071617753a9137/src/adapters/HttpAdapter.ts#L47)
+Defined in: [adapters/HttpAdapter.ts:47](https://github.com/cedricpierre/fluentity-core/blob/dd49dcf5b1debdac859ec47df4dfdcbe1a5885d8/src/adapters/HttpAdapter.ts#L47)
 
 Configures the adapter with additional options.
 
