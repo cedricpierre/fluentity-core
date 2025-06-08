@@ -52,6 +52,9 @@ const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>
       get(this: Model<Attributes>) {
         return new relationBuilderFactory(model(), this.queryBuilder, resource);
       },
+      set(this: Model<Attributes>, value: any) {
+        
+      },
       enumerable: true,
       configurable: true,
     });

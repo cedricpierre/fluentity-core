@@ -61,7 +61,6 @@ export class HasOneRelationBuilder<T extends Model<Attributes>> extends Relation
    */
   async get(): Promise<T> {
     this.queryBuilder.method = Methods.GET;
-    this.queryBuilder.id = this.relatedModel.id!;
     const response = await this.fluentity.adapter.call(this.queryBuilder);
     return new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
   }

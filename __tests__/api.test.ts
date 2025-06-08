@@ -5,6 +5,9 @@ import { Comment } from '../examples/models/Comment';
 import { Fluentity, RestAdapter } from '../src';
 import { Company } from '../examples/models/Company';
 import { HttpResponse } from '../src/adapters/HttpAdapter';
+import { Address } from '../examples/models/Address';
+import { HasManyRelationBuilder } from '../src/HasManyRelationBuilder';
+import { HasOneRelationBuilder } from '../src/HasOneRelationBuilder';
 
 let fluentity: Fluentity<RestAdapter>;
 
@@ -31,6 +34,19 @@ describe('API', () => {
     const users = await User.all();
     expect(fluentity.adapter.request.url).toBe('users');
     expect(users).toBeDefined();
+  });
+
+  it('should fetch all users', async () => {
+    const user = await User.find(1);
+    expect(fluentity.adapter.request.url).toBe('users/1');
+    expect(user).toBeDefined();
+    expect(user.address).toBeDefined();
+    expect(user.address).toBeInstanceOf(HasOneRelationBuilder);
+
+    const address = await user.address.get()
+    expect(fluentity.adapter.request.url).toBe('users/1/address');
+    expect(address).toBeDefined();
+    expect(address).toBeInstanceOf(Address);
   });
 
   it('can get a user by id', async () => {
