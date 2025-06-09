@@ -6,7 +6,7 @@
 
 # Interface: AdapterInterface
 
-Defined in: [Fluentity.ts:21](https://github.com/cedricpierre/fluentity-core/blob/bfd5fb70bea6f45189a53ff24d390175895f2189/src/Fluentity.ts#L21)
+Defined in: [Fluentity.ts:21](https://github.com/cedricpierre/fluentity-core/blob/37e0fe495327dcf7f6b167ed5958ed95c676e957/src/Fluentity.ts#L21)
 
 Interface for adapters that handle API communication.
 Adapters must implement methods for making HTTP requests and configuration.
@@ -30,7 +30,7 @@ class CustomAdapter implements AdapterInterface {
 
 > **options**: [`AdapterOptions`](AdapterOptions.md)
 
-Defined in: [Fluentity.ts:26](https://github.com/cedricpierre/fluentity-core/blob/bfd5fb70bea6f45189a53ff24d390175895f2189/src/Fluentity.ts#L26)
+Defined in: [Fluentity.ts:26](https://github.com/cedricpierre/fluentity-core/blob/37e0fe495327dcf7f6b167ed5958ed95c676e957/src/Fluentity.ts#L26)
 
 The options for the adapter.
 Contains configuration settings specific to the adapter implementation.
@@ -41,7 +41,7 @@ Contains configuration settings specific to the adapter implementation.
 
 > **call**(`queryBuilder`): `Promise`\<[`AdapterResponse`](AdapterResponse.md)\<`any`\>\>
 
-Defined in: [Fluentity.ts:35](https://github.com/cedricpierre/fluentity-core/blob/bfd5fb70bea6f45189a53ff24d390175895f2189/src/Fluentity.ts#L35)
+Defined in: [Fluentity.ts:35](https://github.com/cedricpierre/fluentity-core/blob/37e0fe495327dcf7f6b167ed5958ed95c676e957/src/Fluentity.ts#L35)
 
 Makes an API request using the adapter's implementation.
 
@@ -69,7 +69,7 @@ If the request fails
 
 > **configure**(`options`): `void`
 
-Defined in: [Fluentity.ts:49](https://github.com/cedricpierre/fluentity-core/blob/bfd5fb70bea6f45189a53ff24d390175895f2189/src/Fluentity.ts#L49)
+Defined in: [Fluentity.ts:49](https://github.com/cedricpierre/fluentity-core/blob/37e0fe495327dcf7f6b167ed5958ed95c676e957/src/Fluentity.ts#L49)
 
 Configures the adapter with additional options.
 

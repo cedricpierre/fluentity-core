@@ -6,7 +6,7 @@
 
 # Interface: Attributes
 
-Defined in: [Model.ts:26](https://github.com/cedricpierre/fluentity-core/blob/bfd5fb70bea6f45189a53ff24d390175895f2189/src/Model.ts#L26)
+Defined in: [Model.ts:26](https://github.com/cedricpierre/fluentity-core/blob/37e0fe495327dcf7f6b167ed5958ed95c676e957/src/Model.ts#L26)
 
 Base interface for model attributes that all models must implement.
 Provides the basic structure for model data and allows for dynamic properties.
@@ -36,6 +36,6 @@ Index signature allowing for dynamic properties of any type
 
 > `optional` **id**: `string` \| `number`
 
-Defined in: [Model.ts:28](https://github.com/cedricpierre/fluentity-core/blob/bfd5fb70bea6f45189a53ff24d390175895f2189/src/Model.ts#L28)
+Defined in: [Model.ts:28](https://github.com/cedricpierre/fluentity-core/blob/37e0fe495327dcf7f6b167ed5958ed95c676e957/src/Model.ts#L28)
 
 Unique identifier for the model instance. Can be either a string or number.
