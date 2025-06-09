@@ -6,14 +6,14 @@
 
 # Type Alias: Relation\<T\>
 
-> **Relation**\<`T`\> = `T` *extends* [`Model`](../classes/Model.md)\<[`Attributes`](../interfaces/Attributes.md)\> ? `HasOneRelationBuilder`\<`T`\> : `T` *extends* [`Model`](../classes/Model.md)\<[`Attributes`](../interfaces/Attributes.md)\>[] ? `HasManyRelationBuilder`\<`T`\[`number`\]\> : `never`
+> **Relation**\<`T`\> = `T` *extends* [`Model`](../classes/Model.md)\<[`Attributes`](../interfaces/Attributes.md)\> ? `HasOneRelationBuilder`\<`T`\> \| `T` : `T` *extends* [`Model`](../classes/Model.md)\<[`Attributes`](../interfaces/Attributes.md)\>[] ? `HasManyRelationBuilder`\<`T`\[`number`\]\> \| `T` : `never`
 
-Defined in: [RelationBuilder.ts:35](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L35)
+Defined in: [RelationBuilder.ts:35](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L35)
 
-Type that determines the appropriate relation builder based on the model type.
-Maps model types to their corresponding relation builder types:
-- Single model -> HasOneRelationBuilder
-- Array of models -> HasManyRelationBuilder
+Type that determines the appropriate relation builder or model instance based on the model type.
+Maps model types to their corresponding relation builder types or model instances:
+- Single model -> HasOneRelationBuilder<T> | T
+- Array of models -> HasManyRelationBuilder<T[number]> | T[]
 
 This type is used internally to ensure type safety when working with relationships.
 
@@ -23,16 +23,16 @@ This type is used internally to ensure type safety when working with relationshi
 
 `T`
 
-The model type to determine the relation builder for
+The model type to determine the relation type for
 
 ## Example
 
 ```typescript
 // Has-one relationship
-type UserProfile = Relation<Profile>; // HasOneRelationBuilder<Profile>
+type UserProfile = Relation<Profile>; // HasOneRelationBuilder<Profile> | Profile
 
 // Has-many relationship
-type UserPosts = Relation<Post[]>; // HasManyRelationBuilder<Post>
+type UserPosts = Relation<Post[]>; // HasManyRelationBuilder<Post> | Post[]
 
 // Usage in model definitions
 class User extends Model {

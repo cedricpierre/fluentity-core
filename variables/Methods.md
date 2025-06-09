@@ -8,7 +8,7 @@
 
 > `const` **Methods**: `object`
 
-Defined in: [Fluentity.ts:101](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/Fluentity.ts#L101)
+Defined in: [Fluentity.ts:101](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/Fluentity.ts#L101)
 
 HTTP method constants for use in requests.
 Provides type-safe HTTP method names.

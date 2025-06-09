@@ -6,7 +6,7 @@
 
 # Class: RelationBuilder\<T\>
 
-Defined in: [RelationBuilder.ts:70](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L70)
+Defined in: [RelationBuilder.ts:70](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L70)
 
 Base class for building and managing relationships between models.
 Provides methods for querying related models and building API requests.
@@ -56,7 +56,7 @@ Allows for custom query scopes to be added to the builder.
 
 > **new RelationBuilder**\<`T`\>(`model`, `queryBuilder`, `resource?`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:107](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L107)
+Defined in: [RelationBuilder.ts:107](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L107)
 
 Creates a new relation builder instance.
 Sets up the query builder and configures the resource path.
@@ -110,7 +110,7 @@ const builder = new RelationBuilder(User, parentQuery);
 
 > **filter**(`filters`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:282](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L282)
+Defined in: [RelationBuilder.ts:282](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L282)
 
 Adds filter conditions to the query.
 Supports more complex filtering operations than where().
@@ -166,7 +166,7 @@ const posts = await user.posts
 
 > **find**(`id`): `Promise`\<`T`\>
 
-Defined in: [RelationBuilder.ts:201](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L201)
+Defined in: [RelationBuilder.ts:201](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L201)
 
 Fetches a model instance by ID from the API.
 Makes a GET request to retrieve the model data.
@@ -215,7 +215,7 @@ try {
 
 > **id**(`id`): `T`
 
-Defined in: [RelationBuilder.ts:171](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L171)
+Defined in: [RelationBuilder.ts:171](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L171)
 
 Gets a model instance by ID without making an API request.
 Creates a new model instance with the given ID for local operations.
@@ -254,7 +254,7 @@ const comment = await Comment.create({
 
 > **limit**(`n`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:341](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L341)
+Defined in: [RelationBuilder.ts:341](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L341)
 
 Limits the number of results returned.
 Restricts the query to return at most n results.
@@ -295,7 +295,7 @@ const posts = await user.posts
 
 > **offset**(`n`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:367](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L367)
+Defined in: [RelationBuilder.ts:367](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L367)
 
 Sets the offset for pagination in the query results.
 Skips n records before starting to return results.
@@ -336,7 +336,7 @@ const posts = await user.posts
 
 > **orderBy**(`sort`, `direction`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:314](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L314)
+Defined in: [RelationBuilder.ts:314](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L314)
 
 Adds an order by clause to the query.
 Sorts the results by the specified field and direction.
@@ -388,7 +388,7 @@ const posts = await user.posts
 
 > **where**(`where`): `RelationBuilder`\<`T`\>
 
-Defined in: [RelationBuilder.ts:241](https://github.com/cedricpierre/fluentity-core/blob/dce0cdcd6c905721d35f35c721469c6c87cf0688/src/RelationBuilder.ts#L241)
+Defined in: [RelationBuilder.ts:241](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L241)
 
 Adds a where clause to the query.
 Filters results based on exact field-value matches.
