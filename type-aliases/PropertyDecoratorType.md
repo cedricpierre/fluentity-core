@@ -8,7 +8,7 @@
 
 > **PropertyDecoratorType** = (`target`, `key`) => `void`
 
-Defined in: [decorators.ts:30](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/decorators.ts#L30)
+Defined in: [decorators.ts:30](https://github.com/cedricpierre/fluentity-core/blob/890b18f12c04921c985524e17358279715ef4698/src/decorators.ts#L30)
 
 Type for property decorator functions.
 Defines the signature for decorators that modify class properties.

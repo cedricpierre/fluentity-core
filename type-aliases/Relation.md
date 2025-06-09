@@ -8,7 +8,7 @@
 
 > **Relation**\<`T`\> = `T` *extends* [`Model`](../classes/Model.md)\<[`Attributes`](../interfaces/Attributes.md)\> ? `HasOneRelationBuilder`\<`T`\> \| `T` : `T` *extends* [`Model`](../classes/Model.md)\<[`Attributes`](../interfaces/Attributes.md)\>[] ? `HasManyRelationBuilder`\<`T`\[`number`\]\> \| `T` : `never`
 
-Defined in: [RelationBuilder.ts:35](https://github.com/cedricpierre/fluentity-core/blob/bb9f0ba794b1c5108cdb2855b21da06652ddfeb2/src/RelationBuilder.ts#L35)
+Defined in: [RelationBuilder.ts:35](https://github.com/cedricpierre/fluentity-core/blob/890b18f12c04921c985524e17358279715ef4698/src/RelationBuilder.ts#L35)
 
 Type that determines the appropriate relation builder or model instance based on the model type.
 Maps model types to their corresponding relation builder types or model instances:
