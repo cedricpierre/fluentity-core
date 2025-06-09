@@ -42,21 +42,29 @@ export type PropertyDecoratorType = (target: object, key: string | symbol) => vo
  * @private
  */
 const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>(
-  model: () => Constructor<T>,
+  model: (arg?: any) => Constructor<T>,
   relationBuilderFactory: Constructor<R>,
   resource?: string
 ): PropertyDecoratorType => {
   return function (target: object, key: string | symbol): void {
+    // Create a private key for storing the set value
+    const privateKey = `__${String(key)}__`;
+    
     // Initialize the property on the prototype
     Object.defineProperty(target, key, {
       get(this: Model<Attributes>) {
-        return new relationBuilderFactory(model(), this.queryBuilder, resource);
+        let relation = new relationBuilderFactory(model(), this.queryBuilder, resource);
+        // If there's a stored value, merge it with the relation
+        if ((this as any)[privateKey] !== undefined) {
+          Object.assign(relation,(this as any)[privateKey]);
+        }
+        return relation as R;
       },
       set(this: Model<Attributes>, value: any) {
-        
+        (this as any)[privateKey] = value;
       },
       enumerable: true,
-      configurable: true,
+      configurable: false,
     });
   };
 };
@@ -81,7 +89,7 @@ export const Cast = <T extends Model<Attributes>>(
   return function (target: object, key: string | symbol): void {
     // Create a unique symbol for each instance
     const privateKey = Symbol(String(key));
-
+    const ModelClass = caster();
     // Initialize the property on the prototype
     Object.defineProperty(target, key, {
       get(this: any) {
@@ -89,10 +97,7 @@ export const Cast = <T extends Model<Attributes>>(
           this[privateKey] = undefined;
         }
         const value = this[privateKey];
-        if (!value) return value;
-
-        const ModelClass = caster();
-        if (!ModelClass) return value;
+        if (!value || !ModelClass) return value;
 
         if (Array.isArray(value)) {
           return value.map(item => (item instanceof ModelClass ? item : new ModelClass(item)));
@@ -103,7 +108,6 @@ export const Cast = <T extends Model<Attributes>>(
         }
       },
       set(this: any, value: any) {
-        const ModelClass = caster();
         if (!ModelClass) {
           this[privateKey] = value;
           return;

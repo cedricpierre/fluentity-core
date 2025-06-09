@@ -33,7 +33,7 @@ export class User extends Model<UserAttributes> implements Partial<UserAttribute
   medias!: Relation<Media[]>;
 
   @HasOne(() => Address)
-  address!: Relation<Address[]>;
+  address!: Relation<Address>;
 
   @HasMany(() => Media, 'medias')
   libraries!: Relation<Media[]>;

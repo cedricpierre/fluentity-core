@@ -60,9 +60,9 @@ export class HasOneRelationBuilder<T extends Model<Attributes>> extends Relation
    * ```
    */
   async get(): Promise<T> {
-    this.queryBuilder.method = Methods.GET;
-    const response = await this.fluentity.adapter.call(this.queryBuilder);
-    return new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
+    this._queryBuilder.method = Methods.GET;
+    const response = await this.fluentity.adapter.call(this._queryBuilder);
+    return new (this._relatedModel as any)(response.data, { ...this._queryBuilder });
   }
 
   /**
@@ -109,10 +109,10 @@ export class HasOneRelationBuilder<T extends Model<Attributes>> extends Relation
     data: A,
     method: MethodType = Methods.PUT
   ): Promise<T> {
-    this.queryBuilder.method = method;
-    this.queryBuilder.id = this.relatedModel.id!;
-    const response = await this.fluentity.adapter.call(this.queryBuilder);
-    return new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
+    this._queryBuilder.method = method;
+    this._queryBuilder.id = this._relatedModel.id!;
+    const response = await this.fluentity.adapter.call(this._queryBuilder);
+    return new (this._relatedModel as any)(response.data, { ...this._queryBuilder });
   }
 
   /**
@@ -145,8 +145,8 @@ export class HasOneRelationBuilder<T extends Model<Attributes>> extends Relation
    * ```
    */
   async delete(): Promise<void> {
-    this.queryBuilder.method = Methods.DELETE;
-    this.queryBuilder.id = this.relatedModel.id!;
-    await this.fluentity.adapter.call(this.queryBuilder);
+    this._queryBuilder.method = Methods.DELETE;
+    this._queryBuilder.id = this._relatedModel.id!;
+    await this.fluentity.adapter.call(this._queryBuilder);
   }
 }
