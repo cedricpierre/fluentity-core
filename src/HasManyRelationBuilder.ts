@@ -68,10 +68,10 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
    * ```
    */
   async all(): Promise<T[]> {
-    this._queryBuilder.method = Methods.GET;
-    this._queryBuilder.id = undefined;
-    const list = await this.fluentity.adapter.call(this._queryBuilder);
-    return list?.data?.map((i: any) => new (this._relatedModel as any)(i, { ...this._queryBuilder }));
+    this.queryBuilder.method = Methods.GET;
+    this.queryBuilder.id = undefined;
+    const list = await this.fluentity.adapter.call(this.queryBuilder);
+    return list?.data?.map((i: any) => new (this.relatedModel as any)(i, { ...this.queryBuilder }));
   }
 
   /**
@@ -115,11 +115,11 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
    * ```
    */
   async create<A extends Partial<Attributes>>(data: A): Promise<T> {
-    this._queryBuilder.method = Methods.POST;
-    this._queryBuilder.body = data;
-    this._queryBuilder.id = undefined;
-    const response = await this.fluentity.adapter.call(this._queryBuilder);
-    return new (this._relatedModel as any)(response.data, { ...this._queryBuilder });
+    this.queryBuilder.method = Methods.POST;
+    this.queryBuilder.body = data;
+    this.queryBuilder.id = undefined;
+    const response = await this.fluentity.adapter.call(this.queryBuilder);
+    return new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
   }
 
   /**
@@ -156,9 +156,9 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
    * ```
    */
   async delete(id: string | number): Promise<void> {
-    this._queryBuilder.method = Methods.DELETE;
-    this._queryBuilder.id = id;
-    await this.fluentity.adapter.call(this._queryBuilder);
+    this.queryBuilder.method = Methods.DELETE;
+    this.queryBuilder.id = id;
+    await this.fluentity.adapter.call(this.queryBuilder);
   }
 
   /**
@@ -214,11 +214,11 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
     data: A,
     method: MethodType = Methods.PUT
   ): Promise<T> {
-    this._queryBuilder.method = method;
-    this._queryBuilder.id = id;
-    this._queryBuilder.body = data;
-    const response = await this.fluentity.adapter.call(this._queryBuilder);
-    return new (this._relatedModel as any)(response.data, { ...this._queryBuilder });
+    this.queryBuilder.method = method;
+    this.queryBuilder.id = id;
+    this.queryBuilder.body = data;
+    const response = await this.fluentity.adapter.call(this.queryBuilder);
+    return new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
   }
 
   /**
@@ -261,12 +261,12 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
    * ```
    */
   async paginate(page = 1, perPage = 10): Promise<T[]> {
-    this._queryBuilder.page = page;
-    this._queryBuilder.perPage = perPage;
-    this._queryBuilder.offset = (page - 1) * perPage;
-    this._queryBuilder.limit = perPage;
+    this.queryBuilder.page = page;
+    this.queryBuilder.perPage = perPage;
+    this.queryBuilder.offset = (page - 1) * perPage;
+    this.queryBuilder.limit = perPage;
 
-    const list = await this.fluentity.adapter.call(this._queryBuilder);
-    return list?.data?.map((i: any) => new (this._relatedModel as any)(i, { ...this._queryBuilder }));
+    const list = await this.fluentity.adapter.call(this.queryBuilder);
+    return list?.data?.map((i: any) => new (this.relatedModel as any)(i, { ...this.queryBuilder }));
   }
 }
