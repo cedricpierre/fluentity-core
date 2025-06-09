@@ -53,18 +53,27 @@ const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>
     // Initialize the property on the prototype
     Object.defineProperty(target, key, {
       get(this: Model<Attributes>) {
-        let relation = new relationBuilderFactory(model(), this.queryBuilder, resource);
-        // If there's a stored value, merge it with the relation
+        
+        // If there's a stored value, return the model instance
         if ((this as any)[privateKey] !== undefined) {
-          Object.assign(relation,(this as any)[privateKey]);
+          const value = (this as any)[privateKey];
+          const ModelClass = model();
+          if (Array.isArray(value)) {
+            return value.map(item => (item instanceof ModelClass ? item : new ModelClass(item)));
+          } else if (value instanceof ModelClass) {
+            return value;
+          } else {
+            return new ModelClass(value);
+          }
         }
-        return relation as R;
+
+        return new relationBuilderFactory(model(), this.queryBuilder, resource);
       },
       set(this: Model<Attributes>, value: any) {
         (this as any)[privateKey] = value;
       },
       enumerable: true,
-      configurable: false,
+      configurable: true,
     });
   };
 };
@@ -86,7 +95,7 @@ const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>
 export const Cast = <T extends Model<Attributes>>(
   caster: () => Constructor<T>
 ): PropertyDecoratorType => {
-  return function (target: object, key: string | symbol): void {
+  return function (target: object, key: string | symbol) {
     // Create a unique symbol for each instance
     const privateKey = Symbol(String(key));
     const ModelClass = caster();
@@ -126,6 +135,7 @@ export const Cast = <T extends Model<Attributes>>(
       enumerable: true,
       configurable: true,
     });
+
   };
 };
 

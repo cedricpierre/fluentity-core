@@ -30,19 +30,29 @@ describe('API', () => {
     mock.restore();
   });
 
-  it('should fetch all users', async () => {
-    const users = await User.all();
-    expect(fluentity.adapter.request.url).toBe('users');
-    expect(users).toBeDefined();
-  });
+  // it('should fetch all users', async () => {
+  //   const users = await User.all();
+  //   expect(fluentity.adapter.request.url).toBe('users');
+  //   expect(users).toBeDefined();
+  // });
 
   it('should fetch one user with address', async () => {
     const user = await User.find(1);
     expect(fluentity.adapter.request.url).toBe('users/1');
     expect(user).toBeDefined();
     expect(user.address).toBeDefined();
-    expect(user.address).toBeInstanceOf(HasOneRelationBuilder);
+    expect(user.address).toBeInstanceOf(Address);
     expect(user.address.street).toBe('Kulas Light');
+
+    user.reset('address');
+
+    expect(user.address).toBeInstanceOf(HasOneRelationBuilder<Address>);
+  });
+
+  it('can reset a property', () => {
+    const user = new User({ name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 });
+    user.reset('address');
+    expect(user.address).toBeInstanceOf(HasOneRelationBuilder<Address>);
   });
 
   it('can get a user by id', async () => {

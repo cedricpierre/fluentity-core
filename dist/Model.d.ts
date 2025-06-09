@@ -572,4 +572,21 @@ export declare class Model<T extends Attributes = Attributes> {
      * ```
      */
     toObject(): Record<string, any>;
+    /**
+     * Resets a property on the model, resetting it to undefined.
+     * This is useful for clearing relationships or properties.
+     *
+     * @param key - The property key to reset
+     * @returns The model instance for method chaining
+     * @example
+     * ```typescript
+     * // reset a relationship
+     * user.reset('address');
+     * // Now user.address is undefined
+     *
+     * // reset multiple properties
+     * user.reset('address', 'profile');
+     * ```
+     */
+    reset(...keys: string[]): this;
 }

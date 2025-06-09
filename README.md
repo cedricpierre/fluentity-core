@@ -522,6 +522,36 @@ await user.update({ email: "test@example.com" });
 await user.delete();
 ```
 
+## Auto-populate relations
+
+If you query the API and it return something like:
+
+```json
+{
+  "name": "Cedric",
+  "medias": [
+    { "id": 1, "url": "https://..." },
+    { "id": 2, "url": "https://..." },
+  ]
+}
+```
+
+The relation is populated (Casted) with the existing data:
+
+```ts
+const user = User.find(1);
+console.log(user.medias); // Media[],
+```
+
+### Reseting relations
+
+```ts
+const user = User.find(1);
+user.reset("medias");
+
+console.log(user.medias); // HasManyRelationBuilder<Media>
+```
+
 ## Using relations
 
 You can use the relations declared in the model to create API calls.

@@ -5,21 +5,21 @@ import { HasOneRelationBuilder } from './HasOneRelationBuilder';
 import { Fluentity } from './Fluentity';
 import { RestAdapter } from './adapters/RestAdapter';
 /**
- * Type that determines the appropriate relation builder based on the model type.
- * Maps model types to their corresponding relation builder types:
- * - Single model -> HasOneRelationBuilder
- * - Array of models -> HasManyRelationBuilder
+ * Type that determines the appropriate relation builder or model instance based on the model type.
+ * Maps model types to their corresponding relation builder types or model instances:
+ * - Single model -> HasOneRelationBuilder<T> | T
+ * - Array of models -> HasManyRelationBuilder<T[number]> | T[]
  *
  * This type is used internally to ensure type safety when working with relationships.
  *
- * @template T - The model type to determine the relation builder for
+ * @template T - The model type to determine the relation type for
  * @example
  * ```typescript
  * // Has-one relationship
- * type UserProfile = Relation<Profile>; // HasOneRelationBuilder<Profile>
+ * type UserProfile = Relation<Profile>; // HasOneRelationBuilder<Profile> | Profile
  *
  * // Has-many relationship
- * type UserPosts = Relation<Post[]>; // HasManyRelationBuilder<Post>
+ * type UserPosts = Relation<Post[]>; // HasManyRelationBuilder<Post> | Post[]
  *
  * // Usage in model definitions
  * class User extends Model {
@@ -31,7 +31,7 @@ import { RestAdapter } from './adapters/RestAdapter';
  * }
  * ```
  */
-export type Relation<T> = T extends Model<Attributes> ? HasOneRelationBuilder<T> : T extends Array<Model<Attributes>> ? HasManyRelationBuilder<T[number]> : never;
+export type Relation<T> = T extends Model<Attributes> ? HasOneRelationBuilder<T> | T : T extends Array<Model<Attributes>> ? HasManyRelationBuilder<T[number]> | T : never;
 /**
  * Base class for building and managing relationships between models.
  * Provides methods for querying related models and building API requests.
