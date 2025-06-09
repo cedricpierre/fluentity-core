@@ -61,17 +61,7 @@ export type Relation<T> = T extends Model<Attributes> ? HasOneRelationBuilder<T>
  * ```
  */
 export declare class RelationBuilder<T extends Model<Attributes>> {
-    /**
-     * Query builder instance for constructing API URLs and managing query parameters.
-     * Used internally to build the request URL and parameters.
-     */
-    queryBuilder: QueryBuilder;
-    /**
-     * The related model instance that this builder operates on.
-     * Used to create new instances of the related model.
-     * @protected
-     */
-    protected relatedModel: T;
+    #private;
     /**
      * Creates a new relation builder instance.
      * Sets up the query builder and configures the resource path.
@@ -109,6 +99,8 @@ export declare class RelationBuilder<T extends Model<Attributes>> {
      * @throws {Error} If Fluentity has not been initialized
      */
     protected get fluentity(): Fluentity<RestAdapter>;
+    protected get queryBuilder(): QueryBuilder;
+    protected get relatedModel(): T;
     /**
      * Gets a model instance by ID without making an API request.
      * Creates a new model instance with the given ID for local operations.

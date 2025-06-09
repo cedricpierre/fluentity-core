@@ -73,14 +73,14 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * Used internally to build the request URL and parameters.
    * @private
    */
-  private _queryBuilder: QueryBuilder;
+   #queryBuilder: QueryBuilder;
 
   /**
    * The related model instance that this builder operates on.
    * Used to create new instances of the related model.
    * @private
    */
-  protected _relatedModel: T;
+   #relatedModel: T;
 
   /**
    * Creates a new relation builder instance.
@@ -105,17 +105,17 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   constructor(model: T, queryBuilder: QueryBuilder, resource?: string) {
-    this._relatedModel = model;
-    this._queryBuilder = new QueryBuilder({
-      resource: resource ?? (this._relatedModel as any).resource,
+    this.#relatedModel = model;
+    this.#queryBuilder = new QueryBuilder({
+      resource: resource ?? (this.#relatedModel as any).resource,
     });
 
     if (queryBuilder?.resource) {
-      this._queryBuilder.parent = { ...queryBuilder } as QueryBuilder;
+      this.#queryBuilder.parent = { ...queryBuilder } as QueryBuilder;
     }
 
-    if (this._relatedModel.scopes) {
-      Object.entries(this._relatedModel.scopes).forEach(([name, scope]) => {
+    if (this.#relatedModel.scopes) {
+      Object.entries(this.#relatedModel.scopes).forEach(([name, scope]) => {
         (this as any)[name] = (...args: any[]) => {
           return (scope as any)(this, ...args) as RelationBuilder<T>;
         };
@@ -141,6 +141,14 @@ export class RelationBuilder<T extends Model<Attributes>> {
     return Fluentity.getInstance<RestAdapter>();
   }
 
+  protected get queryBuilder(): QueryBuilder {
+    return this.#queryBuilder;
+  }
+
+  protected get relatedModel(): T {
+    return this.#relatedModel;
+  }
+
   /**
    * Gets a model instance by ID without making an API request.
    * Creates a new model instance with the given ID for local operations.
@@ -161,7 +169,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   id(id: string | number): T {
-    return new (this._relatedModel as any)({ id }, this._queryBuilder);
+    return new (this.#relatedModel as any)({ id }, this.#queryBuilder);
   }
 
   /**
@@ -191,11 +199,11 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   async find(id: string | number): Promise<T> {
-    this._queryBuilder.id = id;
-    this._queryBuilder.method = Methods.GET;
+    this.#queryBuilder.id = id;
+    this.#queryBuilder.method = Methods.GET;
 
-    const response = await this.fluentity.adapter.call(this._queryBuilder);
-    const model = new (this._relatedModel as any)(response.data, this._queryBuilder);
+    const response = await this.fluentity.adapter.call(this.#queryBuilder);
+    const model = new (this.#relatedModel as any)(response.data, this.#queryBuilder);
     model.queryBuilder.id = id;
     return model;
   }
@@ -231,7 +239,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   where(where: Record<string, any>): RelationBuilder<T> {
-    this._queryBuilder.where(where);
+    this.#queryBuilder.where(where);
     return this;
   }
 
@@ -272,7 +280,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   filter(filters: Record<string, any>): RelationBuilder<T> {
-    this._queryBuilder.filter(filters);
+    this.#queryBuilder.filter(filters);
     return this;
   }
 
@@ -304,8 +312,8 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   orderBy(sort: string = 'id', direction: string = 'asc'): RelationBuilder<T> {
-    this._queryBuilder.sort = sort;
-    this._queryBuilder.direction = direction;
+    this.#queryBuilder.sort = sort;
+    this.#queryBuilder.direction = direction;
     return this;
   }
 
@@ -331,7 +339,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   limit(n: number): RelationBuilder<T> {
-    this._queryBuilder.limit = n;
+    this.#queryBuilder.limit = n;
     return this;
   }
 
@@ -357,7 +365,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   offset(n: number): RelationBuilder<T> {
-    this._queryBuilder.offset = n;
+    this.#queryBuilder.offset = n;
     return this;
   }
 }

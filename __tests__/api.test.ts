@@ -40,9 +40,9 @@ describe('API', () => {
     const user = await User.find(1);
     expect(fluentity.adapter.request.url).toBe('users/1');
     expect(user).toBeDefined();
+    console.log(user.address)
     expect(user.address).toBeDefined();
     expect(user.address).toBeInstanceOf(HasOneRelationBuilder);
-    console.log(user.address)
     expect(user.address.street).toBe('Kulas Light');
   });
 
