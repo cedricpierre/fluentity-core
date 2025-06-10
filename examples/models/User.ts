@@ -16,6 +16,7 @@ import { Thumbnail } from './Thumbnail';
 
 import { QueryBuilder } from '../../src/QueryBuilder';
 import { Address } from './Address';
+import { Post } from './Post';
 
 interface UserAttributes extends Attributes {
   name: string;
@@ -31,6 +32,9 @@ export class User extends Model<UserAttributes> implements Partial<UserAttribute
 
   @HasMany(() => Media)
   medias!: Relation<Media[]>;
+
+  @HasMany(() => Post)
+  posts!: Relation<Post[]>;
 
   @HasOne(() => Address)
   address!: Relation<Address>;

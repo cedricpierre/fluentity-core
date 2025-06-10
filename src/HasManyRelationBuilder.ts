@@ -71,7 +71,7 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
     this.queryBuilder.method = Methods.GET;
     this.queryBuilder.id = undefined;
     const list = await this.fluentity.adapter.call(this.queryBuilder);
-    return list?.data?.map((i: any) => new (this.relatedModel as any)(i, { ...this.queryBuilder }));
+    return this.data = list?.data?.map((i: any) => new (this.relatedModel as any)(i, { ...this.queryBuilder }));
   }
 
   /**
@@ -119,7 +119,7 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
     this.queryBuilder.body = data;
     this.queryBuilder.id = undefined;
     const response = await this.fluentity.adapter.call(this.queryBuilder);
-    return new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
+    return this.data = new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
   }
 
   /**
@@ -218,7 +218,7 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
     this.queryBuilder.id = id;
     this.queryBuilder.body = data;
     const response = await this.fluentity.adapter.call(this.queryBuilder);
-    return new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
+    return this.data = new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
   }
 
   /**
@@ -267,6 +267,6 @@ export class HasManyRelationBuilder<T extends Model<Attributes>> extends Relatio
     this.queryBuilder.limit = perPage;
 
     const list = await this.fluentity.adapter.call(this.queryBuilder);
-    return list?.data?.map((i: any) => new (this.relatedModel as any)(i, { ...this.queryBuilder }));
+    return this.data = list?.data?.map((i: any) => new (this.relatedModel as any)(i, { ...this.queryBuilder }));
   }
 }

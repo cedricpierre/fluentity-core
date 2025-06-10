@@ -154,7 +154,8 @@ export class QueryBuilder {
    *      .orderBy('name', 'asc');
    * ```
    */
-  reset(): this {
+  reset(): void {
+    this.id = undefined;
     this.query = {};
     this.sort = undefined;
     this.direction = undefined;
@@ -162,9 +163,8 @@ export class QueryBuilder {
     this.offset = undefined;
     this.page = undefined;
     this.perPage = undefined;
-    this.id = undefined;
     this.method = undefined;
-    return this;
+    this.body = undefined;
   }
 
   /**

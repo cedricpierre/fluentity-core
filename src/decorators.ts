@@ -46,28 +46,28 @@ const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>
   relationBuilderFactory: Constructor<R>,
   resource?: string
 ): PropertyDecoratorType => {
+  const relationDataMap = new WeakMap<object,RelationBuilder<any>>();
+  
   return function (target: object, key: string | symbol): void {
     // Create a private key for storing the set value
-    const privateKey = `__${String(key)}__`;
+    const privateKey = Symbol(String(key));
     
     // Initialize the property on the prototype
     Object.defineProperty(target, key, {
       get(this: Model<Attributes>) {
-        
+        const relation = relationDataMap.get(this) ?? new relationBuilderFactory(model(), this.queryBuilder, resource) as R
+        relationDataMap.set(this, relation);
         // If there's a stored value, return the model instance
         if ((this as any)[privateKey] !== undefined) {
           const value = (this as any)[privateKey];
           const ModelClass = model();
           if (Array.isArray(value)) {
-            return value.map(item => (item instanceof ModelClass ? item : new ModelClass(item)));
-          } else if (value instanceof ModelClass) {
-            return value;
+            relation.data = value.map(item => (item instanceof ModelClass ? item : new ModelClass(item)));
           } else {
-            return new ModelClass(value);
+            relation.data = new ModelClass(value);
           }
         }
-
-        return new relationBuilderFactory(model(), this.queryBuilder, resource);
+        return relation;
       },
       set(this: Model<Attributes>, value: any) {
         (this as any)[privateKey] = value;

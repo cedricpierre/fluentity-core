@@ -241,7 +241,6 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
   }
 
   public static reset(): void {
-    console.log('resetting fluentity')
     Fluentity.instance = undefined;
   }
   /**

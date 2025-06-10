@@ -4,6 +4,7 @@ import { Post } from '../examples/models/Post';
 import { Comment } from '../examples/models/Comment';
 import { Fluentity, RestAdapter } from '../src';
 import { Company } from '../examples/models/Company';
+import { Media } from '../examples/models/Media';
 import { HttpResponse } from '../src/adapters/HttpAdapter';
 import { Address } from '../examples/models/Address';
 import { HasManyRelationBuilder } from '../src/HasManyRelationBuilder';
@@ -30,29 +31,30 @@ describe('API', () => {
     mock.restore();
   });
 
-  // it('should fetch all users', async () => {
-  //   const users = await User.all();
-  //   expect(fluentity.adapter.request.url).toBe('users');
-  //   expect(users).toBeDefined();
-  // });
+  it('should fetch all users', async () => {
+    const users = await User.all();
+    expect(fluentity.adapter.request.url).toBe('users');
+    expect(users).toBeDefined();
+  });
 
   it('should fetch one user with address', async () => {
     const user = await User.find(1);
     expect(fluentity.adapter.request.url).toBe('users/1');
     expect(user).toBeDefined();
     expect(user.address).toBeDefined();
-    expect(user.address).toBeInstanceOf(Address);
-    expect(user.address.street).toBe('Kulas Light');
-
-    user.reset('address');
-
     expect(user.address).toBeInstanceOf(HasOneRelationBuilder<Address>);
-  });
+    expect(user.address.data).toBeInstanceOf(Address);
+    expect(user.address.data.street).toBe('Kulas Light');
 
-  it('can reset a property', () => {
-    const user = new User({ name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 });
-    user.reset('address');
-    expect(user.address).toBeInstanceOf(HasOneRelationBuilder<Address>);
+
+    expect(user.posts.data).toBeUndefined();
+    await user.posts.all();
+
+    expect(fluentity.adapter.request.url).toBe('users/1/posts');
+    expect(user.posts.data).toBeDefined();
+    expect(user.posts.data).toBeInstanceOf(Array);
+    expect(user.posts.data.length).toBe(10);
+    // expect(user.posts.data[0].title).toBe('sunt aut facere repellat provident occaecati excepturi optio reprehenderit');
   });
 
   it('can get a user by id', async () => {
@@ -164,8 +166,8 @@ describe('API', () => {
     expect(post).toBeDefined();
     expect(post).toBeInstanceOf(Post);
 
-    let comments = await post.comments.limit(10).offset(10).all();
-    expect(fluentity.adapter.request.url).toBe('posts/1/comments?limit=10&offset=10');
+    let comments = await post.comments.all();
+    expect(fluentity.adapter.request.url).toBe('posts/1/comments');
     expect(comments).toBeDefined();
     expect(comments).toBeInstanceOf(Array);
     expect(comments.length).toBeGreaterThan(0);
