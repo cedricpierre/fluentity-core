@@ -138,7 +138,7 @@ export declare class QueryBuilder {
      *      .orderBy('name', 'asc');
      * ```
      */
-    reset(): this;
+    reset(): void;
     /**
      * Converts the query builder to a plain object.
      * Used internally to construct the final query parameters for API requests.
