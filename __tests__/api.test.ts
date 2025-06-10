@@ -53,6 +53,7 @@ describe('API', () => {
     expect(fluentity.adapter.request.url).toBe('users/1/posts');
     expect(user.posts.data).toBeDefined();
     expect(user.posts.data).toBeInstanceOf(Array);
+    expect(user.posts.data.every((post:Post) => post instanceof Post)).toBe(true);
     expect(user.posts.data.length).toBe(10);
     // expect(user.posts.data[0].title).toBe('sunt aut facere repellat provident occaecati excepturi optio reprehenderit');
   });
