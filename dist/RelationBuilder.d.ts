@@ -31,7 +31,23 @@ import { RestAdapter } from './adapters/RestAdapter';
  * }
  * ```
  */
-export type Relation<T> = T extends Model<Attributes> ? HasOneRelationBuilder<T> : T extends Array<Model<Attributes>> ? HasManyRelationBuilder<T[number]> : never;
+export type Relation<T extends Model<Attributes>> = T extends Array<Model<Attributes>> ? HasManyRelationBuilder<T[number]> : HasOneRelationBuilder<T>;
+/**
+ * Type that determines the appropriate data type based on the relation builder type.
+ * Returns T if the builder is a HasOneRelationBuilder, otherwise returns T[].
+ *
+ * @template T - The model type
+ * @template B - The relation builder type (defaults to RelationBuilder<T>)
+ * @example
+ * ```typescript
+ * // For has-one relationships
+ * type ProfileData = RelationData<Profile>; // Profile
+ *
+ * // For has-many relationships
+ * type PostsData = RelationData<Post>; // Post[]
+ * ```
+ */
+export type RelationData<T extends Model<Attributes>, B extends RelationBuilder<T> = RelationBuilder<T>> = B extends HasOneRelationBuilder<T> ? T : T[];
 /**
  * Base class for building and managing relationships between models.
  * Provides methods for querying related models and building API requests.
@@ -63,12 +79,6 @@ export type Relation<T> = T extends Model<Attributes> ? HasOneRelationBuilder<T>
 export declare class RelationBuilder<T extends Model<Attributes>> {
     #private;
     /**
-     * The data associated with this relation builder.
-     * Returns T[] if T is an array type, otherwise returns T.
-     * @public
-     */
-    data: T extends Array<T> ? T : T;
-    /**
      * Creates a new relation builder instance.
      * Sets up the query builder and configures the resource path.
      * Handles inheritance of parent query parameters and custom scopes.
@@ -97,6 +107,17 @@ export declare class RelationBuilder<T extends Model<Attributes>> {
      */
     [key: string]: any;
     /**
+     * Gets the data associated with this relation builder.
+     * Returns T[] if T is an array type, otherwise returns T.
+     * @public
+     */
+    get data(): RelationData<T, this>;
+    /**
+     * Sets the data associated with this relation builder.
+     * @param value - The data to set
+     */
+    set data(value: RelationData<T, this>);
+    /**
      * Gets the Fluentity instance for making API requests.
      * Provides access to the singleton instance that manages API communication.
      *
@@ -105,7 +126,17 @@ export declare class RelationBuilder<T extends Model<Attributes>> {
      * @throws {Error} If Fluentity has not been initialized
      */
     protected get fluentity(): Fluentity<RestAdapter>;
+    /**
+     * Gets the query builder instance for constructing API URLs and managing query parameters.
+     * @protected
+     * @returns The query builder instance
+     */
     protected get queryBuilder(): QueryBuilder;
+    /**
+     * Gets the related model instance that this builder operates on.
+     * @protected
+     * @returns The related model instance
+     */
     protected get relatedModel(): T;
     /**
      * Gets a model instance by ID without making an API request.

@@ -62,9 +62,9 @@ const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>
           const value = (this as any)[privateKey];
           const ModelClass = model();
           if (Array.isArray(value)) {
-            relation.data = value.map(item => (item instanceof ModelClass ? item : new ModelClass(item)));
+            ((relation as unknown) as HasManyRelationBuilder<T>).data = value.map(item => (item instanceof ModelClass ? item : new ModelClass(item))) as T[];
           } else {
-            relation.data = new ModelClass(value);
+            ((relation as unknown) as HasOneRelationBuilder<T>).data = new ModelClass(value) as T;
           }
         }
         return relation;

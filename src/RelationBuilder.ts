@@ -37,6 +37,24 @@ export type Relation<T extends Model<Attributes>> = T extends Array<Model<Attrib
     : HasOneRelationBuilder<T>;
     
 /**
+ * Type that determines the appropriate data type based on the relation builder type.
+ * Returns T if the builder is a HasOneRelationBuilder, otherwise returns T[].
+ * 
+ * @template T - The model type
+ * @template B - The relation builder type (defaults to RelationBuilder<T>)
+ * @example
+ * ```typescript
+ * // For has-one relationships
+ * type ProfileData = RelationData<Profile>; // Profile
+ * 
+ * // For has-many relationships
+ * type PostsData = RelationData<Post>; // Post[]
+ * ```
+ */
+export type RelationData<T extends Model<Attributes>, B extends RelationBuilder<T> = RelationBuilder<T>> = 
+  B extends HasOneRelationBuilder<T> ? T : T[];
+
+/**
  * Base class for building and managing relationships between models.
  * Provides methods for querying related models and building API requests.
  * This class is extended by HasOneRelationBuilder and HasManyRelationBuilder
@@ -82,9 +100,9 @@ export class RelationBuilder<T extends Model<Attributes>> {
   /**
    * The data associated with this relation builder.
    * Returns T[] if T is an array type, otherwise returns T.
-   * @public
+   * @private
    */
-   data: this extends HasOneRelationBuilder<T> ? T : T[];
+  #data!: RelationData<T, this>;
 
   /**
    * Creates a new relation builder instance.
@@ -134,6 +152,23 @@ export class RelationBuilder<T extends Model<Attributes>> {
   [key: string]: any;
 
   /**
+   * Gets the data associated with this relation builder.
+   * Returns T[] if T is an array type, otherwise returns T.
+   * @public
+   */
+  get data(): RelationData<T, this> {
+    return this.#data;
+  }
+
+  /**
+   * Sets the data associated with this relation builder.
+   * @param value - The data to set
+   */
+  set data(value: RelationData<T, this>) {
+    this.#data = value;
+  }
+
+  /**
    * Gets the Fluentity instance for making API requests.
    * Provides access to the singleton instance that manages API communication.
    *
@@ -145,10 +180,20 @@ export class RelationBuilder<T extends Model<Attributes>> {
     return Fluentity.getInstance<RestAdapter>();
   }
 
+  /**
+   * Gets the query builder instance for constructing API URLs and managing query parameters.
+   * @protected
+   * @returns The query builder instance
+   */
   protected get queryBuilder(): QueryBuilder {
     return this.#queryBuilder;
   }
 
+  /**
+   * Gets the related model instance that this builder operates on.
+   * @protected
+   * @returns The related model instance
+   */
   protected get relatedModel(): T {
     return this.#relatedModel;
   }
