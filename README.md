@@ -491,7 +491,7 @@ Example usage:
 const activeUsers = await User.where({ status: 'active' }).all();
 
 // Deep chaining
-const thumbails = User.id(1).medias.id(2).thumnails.all();
+const thumbails = await User.id(1).medias.id(2).thumnails.all();
 // Will make a call to /users/1/medias/2/thumbails
 ```
 
@@ -536,47 +536,47 @@ If you query the API and it return something like:
 }
 ```
 
-The relation is populated (Casted) with the existing data:
+The relation is populated with the existing data:
 
 ```ts
-const user = User.find(1);
-console.log(user.medias); // Media[],
+const user = await User.find(1);
+console.log(user.medias); // HasManyRelationBuilder<Media>,
+console.log(user.medias.data); // Media[],
 ```
 
-### Reseting relations
-
-```ts
-const user = User.find(1);
-user.reset("medias");
-
-console.log(user.medias); // HasManyRelationBuilder<Media>
-```
 
 ## Using relations
 
 You can use the relations declared in the model to create API calls.
 
 ```typescript
-const user = User.find(1)
+const user = await User.find(1)
 
 // Will create an API call: GET /users/1/medias
-user.medias.all()
+await user.medias.all()
 
 // Will create an API call: GET /users/1/medias/2
-user.medias.find(2)
+await user.medias.find(2)
 
 // Will create an API call: GET /users/1/medias/2/thumbnails
-user.medias.id(2).thumbnails.all()
+await user.medias.id(2).thumbnails.all()
+```
+
+## Accessing the retrieved data
+
+```ts
+const medias = await user.medias.all()
+console.log(medias); // Media[]
+// or
+console.log(user.medias.data); // Media[]
 ```
 
 ### Difference between id() and find()
 
 ```typescript
-const user = User.find(1) // Will make an API call to /users/1
+const user = await User.find(1) // Will make an API call to /users/1
 
 const user = User.id(1) // return an instance of a new User with id equals 1. Then this instance can be used to query relations.
-
-user.medias.all() // Will create an API call: GET /users/1/medias
 ```
 
 ## Additional Methods
