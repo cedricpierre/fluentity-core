@@ -28,6 +28,7 @@
 - [MethodType](type-aliases/MethodType.md)
 - [PropertyDecoratorType](type-aliases/PropertyDecoratorType.md)
 - [Relation](type-aliases/Relation.md)
+- [RelationData](type-aliases/RelationData.md)
 - [RestAdapterOptions](type-aliases/RestAdapterOptions.md)
 
 ## Variables
