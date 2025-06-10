@@ -8,7 +8,7 @@
 
 > **HasOne**(`model`, `resource?`): [`PropertyDecoratorType`](../type-aliases/PropertyDecoratorType.md)
 
-Defined in: [decorators.ts:157](https://github.com/cedricpierre/fluentity-core/blob/34a9bb28becd0618e108897eaa31bb1d138fb663/src/decorators.ts#L157)
+Defined in: [decorators.ts:157](https://github.com/cedricpierre/fluentity-core/blob/dd8a9677399483c7f219407b62f6d0050aff02e4/src/decorators.ts#L157)
 
 Decorator for creating a has-one relationship between models.
 Sets up a one-to-one relationship where a model has exactly one related model.

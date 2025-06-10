@@ -6,7 +6,7 @@
 
 # Interface: AdapterResponse\<T\>
 
-Defined in: [Fluentity.ts:87](https://github.com/cedricpierre/fluentity-core/blob/34a9bb28becd0618e108897eaa31bb1d138fb663/src/Fluentity.ts#L87)
+Defined in: [Fluentity.ts:87](https://github.com/cedricpierre/fluentity-core/blob/dd8a9677399483c7f219407b62f6d0050aff02e4/src/Fluentity.ts#L87)
 
 Interface for adapter responses.
 Contains the response data from the API.
@@ -37,6 +37,6 @@ const response: AdapterResponse<User[]> = {
 
 > **data**: `T`
 
-Defined in: [Fluentity.ts:89](https://github.com/cedricpierre/fluentity-core/blob/34a9bb28becd0618e108897eaa31bb1d138fb663/src/Fluentity.ts#L89)
+Defined in: [Fluentity.ts:89](https://github.com/cedricpierre/fluentity-core/blob/dd8a9677399483c7f219407b62f6d0050aff02e4/src/Fluentity.ts#L89)
 
 The response data from the API

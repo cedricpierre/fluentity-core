@@ -8,7 +8,7 @@
 
 > `const` **BelongsTo**: (`model`, `resource?`) => [`PropertyDecoratorType`](../type-aliases/PropertyDecoratorType.md) = `HasOne`
 
-Defined in: [decorators.ts:198](https://github.com/cedricpierre/fluentity-core/blob/34a9bb28becd0618e108897eaa31bb1d138fb663/src/decorators.ts#L198)
+Defined in: [decorators.ts:198](https://github.com/cedricpierre/fluentity-core/blob/dd8a9677399483c7f219407b62f6d0050aff02e4/src/decorators.ts#L198)
 
 Alias for HasOne decorator.
 Used for better semantic meaning in certain relationship contexts.
