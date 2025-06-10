@@ -92,4 +92,41 @@ describe('Models', () => {
     expect(medias).toHaveLength(2)
     expect(medias.every((media: Media) => media instanceof Media)).toBe(true)
   })
+
+  it('can access the data of a relation HasMany', async () => {
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ 
+      data: [
+        { id: '1', name: 'Photo 1', url: 'https://example.com/photo1.jpg' },
+        { id: '2', name: 'Photo 2', url: 'https://example.com/photo2.jpg' }
+      ]
+    })
+
+    const medias = await user.medias.all()
+
+    expect(medias).toBeInstanceOf(Array)
+    expect(medias).toHaveLength(2)
+    expect(medias.every((media: Media) => media instanceof Media)).toBe(true)
+    expect(user.medias.data).toBe(medias)
+
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ 
+      data: { id: '1', name: 'Photo 1 updated', url: 'https://example.com/photo1.jpg' }
+    })
+
+    user.medias.data[0].update({ name: 'Photo 1 updated' })
+
+    expect(user.medias.data[0].name).toBe('Photo 1 updated')
+  })
+
+  it('can access the data of a relation HasOne', async () => {
+    spyOn(fluentity.adapter, 'call').mockResolvedValue({ 
+      data: { id: '1', name: 'Photo 1', url: 'https://example.com/photo1.jpg' }
+    })
+
+    const picture = await user.picture.get()
+
+    expect(picture).toBeInstanceOf(Media)
+    expect(picture.id).toBe('1')
+    expect(picture.url).toBe('https://example.com/photo1.jpg')
+    expect(user.picture.data).toBe(picture)
+  })
 })

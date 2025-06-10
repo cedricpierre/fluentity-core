@@ -32,13 +32,10 @@ import { RestAdapter } from './adapters/RestAdapter';
  * }
  * ```
  */
-export type Relation<T> =
-  T extends Model<Attributes>
-    ? HasOneRelationBuilder<T>
-    : T extends Array<Model<Attributes>>
-      ? HasManyRelationBuilder<T[number]>
-      : never;
-
+export type Relation<T extends Model<Attributes>> = T extends Array<Model<Attributes>>
+    ? HasManyRelationBuilder<T[number]>
+    : HasOneRelationBuilder<T>;
+    
 /**
  * Base class for building and managing relationships between models.
  * Provides methods for querying related models and building API requests.
@@ -87,7 +84,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * Returns T[] if T is an array type, otherwise returns T.
    * @public
    */
-   data: T extends Array<T> ? T : T;
+   data: this extends HasOneRelationBuilder<T> ? T : T[];
 
   /**
    * Creates a new relation builder instance.
