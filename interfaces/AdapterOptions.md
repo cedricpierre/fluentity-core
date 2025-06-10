@@ -6,7 +6,7 @@
 
 # Interface: AdapterOptions
 
-Defined in: [Fluentity.ts:65](https://github.com/cedricpierre/fluentity-core/blob/0477a087824bf7a4018f8406c3dc788cd653f1f5/src/Fluentity.ts#L65)
+Defined in: [Fluentity.ts:65](https://github.com/cedricpierre/fluentity-core/blob/3d631f9d75799f08579e51e69ea25c119384e045/src/Fluentity.ts#L65)
 
 Base interface for adapter request options.
 Can be extended with additional properties by specific adapters.
