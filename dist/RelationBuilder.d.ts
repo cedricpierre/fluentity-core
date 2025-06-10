@@ -8,7 +8,7 @@ import { RestAdapter } from './adapters/RestAdapter';
  * Type that determines the appropriate relation builder or model instance based on the model type.
  * Maps model types to their corresponding relation builder types or model instances:
  * - Single model -> HasOneRelationBuilder<T> | T
- * - Array of models -> HasManyRelationBuilder<T[number]> | T[]
+ * - Array of models -> HasManyRelationBuilder<T> | T[]
  *
  * This type is used internally to ensure type safety when working with relationships.
  *
@@ -31,7 +31,7 @@ import { RestAdapter } from './adapters/RestAdapter';
  * }
  * ```
  */
-export type Relation<T extends Model<Attributes>> = T extends Array<Model<Attributes>> ? HasManyRelationBuilder<T[number]> : HasOneRelationBuilder<T>;
+export type Relation<T extends Model<Attributes> | Array<Model<Attributes>>> = T extends Array<infer U extends Model<Attributes>> ? HasManyRelationBuilder<U> : T extends Model<Attributes> ? HasOneRelationBuilder<T> : never;
 /**
  * Type that determines the appropriate data type based on the relation builder type.
  * Returns T if the builder is a HasOneRelationBuilder, otherwise returns T[].
