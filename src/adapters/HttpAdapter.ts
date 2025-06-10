@@ -41,6 +41,10 @@ export abstract class HttpAdapter implements AdapterInterface {
    * @param options - Partial configuration options to merge with existing options
    */
   constructor(options: Partial<HttpAdapterOptions>) {
+    if (!options.baseUrl) {
+      throw new Error('baseUrl is required');
+    }
+
     this.options = { ...this.options, ...options };
   }
 
@@ -77,12 +81,7 @@ export abstract class HttpAdapter implements AdapterInterface {
         throw new Error('baseUrl is required');
       }
 
-      this._request = new HttpRequest({
-        url: this.buildUrl(queryBuilder),
-        method: queryBuilder.method,
-        body: queryBuilder.body,
-        options: this.options?.options,
-      });
+      this._request = this.buildRequest(queryBuilder);
 
       // Check cache if enabled
       if (this.options.cacheOptions?.enabled) {
@@ -124,8 +123,13 @@ export abstract class HttpAdapter implements AdapterInterface {
     }
   }
 
-  protected buildUrl(_queryBuilder: QueryBuilder): string {
-    return '';
+  protected buildRequest(queryBuilder: QueryBuilder): HttpRequest {
+    return new HttpRequest({
+      url: '',
+      method: queryBuilder.method,
+      body: queryBuilder.body,
+      options: this.options?.options,
+    });
   }
 
   protected async fetchRequestHandler(_request: HttpRequest): Promise<HttpResponse> {

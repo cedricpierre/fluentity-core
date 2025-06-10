@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, mock } from 'bun:test';
 import { Methods } from '../../src/Fluentity';
 import { QueryBuilder } from '../../src/QueryBuilder';
 import { HttpResponse, HttpRequest } from '../../src/adapters/HttpAdapter';
+import { GraphqlAdapter } from '../../src/adapters/GraphqlAdapter';
 
 interface TestResponseData {
   success?: boolean;
@@ -12,11 +13,11 @@ interface TestResponseData {
   intercepted?: boolean;
 }
 
-describe('RestAdapter', () => {
-  let httpClient: RestAdapter;
+describe('GraphqlAdapter', () => {
+  let httpClient: GraphqlAdapter;
 
   beforeEach(() => {
-    httpClient = new RestAdapter({ baseUrl: 'https://jsonplaceholder.typicode.com' });
+    httpClient = new GraphqlAdapter({ endpoint: '/graphql', baseUrl: 'https://jsonplaceholder.typicode.com' });
     httpClient.clearCache();
     mock.restore();
   });

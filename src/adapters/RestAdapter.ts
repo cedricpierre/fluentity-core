@@ -6,20 +6,31 @@ import { HttpAdapter, HttpAdapterOptions, HttpRequest, HttpResponse } from './Ht
  * interceptors, and request/response handling capabilities.
  */
 export class RestAdapter extends HttpAdapter {
+  declare options: RestAdapterOptions;
+
   /**
    * Constructor for the RestAdapter class.
    * @param options - Partial configuration options to merge with existing options
    */
   constructor(options: Partial<RestAdapterOptions>) {
     super(options);
-    this.options = { ...this.options, ...options };
+    // Merge options while preserving parent class defaults
+    this.options = { ...this.options, ...options } as RestAdapterOptions;
   }
 
+  protected buildRequest(queryBuilder: QueryBuilder): HttpRequest {
+    return new HttpRequest({
+      url: this.buildUrl(queryBuilder),
+      method: queryBuilder.method,
+      body: queryBuilder.body,
+      options: this.options?.options,
+    });
+  }
   /**
    * Builds the final URL for the API request.
    * @returns The constructed URL with query parameters
    */
-  protected buildUrl(queryBuilder: QueryBuilder): string {
+  private buildUrl(queryBuilder: QueryBuilder): string {
     const queryString = this.toQueryString(queryBuilder);
 
     let segments: Array<string> = [];
@@ -97,6 +108,9 @@ export class RestAdapter extends HttpAdapter {
 }
 
 /**
- * Configuration options for the HttpClient.
+ * Configuration options for the RestAdapter.
+ * Extends HttpAdapterOptions with any additional REST-specific options.
  */
-export type RestAdapterOptions = HttpAdapterOptions;
+export interface RestAdapterOptions extends HttpAdapterOptions {
+  // Add any REST-specific options here
+}
