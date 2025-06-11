@@ -21,6 +21,7 @@
 - [AdapterResponse](interfaces/AdapterResponse.md)
 - [Attributes](interfaces/Attributes.md)
 - [FluentityOptions](interfaces/FluentityOptions.md)
+- [RestAdapterOptions](interfaces/RestAdapterOptions.md)
 
 ## Type Aliases
 
@@ -29,7 +30,6 @@
 - [PropertyDecoratorType](type-aliases/PropertyDecoratorType.md)
 - [Relation](type-aliases/Relation.md)
 - [RelationData](type-aliases/RelationData.md)
-- [RestAdapterOptions](type-aliases/RestAdapterOptions.md)
 
 ## Variables
 
