@@ -2,43 +2,40 @@
 
 ***
 
-[@fluentity/core](../globals.md) / RelationBuilder
+[@fluentity/core](../globals.md) / HasOneRelationBuilder
 
-# Class: RelationBuilder\<T\>
+# Class: HasOneRelationBuilder\<T\>
 
-Defined in: [RelationBuilder.ts:87](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L87)
+Defined in: [HasOneRelationBuilder.ts:31](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/HasOneRelationBuilder.ts#L31)
 
-Base class for building and managing relationships between models.
-Provides methods for querying related models and building API requests.
-This class is extended by HasOneRelationBuilder and HasManyRelationBuilder
-to implement specific relationship behaviors.
+Builder class for has-one relationships between models.
+Provides methods for managing a one-to-one relationship with another model.
+Used when a model has exactly one related model instance.
 
 Features:
-- Query building and filtering
-- Sorting and pagination
+- Single model retrieval
+- Model updates
+- Model deletion
 - Relationship traversal
-- Custom query scopes
 
 ## Example
 
 ```typescript
-// Basic usage with a has-one relationship
-class UserProfile extends RelationBuilder<Profile> {
-  // Custom relationship logic
+// Basic usage in a model
+class User extends Model {
+  @HasOne(() => Profile)
+  profile: Profile;
 }
 
-// Usage with query building
-const posts = await user.posts
-  .where({ status: 'published' })
-  .orderBy('created_at', 'desc')
-  .limit(10)
-  .all();
+// Usage in queries
+const profile = await user.profile.get();
+await user.profile.update({ bio: 'New bio' });
+await user.profile.delete();
 ```
 
-## Extended by
+## Extends
 
-- [`HasOneRelationBuilder`](HasOneRelationBuilder.md)
-- [`HasManyRelationBuilder`](HasManyRelationBuilder.md)
+- [`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 ## Type Parameters
 
@@ -59,7 +56,7 @@ Allows for custom query scopes to be added to the builder.
 
 ### Constructor
 
-> **new RelationBuilder**\<`T`\>(`model`, `parentQuery?`): `RelationBuilder`\<`T`\>
+> **new HasOneRelationBuilder**\<`T`\>(`model`, `parentQuery?`): `HasOneRelationBuilder`\<`T`\>
 
 Defined in: [RelationBuilder.ts:131](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L131)
 
@@ -83,7 +80,7 @@ Query builder instance for constructing API requests
 
 #### Returns
 
-`RelationBuilder`\<`T`\>
+`HasOneRelationBuilder`\<`T`\>
 
 #### Throws
 
@@ -102,6 +99,10 @@ const builder = new RelationBuilder(User, new QueryBuilder(), 'custom-users');
 const parentQuery = new QueryBuilder().where({ active: true });
 const builder = new RelationBuilder(User, parentQuery);
 ```
+
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`constructor`](RelationBuilder.md#constructor)
 
 ## Accessors
 
@@ -140,11 +141,60 @@ The data to set
 
 `void`
 
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`data`](RelationBuilder.md#data)
+
 ## Methods
+
+### delete()
+
+> **delete**(): `Promise`\<`void`\>
+
+Defined in: [HasOneRelationBuilder.ts:147](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/HasOneRelationBuilder.ts#L147)
+
+Deletes the related model instance.
+Makes a DELETE request to remove the single related model.
+The local instance remains but becomes detached from the server.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the deletion is complete
+
+#### Throws
+
+If the deletion fails
+
+#### Example
+
+```typescript
+// Delete the profile
+await user.profile.delete();
+
+// Delete with error handling
+try {
+  await user.profile.delete();
+  console.log('Profile deleted successfully');
+} catch (error) {
+  if (error.status === 404) {
+    console.log('Profile not found');
+  } else {
+    console.error('Error deleting profile:', error);
+  }
+}
+
+// Delete in relationship chain
+const post = await user.posts.find(123);
+await post.author.profile.delete();
+```
+
+***
 
 ### filter()
 
-> **filter**(`filters`): `RelationBuilder`\<`T`\>
+> **filter**(`filters`): [`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 Defined in: [RelationBuilder.ts:334](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L334)
 
@@ -162,7 +212,7 @@ Object containing filter conditions
 
 #### Returns
 
-`RelationBuilder`\<`T`\>
+[`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 The relation builder instance for method chaining
 
@@ -195,6 +245,10 @@ const posts = await user.posts
   })
   .all();
 ```
+
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`filter`](RelationBuilder.md#filter)
 
 ***
 
@@ -245,6 +299,56 @@ try {
 }
 ```
 
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`find`](RelationBuilder.md#find)
+
+***
+
+### get()
+
+> **get**(): `Promise`\<`T`\>
+
+Defined in: [HasOneRelationBuilder.ts:62](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/HasOneRelationBuilder.ts#L62)
+
+Fetches the related model instance.
+Makes a GET request to retrieve the single related model.
+Throws an error if the related model is not found.
+
+#### Returns
+
+`Promise`\<`T`\>
+
+A promise that resolves to the related model instance
+
+#### Throws
+
+If the related model is not found
+
+#### Example
+
+```typescript
+// Get user's profile
+const profile = await user.profile.get();
+console.log(`Profile bio: ${profile.bio}`);
+
+// Get with error handling
+try {
+  const profile = await user.profile.get();
+  console.log('Profile loaded successfully');
+} catch (error) {
+  if (error.status === 404) {
+    console.log('Profile not found');
+  } else {
+    console.error('Error loading profile:', error);
+  }
+}
+
+// Use in relationship chain
+const post = await user.posts.find(123);
+const authorProfile = await post.author.profile.get();
+```
+
 ***
 
 ### id()
@@ -284,11 +388,15 @@ const comment = await Comment.create({
 });
 ```
 
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`id`](RelationBuilder.md#id)
+
 ***
 
 ### limit()
 
-> **limit**(`n`): `RelationBuilder`\<`T`\>
+> **limit**(`n`): [`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 Defined in: [RelationBuilder.ts:393](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L393)
 
@@ -306,7 +414,7 @@ The maximum number of results to return
 
 #### Returns
 
-`RelationBuilder`\<`T`\>
+[`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 The relation builder instance for method chaining
 
@@ -325,11 +433,15 @@ const posts = await user.posts
   .all();
 ```
 
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`limit`](RelationBuilder.md#limit)
+
 ***
 
 ### offset()
 
-> **offset**(`n`): `RelationBuilder`\<`T`\>
+> **offset**(`n`): [`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 Defined in: [RelationBuilder.ts:419](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L419)
 
@@ -347,7 +459,7 @@ The number of records to skip
 
 #### Returns
 
-`RelationBuilder`\<`T`\>
+[`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 The relation builder instance for method chaining
 
@@ -366,11 +478,15 @@ const posts = await user.posts
   .all();
 ```
 
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`offset`](RelationBuilder.md#offset)
+
 ***
 
 ### orderBy()
 
-> **orderBy**(`sort`, `direction`): `RelationBuilder`\<`T`\>
+> **orderBy**(`sort`, `direction`): [`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 Defined in: [RelationBuilder.ts:366](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L366)
 
@@ -394,7 +510,7 @@ The direction to order in ('asc' or 'desc', default: 'asc')
 
 #### Returns
 
-`RelationBuilder`\<`T`\>
+[`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 The relation builder instance for method chaining
 
@@ -418,11 +534,89 @@ const posts = await user.posts
   .all();
 ```
 
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`orderBy`](RelationBuilder.md#orderby)
+
+***
+
+### update()
+
+> **update**\<`A`\>(`data`, `method`): `Promise`\<`T`\>
+
+Defined in: [HasOneRelationBuilder.ts:108](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/HasOneRelationBuilder.ts#L108)
+
+Updates the related model instance.
+Makes a PUT/PATCH request to update the single related model.
+Can use either PUT (full update) or PATCH (partial update).
+
+#### Type Parameters
+
+##### A
+
+`A` *extends* `Partial`\<[`Attributes`](../interfaces/Attributes.md)\>
+
+#### Parameters
+
+##### data
+
+`A`
+
+The data to update the related model with
+
+##### method
+
+The HTTP method to use (PUT or PATCH)
+
+`"GET"` | `"POST"` | `"PUT"` | `"PATCH"` | `"DELETE"` | `"HEAD"` | `"OPTIONS"`
+
+#### Returns
+
+`Promise`\<`T`\>
+
+A promise that resolves to the updated model instance
+
+#### Throws
+
+If the update fails
+
+#### Example
+
+```typescript
+// Full update with PUT
+const profile = await user.profile.update({
+  bio: 'New bio',
+  location: 'New York',
+  website: 'https://example.com'
+});
+
+// Partial update with PATCH
+const profile = await user.profile.update({
+  bio: 'Updated bio'
+}, Methods.PATCH);
+
+// Update with error handling
+try {
+  const profile = await user.profile.update({
+    bio: 'New bio'
+  });
+  console.log('Profile updated successfully');
+} catch (error) {
+  if (error.status === 404) {
+    console.log('Profile not found');
+  } else if (error.status === 422) {
+    console.log('Validation failed:', error.errors);
+  } else {
+    console.error('Error updating profile:', error);
+  }
+}
+```
+
 ***
 
 ### where()
 
-> **where**(`where`): `RelationBuilder`\<`T`\>
+> **where**(`where`): [`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 Defined in: [RelationBuilder.ts:293](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L293)
 
@@ -440,7 +634,7 @@ Object containing field-value pairs to filter by
 
 #### Returns
 
-`RelationBuilder`\<`T`\>
+[`RelationBuilder`](RelationBuilder.md)\<`T`\>
 
 The relation builder instance for method chaining
 
@@ -467,3 +661,7 @@ const posts = await user.posts
   .where({ type: 'article' })
   .all();
 ```
+
+#### Inherited from
+
+[`RelationBuilder`](RelationBuilder.md).[`where`](RelationBuilder.md#where)

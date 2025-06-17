@@ -2,59 +2,64 @@
 
 ***
 
-[@fluentity/core](../globals.md) / RestAdapter
+[@fluentity/core](../globals.md) / HttpAdapter
 
-# Class: RestAdapter
+# Class: `abstract` HttpAdapter
 
-Defined in: [adapters/RestAdapter.ts:8](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/RestAdapter.ts#L8)
+Defined in: [adapters/HttpAdapter.ts:46](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L46)
 
 A static HTTP client class that provides methods for making HTTP requests with built-in caching,
 interceptors, and request/response handling capabilities.
 
-## Extends
+## Extended by
 
-- [`HttpAdapter`](HttpAdapter.md)
+- [`RestAdapter`](RestAdapter.md)
+- [`GraphqlAdapter`](GraphqlAdapter.md)
+
+## Implements
+
+- [`AdapterInterface`](../interfaces/AdapterInterface.md)
 
 ## Constructors
 
 ### Constructor
 
-> **new RestAdapter**(`options`): `RestAdapter`
+> **new HttpAdapter**(`options`): `HttpAdapter`
 
-Defined in: [adapters/RestAdapter.ts:15](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/RestAdapter.ts#L15)
+Defined in: [adapters/HttpAdapter.ts:75](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L75)
 
-Constructor for the RestAdapter class.
+Constructor for the HttpAdapter class.
 
 #### Parameters
 
 ##### options
 
-`Partial`\<[`RestAdapterOptions`](../interfaces/RestAdapterOptions.md)\>
+`Partial`\<[`HttpAdapterOptions`](../interfaces/HttpAdapterOptions.md)\<`any`\>\>
 
 Partial configuration options to merge with existing options
 
 #### Returns
 
-`RestAdapter`
+`HttpAdapter`
 
-#### Overrides
+#### Throws
 
-[`HttpAdapter`](HttpAdapter.md).[`constructor`](HttpAdapter.md#constructor)
+If baseUrl is not provided
 
 ## Properties
 
 ### options
 
-> **options**: [`RestAdapterOptions`](../interfaces/RestAdapterOptions.md)
+> **options**: [`HttpAdapterOptions`](../interfaces/HttpAdapterOptions.md)
 
-Defined in: [adapters/RestAdapter.ts:9](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/RestAdapter.ts#L9)
+Defined in: [adapters/HttpAdapter.ts:49](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L49)
 
 The options for the adapter.
 Contains configuration settings specific to the adapter implementation.
 
-#### Overrides
+#### Implementation of
 
-[`HttpAdapter`](HttpAdapter.md).[`options`](HttpAdapter.md#options)
+[`AdapterInterface`](../interfaces/AdapterInterface.md).[`options`](../interfaces/AdapterInterface.md#options)
 
 ## Accessors
 
@@ -71,10 +76,6 @@ The request object.
 ##### Returns
 
 [`HttpRequest`](HttpRequest.md)
-
-#### Inherited from
-
-[`HttpAdapter`](HttpAdapter.md).[`request`](HttpAdapter.md#request)
 
 ## Methods
 
@@ -105,9 +106,9 @@ A promise that resolves to the response data
 
 Error if baseUrl is not configured or if the request fails
 
-#### Inherited from
+#### Implementation of
 
-[`HttpAdapter`](HttpAdapter.md).[`call`](HttpAdapter.md#call)
+[`AdapterInterface`](../interfaces/AdapterInterface.md).[`call`](../interfaces/AdapterInterface.md#call)
 
 ***
 
@@ -122,10 +123,6 @@ Clears all cached responses.
 #### Returns
 
 `this`
-
-#### Inherited from
-
-[`HttpAdapter`](HttpAdapter.md).[`clearCache`](HttpAdapter.md#clearcache)
 
 ***
 
@@ -158,6 +155,6 @@ adapter.configure({
 });
 ```
 
-#### Inherited from
+#### Implementation of
 
-[`HttpAdapter`](HttpAdapter.md).[`configure`](HttpAdapter.md#configure)
+[`AdapterInterface`](../interfaces/AdapterInterface.md).[`configure`](../interfaces/AdapterInterface.md#configure)

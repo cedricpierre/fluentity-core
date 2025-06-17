@@ -6,7 +6,7 @@
 
 # Interface: AdapterOptions
 
-Defined in: [Fluentity.ts:65](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/Fluentity.ts#L65)
+Defined in: [Fluentity.ts:65](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/Fluentity.ts#L65)
 
 Base interface for adapter request options.
 Can be extended with additional properties by specific adapters.
@@ -19,6 +19,11 @@ interface CustomAdapterOptions extends AdapterOptions {
   retryCount: number;
 }
 ```
+
+## Extended by
+
+- [`HttpAdapterOptions`](HttpAdapterOptions.md)
+- [`HttpRequestOptions`](HttpRequestOptions.md)
 
 ## Indexable
 

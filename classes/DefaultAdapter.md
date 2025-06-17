@@ -6,22 +6,22 @@
 
 # Class: DefaultAdapter
 
-Defined in: [adapters/DefaultAdapter.ts:3](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/adapters/DefaultAdapter.ts#L3)
+Defined in: [adapters/DefaultAdapter.ts:19](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/DefaultAdapter.ts#L19)
 
-Interface for adapters that handle API communication.
-Adapters must implement methods for making HTTP requests and configuration.
+Default adapter implementation that provides no-op behavior.
+Used as a fallback when no specific adapter is configured.
+Returns undefined data for all requests.
 
 ## Example
 
 ```typescript
-class CustomAdapter implements AdapterInterface {
-  async call(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
-    // Make HTTP request
-  }
-  configure(options: Partial<AdapterOptions>): void {
-    // Configure adapter
-  }
-}
+// Used automatically when no adapter is specified
+Fluentity.initialize();
+
+// Or explicitly
+Fluentity.initialize({
+  adapter: new DefaultAdapter()
+});
 ```
 
 ## Implements
@@ -44,7 +44,7 @@ class CustomAdapter implements AdapterInterface {
 
 > **options**: [`AdapterOptions`](../interfaces/AdapterOptions.md) = `{}`
 
-Defined in: [adapters/DefaultAdapter.ts:4](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/adapters/DefaultAdapter.ts#L4)
+Defined in: [adapters/DefaultAdapter.ts:20](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/DefaultAdapter.ts#L20)
 
 The options for the adapter.
 Contains configuration settings specific to the adapter implementation.
@@ -59,9 +59,10 @@ Contains configuration settings specific to the adapter implementation.
 
 > **call**(`_queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\>
 
-Defined in: [adapters/DefaultAdapter.ts:5](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/adapters/DefaultAdapter.ts#L5)
+Defined in: [adapters/DefaultAdapter.ts:35](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/DefaultAdapter.ts#L35)
 
-Makes an API request using the adapter's implementation.
+Makes a mock API request that always returns undefined data.
+This is a no-op implementation for testing or when no real API is available.
 
 #### Parameters
 
@@ -69,15 +70,21 @@ Makes an API request using the adapter's implementation.
 
 [`QueryBuilder`](QueryBuilder.md)
 
+The query builder (unused in this implementation)
+
 #### Returns
 
 `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\>
 
-Promise resolving to the API response
+Promise resolving to an empty response
 
-#### Throws
+#### Example
 
-If the request fails
+```typescript
+const adapter = new DefaultAdapter();
+const response = await adapter.call(new QueryBuilder());
+// response.data is undefined
+```
 
 #### Implementation of
 
@@ -89,15 +96,18 @@ If the request fails
 
 > **configure**(`_options`): `void`
 
-Defined in: [adapters/DefaultAdapter.ts:9](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/adapters/DefaultAdapter.ts#L9)
+Defined in: [adapters/DefaultAdapter.ts:50](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/DefaultAdapter.ts#L50)
 
-Configures the adapter with additional options.
+Configures the adapter with options (no-op in this implementation).
+This method exists to satisfy the AdapterInterface contract.
 
 #### Parameters
 
 ##### \_options
 
 `Partial`\<[`AdapterOptions`](../interfaces/AdapterOptions.md)\>
+
+Configuration options (unused in this implementation)
 
 #### Returns
 
@@ -106,10 +116,8 @@ Configures the adapter with additional options.
 #### Example
 
 ```typescript
-adapter.configure({
-  baseURL: 'https://api.example.com',
-  timeout: 5000
-});
+const adapter = new DefaultAdapter();
+adapter.configure({ baseURL: 'https://example.com' }); // No effect
 ```
 
 #### Implementation of

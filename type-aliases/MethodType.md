@@ -8,7 +8,7 @@
 
 > **MethodType** = keyof *typeof* [`Methods`](../variables/Methods.md)
 
-Defined in: [Fluentity.ts:122](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/Fluentity.ts#L122)
+Defined in: [adapters/HttpAdapter.ts:40](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L40)
 
 Type representing valid HTTP method names.
 Derived from the Methods constant object.

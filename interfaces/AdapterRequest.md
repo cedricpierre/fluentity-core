@@ -6,4 +6,4 @@
 
 # Interface: AdapterRequest
 
-Defined in: [Fluentity.ts:67](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/Fluentity.ts#L67)
+Defined in: [Fluentity.ts:67](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/Fluentity.ts#L67)

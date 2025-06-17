@@ -2,18 +2,27 @@
 
 ***
 
-[@fluentity/core](../globals.md) / RestAdapterOptions
+[@fluentity/core](../globals.md) / HttpAdapterOptions
 
-# Interface: RestAdapterOptions
+# Interface: HttpAdapterOptions\<T\>
 
-Defined in: [adapters/RestAdapter.ts:115](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/RestAdapter.ts#L115)
+Defined in: [adapters/HttpAdapter.ts:177](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L177)
 
-Configuration options for the RestAdapter.
-Extends HttpAdapterOptions with any additional REST-specific options.
+Configuration options for the HttpClient.
 
 ## Extends
 
-- [`HttpAdapterOptions`](HttpAdapterOptions.md)
+- [`AdapterOptions`](AdapterOptions.md)
+
+## Extended by
+
+- [`RestAdapterOptions`](RestAdapterOptions.md)
+
+## Type Parameters
+
+### T
+
+`T` = `unknown` \| `any`
 
 ## Indexable
 
@@ -29,10 +38,6 @@ Defined in: [adapters/HttpAdapter.ts:179](https://github.com/cedricpierre/fluent
 
 Base URL to prepend to all requests
 
-#### Inherited from
-
-[`HttpAdapterOptions`](HttpAdapterOptions.md).[`baseUrl`](HttpAdapterOptions.md#baseurl)
-
 ***
 
 ### cacheOptions?
@@ -42,10 +47,6 @@ Base URL to prepend to all requests
 Defined in: [adapters/HttpAdapter.ts:191](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L191)
 
 Cache configuration options
-
-#### Inherited from
-
-[`HttpAdapterOptions`](HttpAdapterOptions.md).[`cacheOptions`](HttpAdapterOptions.md#cacheoptions)
 
 ***
 
@@ -67,10 +68,6 @@ Handler for request errors
 
 `void`
 
-#### Inherited from
-
-[`HttpAdapterOptions`](HttpAdapterOptions.md).[`errorInterceptor`](HttpAdapterOptions.md#errorinterceptor)
-
 ***
 
 ### options?
@@ -80,10 +77,6 @@ Handler for request errors
 Defined in: [adapters/HttpAdapter.ts:181](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L181)
 
 Default request options to apply to all requests
-
-#### Inherited from
-
-[`HttpAdapterOptions`](HttpAdapterOptions.md).[`options`](HttpAdapterOptions.md#options)
 
 ***
 
@@ -105,10 +98,6 @@ Custom request handler function
 
 `Promise`\<[`HttpResponse`](../classes/HttpResponse.md)\<`any`\>\>
 
-#### Inherited from
-
-[`HttpAdapterOptions`](HttpAdapterOptions.md).[`requestHandler`](HttpAdapterOptions.md#requesthandler)
-
 ***
 
 ### requestInterceptor()?
@@ -129,15 +118,11 @@ Interceptor to modify requests before they are sent
 
 [`HttpRequest`](../classes/HttpRequest.md)
 
-#### Inherited from
-
-[`HttpAdapterOptions`](HttpAdapterOptions.md).[`requestInterceptor`](HttpAdapterOptions.md#requestinterceptor)
-
 ***
 
 ### responseInterceptor()?
 
-> `optional` **responseInterceptor**: (`response`) => [`HttpResponse`](../classes/HttpResponse.md)\<`any`\>
+> `optional` **responseInterceptor**: (`response`) => [`HttpResponse`](../classes/HttpResponse.md)\<`T`\>
 
 Defined in: [adapters/HttpAdapter.ts:185](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L185)
 
@@ -147,12 +132,8 @@ Interceptor to modify responses after they are received
 
 ##### response
 
-[`HttpResponse`](../classes/HttpResponse.md)\<`any`\>
+[`HttpResponse`](../classes/HttpResponse.md)\<`T`\>
 
 #### Returns
 
-[`HttpResponse`](../classes/HttpResponse.md)\<`any`\>
-
-#### Inherited from
-
-[`HttpAdapterOptions`](HttpAdapterOptions.md).[`responseInterceptor`](HttpAdapterOptions.md#responseinterceptor)
+[`HttpResponse`](../classes/HttpResponse.md)\<`T`\>

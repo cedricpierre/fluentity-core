@@ -6,9 +6,9 @@
 
 # Type Alias: RelationData\<T, B\>
 
-> **RelationData**\<`T`, `B`\> = `B` *extends* `HasOneRelationBuilder`\<`T`\> ? `T` : `T`[]
+> **RelationData**\<`T`, `B`\> = `B` *extends* [`HasOneRelationBuilder`](../classes/HasOneRelationBuilder.md)\<`T`\> ? `T` : `T`[]
 
-Defined in: [RelationBuilder.ts:56](https://github.com/cedricpierre/fluentity-core/blob/1d61f2807beb4f29a63808a89bba251ec2261e92/src/RelationBuilder.ts#L56)
+Defined in: [RelationBuilder.ts:56](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/RelationBuilder.ts#L56)
 
 Type that determines the appropriate data type based on the relation builder type.
 Returns T if the builder is a HasOneRelationBuilder, otherwise returns T[].
