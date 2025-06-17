@@ -9,8 +9,9 @@ export class GraphqlAdapter extends HttpAdapter {
   declare options: GraphqlAdapterOptions;
 
   /**
-   * Constructor for the RestAdapter class.
+   * Constructor for the GraphqlAdapter class.
    * @param options - Partial configuration options to merge with existing options
+   * @throws {Error} If endpoint is not provided
    */
   constructor(options: Partial<GraphqlAdapterOptions>) {
     super(options);
@@ -253,6 +254,8 @@ export class GraphqlAdapter extends HttpAdapter {
         return `Update${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
       case 'DELETE':
         return `Delete${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
+      default:
+        return `Get${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
     }
   }
 

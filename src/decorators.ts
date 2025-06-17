@@ -44,6 +44,7 @@ export type PropertyDecoratorType = (target: object, key: string | symbol) => vo
 const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>(
   model: (arg?: any) => Constructor<T>,
   relationBuilderFactory: Constructor<R>,
+  resource?: string
 ): PropertyDecoratorType => {
   const relationDataMap = new WeakMap<object,RelationBuilder<any>>();
   

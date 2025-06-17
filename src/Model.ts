@@ -98,7 +98,7 @@ export class Model<T extends Attributes = Attributes> {
    * Can optionally accept an existing query builder instance.
    *
    * @param attributes - The attributes to initialize the model with
-   * @param queryBuilder - Optional query builder instance to use instead of creating a new one
+   * @param parentQuery - Optional query builder instance to use instead of creating a new one
    * @returns A new model instance
    * @throws {Error} If required attributes are missing
    * @example
@@ -175,7 +175,7 @@ export class Model<T extends Attributes = Attributes> {
    * Uses an internal cache to avoid creating duplicate relation builders.
    * Supports both has-one and has-many relationships.
    *
-   * @param model - The model class to create a relation builder for
+   * @param modelConstructor - The model constructor to create a relation builder for
    * @param relationBuilderFactory - The factory class to create the relation builder
    * @returns A relation builder instance configured for the model
    * @private
@@ -187,10 +187,11 @@ export class Model<T extends Attributes = Attributes> {
    * ```
    */
   private static getRelationBuilder<T extends Model<Attributes>, R extends RelationBuilder<T>>(
-    model: Constructor<T>,
+    modelConstructor: Constructor<T>,
     relationBuilderFactory: Constructor<R>
   ): R {
-    return new relationBuilderFactory(model);
+    const modelInstance = new modelConstructor({});
+    return new relationBuilderFactory(modelInstance);
   }
 
   /**
@@ -736,10 +737,10 @@ export class Model<T extends Attributes = Attributes> {
   }
 
   /**
-   * Resets a property on the model, resetting it to undefined.
+   * Resets properties on the model, setting them to undefined.
    * This is useful for clearing relationships or properties.
    * 
-   * @param key - The property key to reset
+   * @param keys - The property keys to reset (accepts multiple keys)
    * @returns The model instance for method chaining
    * @example
    * ```typescript

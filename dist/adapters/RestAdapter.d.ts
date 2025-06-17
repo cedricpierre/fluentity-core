@@ -5,16 +5,18 @@ import { HttpAdapter, HttpAdapterOptions, HttpRequest, HttpResponse } from './Ht
  * interceptors, and request/response handling capabilities.
  */
 export declare class RestAdapter extends HttpAdapter {
+    options: RestAdapterOptions;
     /**
      * Constructor for the RestAdapter class.
      * @param options - Partial configuration options to merge with existing options
      */
     constructor(options: Partial<RestAdapterOptions>);
+    protected buildRequest(queryBuilder: QueryBuilder): HttpRequest;
     /**
      * Builds the final URL for the API request.
      * @returns The constructed URL with query parameters
      */
-    protected buildUrl(queryBuilder: QueryBuilder): string;
+    private buildUrl;
     private unwrapParents;
     /**
      * Builds a query string from the query builder.
@@ -25,6 +27,8 @@ export declare class RestAdapter extends HttpAdapter {
     protected fetchRequestHandler(request: HttpRequest): Promise<HttpResponse>;
 }
 /**
- * Configuration options for the HttpClient.
+ * Configuration options for the RestAdapter.
+ * Extends HttpAdapterOptions with any additional REST-specific options.
  */
-export type RestAdapterOptions = HttpAdapterOptions;
+export interface RestAdapterOptions extends HttpAdapterOptions {
+}

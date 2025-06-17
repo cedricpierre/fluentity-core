@@ -68,8 +68,9 @@ export abstract class HttpAdapter implements AdapterInterface {
   private _request: HttpRequest = new HttpRequest();
 
   /**
-   * Constructor for the RestAdapter class.
+   * Constructor for the HttpAdapter class.
    * @param options - Partial configuration options to merge with existing options
+   * @throws {Error} If baseUrl is not provided
    */
   constructor(options: Partial<HttpAdapterOptions>) {
     if (!options.baseUrl) {

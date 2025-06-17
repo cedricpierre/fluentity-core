@@ -1,5 +1,35 @@
-import { AdapterInterface, AdapterOptions, AdapterRequest, AdapterResponse, MethodType } from '../Fluentity';
+import { AdapterInterface, AdapterOptions, AdapterRequest, AdapterResponse } from '../Fluentity';
 import { QueryBuilder } from '../QueryBuilder';
+/**
+ * HTTP method constants for use in requests.
+ * Provides type-safe HTTP method names.
+ *
+ * @example
+ * ```typescript
+ * const method: MethodType = Methods.POST;
+ * ```
+ */
+export declare const Methods: {
+    /** HTTP GET method */
+    readonly GET: "GET";
+    /** HTTP POST method */
+    readonly POST: "POST";
+    /** HTTP PUT method */
+    readonly PUT: "PUT";
+    /** HTTP PATCH method */
+    readonly PATCH: "PATCH";
+    /** HTTP DELETE method */
+    readonly DELETE: "DELETE";
+    /** HTTP HEAD method */
+    readonly HEAD: "HEAD";
+    /** HTTP OPTIONS method */
+    readonly OPTIONS: "OPTIONS";
+};
+/**
+ * Type representing valid HTTP method names.
+ * Derived from the Methods constant object.
+ */
+export type MethodType = keyof typeof Methods;
 /**
  * A static HTTP client class that provides methods for making HTTP requests with built-in caching,
  * interceptors, and request/response handling capabilities.
@@ -12,8 +42,9 @@ export declare abstract class HttpAdapter implements AdapterInterface {
      */
     private _request;
     /**
-     * Constructor for the RestAdapter class.
+     * Constructor for the HttpAdapter class.
      * @param options - Partial configuration options to merge with existing options
+     * @throws {Error} If baseUrl is not provided
      */
     constructor(options: Partial<HttpAdapterOptions>);
     configure(options: Partial<HttpAdapterOptions>): this;
@@ -33,7 +64,7 @@ export declare abstract class HttpAdapter implements AdapterInterface {
      * @throws Error if baseUrl is not configured or if the request fails
      */
     call(queryBuilder: QueryBuilder): Promise<HttpResponse>;
-    protected buildUrl(_queryBuilder: QueryBuilder): string;
+    protected buildRequest(queryBuilder: QueryBuilder): HttpRequest;
     protected fetchRequestHandler(_request: HttpRequest): Promise<HttpResponse>;
 }
 /**
@@ -82,7 +113,7 @@ export declare class HttpRequest implements HttpRequestInterface, AdapterRequest
     url: string;
     options?: HttpRequestOptions;
     method?: MethodType;
-    body?: string;
+    body?: string | any | any[];
     constructor(options?: Partial<HttpRequestInterface>);
 }
 export interface HttpResponseInterface {

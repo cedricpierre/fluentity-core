@@ -1,6 +1,6 @@
-import { MethodType } from './Fluentity';
+import { MethodType, Model } from './index';
 export interface QueryBuilderOptions {
-    resource?: string;
+    model?: typeof Model;
     id?: string | number;
     parent?: QueryBuilder;
     query?: Record<string, any>;
@@ -12,6 +12,7 @@ export interface QueryBuilderOptions {
     perPage?: number;
     method?: MethodType;
     body?: any;
+    url?: string;
 }
 /**
  * Builder class for constructing URL query strings and API requests.
@@ -19,7 +20,6 @@ export interface QueryBuilderOptions {
  * Used internally by models and relation builders to construct API calls.
  *
  * The QueryBuilder supports:
- * - Resource path construction
  * - Query parameter management
  * - Sorting and pagination
  * - HTTP method specification
@@ -46,10 +46,11 @@ export interface QueryBuilderOptions {
  */
 export declare class QueryBuilder {
     constructor(options?: QueryBuilderOptions);
-    /** The resource name for the API endpoint */
-    resource?: string;
+    url?: string;
+    /** The model for the query builder */
+    model?: Model;
     /** Resource ID for single-resource operations */
-    id?: string | number;
+    id?: string | number | BigInt;
     /** The parents of the query builder */
     parent?: QueryBuilder;
     /** Query parameters to be added to the URL */
@@ -124,7 +125,6 @@ export declare class QueryBuilder {
      * Clears all query parameters, pagination settings, and request options.
      * Useful for reusing a query builder instance with different parameters.
      *
-     * @returns The QueryBuilder instance for method chaining
      * @example
      * ```typescript
      * // Reset after a complex query

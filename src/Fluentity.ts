@@ -147,7 +147,7 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    * Creates a new Fluentity instance.
    * Private constructor to enforce singleton pattern.
    *
-   * @param {FluentityOptions<A>} [options] - Configuration options for Fluentity
+   * @param options - Configuration options for Fluentity
    * @throws {Error} If a Fluentity instance already exists
    * @private
    */
@@ -160,6 +160,20 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
     Fluentity.instance = this;
   }
 
+  /**
+   * Configures the Fluentity instance with new options.
+   * Updates the adapter and configuration settings.
+   *
+   * @param options - Optional configuration options to apply
+   * @throws {Error} If Fluentity has not been initialized
+   * @example
+   * ```typescript
+   * // Configure with new adapter
+   * fluentity.configure({
+   *   adapter: new CustomAdapter()
+   * });
+   * ```
+   */
   public configure(options?: FluentityOptions<A>): void {
     if (!Fluentity.instance) {
       throw new Error('Fluentity has not been initialized. Call initialize() first.');
@@ -183,8 +197,8 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
    * Initializes the Fluentity singleton instance.
    * Must be called before using any other Fluentity functionality.
    *
-   * @param {FluentityOptions<A>} [options] - Configuration options for Fluentity
-   * @returns {Fluentity<A>} The initialized Fluentity instance
+   * @param options - Configuration options for Fluentity
+   * @returns The initialized Fluentity instance
    * @throws {Error} If Fluentity has already been initialized
    * @example
    * ```typescript
@@ -208,9 +222,26 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
     return new Fluentity<A>(options);
   }
 
+  /**
+   * Resets the Fluentity singleton instance.
+   * Clears the current instance, allowing for re-initialization.
+   * Useful for testing or when you need to change the adapter configuration.
+   *
+   * @example
+   * ```typescript
+   * // Reset for testing
+   * Fluentity.reset();
+   * 
+   * // Re-initialize with different adapter
+   * Fluentity.initialize({
+   *   adapter: new CustomAdapter()
+   * });
+   * ```
+   */
   public static reset(): void {
     Fluentity.instance = undefined;
   }
+
   /**
    * Gets the Fluentity singleton instance.
    *
@@ -243,9 +274,21 @@ export class Fluentity<A extends AdapterInterface = DefaultAdapter> {
   }
 
   /**
-   * Calls the adapter with the given query builder.
+   * Calls the adapter with the given query builder using the singleton instance.
+   * Static convenience method that delegates to the singleton instance.
+   *
    * @param queryBuilder - The query builder to use
    * @returns The adapter response
+   * @throws {Error} If Fluentity has not been initialized
+   * @example
+   * ```typescript
+   * // Use static method
+   * const response = await Fluentity.call(queryBuilder);
+   * 
+   * // Equivalent to
+   * const fluentity = Fluentity.getInstance();
+   * const response = await fluentity.call(queryBuilder);
+   * ```
    */
   static call(queryBuilder: QueryBuilder): Promise<AdapterResponse> {
     return Fluentity.getInstance().call(queryBuilder);

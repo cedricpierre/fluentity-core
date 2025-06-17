@@ -2,7 +2,7 @@ import { Attributes, Model } from './Model';
 import { QueryBuilder } from './QueryBuilder';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
-import { Fluentity } from './Fluentity';
+import { Fluentity } from './index';
 import { RestAdapter } from './adapters/RestAdapter';
 /**
  * Type that determines the appropriate relation builder or model instance based on the model type.
@@ -84,7 +84,7 @@ export declare class RelationBuilder<T extends Model<Attributes>> {
      * Handles inheritance of parent query parameters and custom scopes.
      *
      * @param model - The model instance to build relations for
-     * @param queryBuilder - Query builder instance for constructing API requests
+     * @param parentQuery - Query builder instance for constructing API requests
      * @param resource - Optional custom resource name for the relation
      * @throws {Error} If the model or query builder is invalid
      * @example
@@ -100,7 +100,7 @@ export declare class RelationBuilder<T extends Model<Attributes>> {
      * const builder = new RelationBuilder(User, parentQuery);
      * ```
      */
-    constructor(model: T, queryBuilder: QueryBuilder, resource?: string);
+    constructor(model: T, parentQuery?: QueryBuilder);
     /**
      * Type definition for dynamic scope methods that can be added at runtime.
      * Allows for custom query scopes to be added to the builder.

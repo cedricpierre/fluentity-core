@@ -1,4 +1,4 @@
-import { MethodType } from './Fluentity';
+import { MethodType } from './index';
 import { Attributes, Model } from './Model';
 import { RelationBuilder } from './RelationBuilder';
 /**

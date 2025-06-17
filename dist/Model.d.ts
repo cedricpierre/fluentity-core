@@ -1,9 +1,5 @@
-import { RelationBuilder } from './RelationBuilder';
-import { HasManyRelationBuilder } from './HasManyRelationBuilder';
-import { Constructor } from './decorators';
-import { AdapterResponse, Fluentity, MethodType } from './Fluentity';
+import { RelationBuilder, HasManyRelationBuilder, Constructor, AdapterResponse, Fluentity, MethodType, RestAdapter } from './index';
 import { QueryBuilder } from './QueryBuilder';
-import { RestAdapter } from './adapters/RestAdapter';
 /**
  * Base interface for model attributes that all models must implement.
  * Provides the basic structure for model data and allows for dynamic properties.
@@ -91,7 +87,7 @@ export declare class Model<T extends Attributes = Attributes> {
      * Can optionally accept an existing query builder instance.
      *
      * @param attributes - The attributes to initialize the model with
-     * @param queryBuilder - Optional query builder instance to use instead of creating a new one
+     * @param parentQuery - Optional query builder instance to use instead of creating a new one
      * @returns A new model instance
      * @throws {Error} If required attributes are missing
      * @example
@@ -104,7 +100,7 @@ export declare class Model<T extends Attributes = Attributes> {
      * const user = new User({ name: 'John' }, query);
      * ```
      */
-    constructor(attributes: T, queryBuilder?: QueryBuilder);
+    constructor(attributes: T, parentQuery?: QueryBuilder);
     /**
      * Gets the query builder instance for this model.
      * Used internally for constructing API requests.
@@ -149,7 +145,7 @@ export declare class Model<T extends Attributes = Attributes> {
      * Uses an internal cache to avoid creating duplicate relation builders.
      * Supports both has-one and has-many relationships.
      *
-     * @param model - The model class to create a relation builder for
+     * @param modelConstructor - The model constructor to create a relation builder for
      * @param relationBuilderFactory - The factory class to create the relation builder
      * @returns A relation builder instance configured for the model
      * @private
@@ -573,10 +569,10 @@ export declare class Model<T extends Attributes = Attributes> {
      */
     toObject(): Record<string, any>;
     /**
-     * Resets a property on the model, resetting it to undefined.
+     * Resets properties on the model, setting them to undefined.
      * This is useful for clearing relationships or properties.
      *
-     * @param key - The property key to reset
+     * @param keys - The property keys to reset (accepts multiple keys)
      * @returns The model instance for method chaining
      * @example
      * ```typescript

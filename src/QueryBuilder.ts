@@ -141,7 +141,6 @@ export class QueryBuilder {
    * Clears all query parameters, pagination settings, and request options.
    * Useful for reusing a query builder instance with different parameters.
    *
-   * @returns The QueryBuilder instance for method chaining
    * @example
    * ```typescript
    * // Reset after a complex query
