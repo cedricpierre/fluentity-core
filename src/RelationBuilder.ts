@@ -2,7 +2,7 @@ import { Attributes, Model } from './Model';
 import { QueryBuilder } from './QueryBuilder';
 import { HasManyRelationBuilder } from './HasManyRelationBuilder';
 import { HasOneRelationBuilder } from './HasOneRelationBuilder';
-import { Fluentity, Methods } from './Fluentity';
+import { Fluentity, Methods } from './index';
 import { RestAdapter } from './adapters/RestAdapter';
 
 /**
@@ -112,7 +112,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * Handles inheritance of parent query parameters and custom scopes.
    *
    * @param model - The model instance to build relations for
-   * @param queryBuilder - Query builder instance for constructing API requests
+   * @param parentQuery - Query builder instance for constructing API requests
    * @param resource - Optional custom resource name for the relation
    * @throws {Error} If the model or query builder is invalid
    * @example
@@ -128,14 +128,14 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * const builder = new RelationBuilder(User, parentQuery);
    * ```
    */
-  constructor(model: T, queryBuilder: QueryBuilder, resource?: string) {
+  constructor(model: T, parentQuery?: QueryBuilder) {
     this.#relatedModel = model;
     this.#queryBuilder = new QueryBuilder({
-      resource: resource ?? (this.#relatedModel as any).resource,
+      model: this.#relatedModel as unknown as typeof Model,
     });
 
-    if (queryBuilder?.resource) {
-      this.#queryBuilder.parent = { ...queryBuilder } as QueryBuilder;
+    if (parentQuery) {
+      this.#queryBuilder.parent = { ...parentQuery } as QueryBuilder;
     }
 
     if (this.#relatedModel.scopes) {
@@ -220,6 +220,7 @@ export class RelationBuilder<T extends Model<Attributes>> {
    * ```
    */
   id(id: string | number): T {
+    this.#queryBuilder.id = id;
     return new (this.#relatedModel as any)({ id }, this.#queryBuilder);
   }
 

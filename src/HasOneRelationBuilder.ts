@@ -1,4 +1,4 @@
-import { Methods, MethodType } from './Fluentity';
+import { Methods, MethodType } from './index';
 import { Model, Attributes } from './Model';
 import { RelationBuilder } from './RelationBuilder';
 
@@ -62,7 +62,7 @@ export class HasOneRelationBuilder<T extends Model<Attributes>> extends Relation
   async get(): Promise<T> {
     this.queryBuilder.method = Methods.GET;
     const response = await this.fluentity.adapter.call(this.queryBuilder);
-    return this.data = new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
+    return this.data = new (this.relatedModel as any)(response.data, { ...this.queryBuilder, id: response.data.id });
   }
 
   /**
@@ -112,7 +112,7 @@ export class HasOneRelationBuilder<T extends Model<Attributes>> extends Relation
     this.queryBuilder.method = method;
     this.queryBuilder.id = this.relatedModel.id!;
     const response = await this.fluentity.adapter.call(this.queryBuilder);
-    return this.data = new (this.relatedModel as any)(response.data, { ...this.queryBuilder });
+    return this.data = new (this.relatedModel as any)(response.data, { ...this.queryBuilder, id: response.data.id });
   }
 
   /**

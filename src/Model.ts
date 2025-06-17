@@ -1,10 +1,5 @@
-import { RelationBuilder } from './RelationBuilder';
-import { HasOneRelationBuilder } from './HasOneRelationBuilder';
-import { HasManyRelationBuilder } from './HasManyRelationBuilder';
-import { Constructor } from './decorators';
-import { AdapterResponse, Fluentity, Methods, MethodType } from './Fluentity';
+import { RelationBuilder, HasOneRelationBuilder, HasManyRelationBuilder, Constructor, AdapterResponse, Fluentity, Methods, MethodType, RestAdapter } from './index';
 import { QueryBuilder } from './QueryBuilder';
-import { RestAdapter } from './adapters/RestAdapter';
 
 /**
  * Base interface for model attributes that all models must implement.
@@ -85,7 +80,7 @@ export class Model<T extends Attributes = Attributes> {
    * Internal query builder instance for constructing API requests.
    * @private
    */
-  readonly#queryBuilder: QueryBuilder;
+  readonly #queryBuilder: QueryBuilder;
 
   /**
    * Resource endpoint for the model, used to construct API URLs.
@@ -116,15 +111,17 @@ export class Model<T extends Attributes = Attributes> {
    * const user = new User({ name: 'John' }, query);
    * ```
    */
-  constructor(attributes: T, queryBuilder?: QueryBuilder) {
+  constructor(attributes: T, parentQuery?: QueryBuilder) {
     if (attributes) {
       Object.assign(this, attributes);
     }
+
     
-    this.#queryBuilder = queryBuilder ?? new QueryBuilder();
-    
-    this.#queryBuilder.resource = (this.constructor as any).resource;
-    this.#queryBuilder.id = this.id;
+    this.#queryBuilder = parentQuery ?? new QueryBuilder({
+      model: this.constructor as unknown as typeof Model,
+      id: this.id,
+    });
+
     return this;
   }
 
@@ -193,9 +190,7 @@ export class Model<T extends Attributes = Attributes> {
     model: Constructor<T>,
     relationBuilderFactory: Constructor<R>
   ): R {
-    const queryBuilder = new QueryBuilder();
-
-    return new relationBuilderFactory(model, queryBuilder, (model.constructor as any).resource);
+    return new relationBuilderFactory(model);
   }
 
   /**
@@ -636,6 +631,7 @@ export class Model<T extends Attributes = Attributes> {
     if (attributes) Object.assign(this, attributes);
 
     this.#queryBuilder.method = method;
+    this.#queryBuilder.id = this.id;
     this.#queryBuilder.body = this.toObject();
 
     const updated = await this.fluentity.adapter.call(this.#queryBuilder);

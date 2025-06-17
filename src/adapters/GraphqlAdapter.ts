@@ -1,12 +1,12 @@
 import { QueryBuilder } from '../QueryBuilder';
-import { HttpAdapter, HttpAdapterOptions, HttpRequest, HttpResponse } from './HttpAdapter';
+import { HttpAdapter, HttpAdapterOptions, HttpRequest, HttpResponse, Methods } from './HttpAdapter';
 
 /**
  * A static HTTP client class that provides methods for making HTTP requests with built-in caching,
  * interceptors, and request/response handling capabilities.
  */
 export class GraphqlAdapter extends HttpAdapter {
-  options: GraphqlAdapterOptions;
+  declare options: GraphqlAdapterOptions;
 
   /**
    * Constructor for the RestAdapter class.
@@ -23,40 +23,239 @@ export class GraphqlAdapter extends HttpAdapter {
   }
 
   protected buildRequest(queryBuilder: QueryBuilder): HttpRequest {
+
+
     return new HttpRequest({
       url: this.options.endpoint ?? '/graphql',
-      method: queryBuilder.method,
-      body: queryBuilder.body,
+      method: queryBuilder.method ?? Methods.POST,
+      body: this.buildBody(queryBuilder),
       options: this.options?.options,
     });
   }
 
-  protected async fetchRequestHandler(request: HttpRequest): Promise<HttpResponse> {
-    if (request.options?.headers?.['Content-Type'] === 'application/json' && request.body) {
-      request.body = JSON.stringify(request.body);
-    }
+  private buildBody(queryBuilder: QueryBuilder) {
+    return {
+      query: this.buildGraphQLQuery(queryBuilder),
+      variables: this.buildVariables(queryBuilder),
+      operationName: this.generateOperationName(queryBuilder),
+    };
+  }
 
-    try {
-      const response = await fetch(`${this.options.baseUrl}/${request.url}`, {
-        method: request.method,
-        body: ['PUT', 'POST', 'PATCH'].includes(request.method!) ? request.body : null,
-        headers: request.options?.headers,
-        credentials: request.options?.credentials,
-        mode: request.options?.mode,
-        redirect: request.options?.redirect,
-        referrer: request.options?.referrer,
-        cache: request.options?.cache,
-        keepalive: request.options?.keepalive,
-        signal: request.options?.signal,
-      } as RequestInit);
-
-      return new HttpResponse({
-        data: await response.json(),
-      });
-    } catch (error) {
-      throw new Error(`HTTP error: ${error}`);
+  private determineOperation(queryBuilder: QueryBuilder): 'query' | 'mutation' {
+    switch (queryBuilder.method) {
+      case 'GET':
+        return 'query';
+      case 'POST':
+      case 'PUT':
+      case 'PATCH':
+        return 'mutation';
+      case 'DELETE':
+        return 'mutation';
+      default:
+        return 'query';
     }
   }
+
+  private buildGraphQLQuery(queryBuilder: QueryBuilder): string {
+    const operation = this.determineOperation(queryBuilder);
+    const resource = queryBuilder.model?.resource ?? 'resource';
+    const fields = this.buildFields(queryBuilder);
+    const arguments_ = this.buildArguments(queryBuilder);
+    
+    let query = `${operation} ${this.generateOperationName(queryBuilder)}`;
+    
+    if (arguments_.length > 0) {
+      query += `(${arguments_.join(', ')})`;
+    }
+    
+    query += ` {\n  ${resource}${this.buildQueryArguments(queryBuilder)} {\n    ${fields}\n  }\n}`;
+    
+    return query;
+  }
+
+  private buildFields(queryBuilder: QueryBuilder): string {
+    const fields = new Set<string>();
+    
+    // Add basic fields if no specific fields are requested
+    fields.add('id');
+    
+    // Add fields from query parameters that might represent field selections
+    if (queryBuilder.query) {
+      Object.keys(queryBuilder.query).forEach(key => {
+        if (typeof queryBuilder.query![key] === 'boolean' && queryBuilder.query![key]) {
+          fields.add(key);
+        }
+      });
+    }
+    
+    // Add fields from body if it contains field selections
+    if (queryBuilder.body && typeof queryBuilder.body === 'object') {
+      Object.keys(queryBuilder.body).forEach(key => {
+        if (typeof queryBuilder.body![key] === 'boolean' && queryBuilder.body![key]) {
+          fields.add(key);
+        }
+      });
+    }
+    
+    // Handle recursive relations
+    if (queryBuilder.parent) {
+      const parentFields = this.buildFields(queryBuilder.parent);
+      fields.add(parentFields);
+    }
+    
+    return Array.from(fields).join('\n    ');
+  }
+
+  private buildArguments(queryBuilder: QueryBuilder): string[] {
+    const args: string[] = [];
+    
+    // Add ID argument for single resource operations
+    if (queryBuilder.id) {
+      args.push('$id: ID!');
+    }
+    
+    // Add pagination arguments
+    if (queryBuilder.limit) {
+      args.push('$limit: Int');
+    }
+    if (queryBuilder.offset) {
+      args.push('$offset: Int');
+    }
+    if (queryBuilder.page) {
+      args.push('$page: Int');
+    }
+    if (queryBuilder.perPage) {
+      args.push('$perPage: Int');
+    }
+    
+    // Add sorting arguments
+    if (queryBuilder.sort) {
+      args.push('$sort: String');
+    }
+    if (queryBuilder.direction) {
+      args.push('$direction: String');
+    }
+    
+    // Add filter arguments
+    if (queryBuilder.query && Object.keys(queryBuilder.query).length > 0) {
+      args.push('$filters: JSON');
+    }
+    
+    // Add input arguments for mutations
+    if (queryBuilder.body && this.determineOperation(queryBuilder) === 'mutation') {
+      args.push('$input: JSON!');
+    }
+    
+    return args;
+  }
+
+  private buildQueryArguments(queryBuilder: QueryBuilder): string {
+    const args: string[] = [];
+    
+    // Add ID argument
+    if (queryBuilder.id) {
+      args.push('id: $id');
+    }
+    
+    // Add pagination arguments
+    if (queryBuilder.limit) {
+      args.push('limit: $limit');
+    }
+    if (queryBuilder.offset) {
+      args.push('offset: $offset');
+    }
+    if (queryBuilder.page) {
+      args.push('page: $page');
+    }
+    if (queryBuilder.perPage) {
+      args.push('perPage: $perPage');
+    }
+    
+    // Add sorting arguments
+    if (queryBuilder.sort) {
+      args.push('sort: $sort');
+    }
+    if (queryBuilder.direction) {
+      args.push('direction: $direction');
+    }
+    
+    // Add filter arguments
+    if (queryBuilder.query && Object.keys(queryBuilder.query).length > 0) {
+      args.push('filters: $filters');
+    }
+    
+    // Add input arguments for mutations
+    if (queryBuilder.body && this.determineOperation(queryBuilder) === 'mutation') {
+      args.push('input: $input');
+    }
+    
+    return args.length > 0 ? `(${args.join(', ')})` : '';
+  }
+
+  private buildVariables(queryBuilder: QueryBuilder): Record<string, any> {
+    const variables: Record<string, any> = {};
+    
+    // Add ID variable
+    if (queryBuilder.id) {
+      variables.id = queryBuilder.id;
+    }
+    
+    // Add pagination variables
+    if (queryBuilder.limit) {
+      variables.limit = queryBuilder.limit;
+    }
+    if (queryBuilder.offset) {
+      variables.offset = queryBuilder.offset;
+    }
+    if (queryBuilder.page) {
+      variables.page = queryBuilder.page;
+    }
+    if (queryBuilder.perPage) {
+      variables.perPage = queryBuilder.perPage;
+    }
+    
+    // Add sorting variables
+    if (queryBuilder.sort) {
+      variables.sort = queryBuilder.sort;
+    }
+    if (queryBuilder.direction) {
+      variables.direction = queryBuilder.direction;
+    }
+    
+    // Add filter variables
+    if (queryBuilder.query && Object.keys(queryBuilder.query).length > 0) {
+      variables.filters = queryBuilder.query;
+    }
+    
+    // Add input variables for mutations
+    if (queryBuilder.body && this.determineOperation(queryBuilder) === 'mutation') {
+      variables.input = queryBuilder.body;
+    }
+    
+    return variables;
+  }
+
+  private generateOperationName(queryBuilder: QueryBuilder): string {
+    const resource = queryBuilder.model?.resource || 'resource';
+    const method = queryBuilder.method || 'GET';
+    
+    if (queryBuilder.id) {
+      return `Get${resource.charAt(0).toUpperCase() + resource.slice(1)}ById`;
+    }
+    
+    switch (method) {
+      case 'GET':
+        return `Get${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
+      case 'POST':
+        return `Create${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
+      case 'PUT':
+      case 'PATCH':
+        return `Update${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
+      case 'DELETE':
+        return `Delete${resource.charAt(0).toUpperCase() + resource.slice(1)}`;
+    }
+  }
+
 }
 
 /**

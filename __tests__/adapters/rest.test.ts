@@ -1,8 +1,9 @@
 import { RestAdapter } from '../../src/adapters/RestAdapter';
 import { describe, it, expect, beforeEach, mock } from 'bun:test';
-import { Methods } from '../../src/Fluentity';
 import { QueryBuilder } from '../../src/QueryBuilder';
-import { HttpResponse, HttpRequest } from '../../src/adapters/HttpAdapter';
+import { HttpResponse, HttpRequest, Methods } from '../../src/adapters/HttpAdapter';
+import { User } from '../../examples/models/User';
+import { Model } from '../../src/Model';
 
 interface TestResponseData {
   success?: boolean;
@@ -39,7 +40,7 @@ describe('RestAdapter', () => {
         requestHandler,
       });
 
-      await httpClient.call(new QueryBuilder({ resource: 'test' }));
+      await httpClient.call(new QueryBuilder({ model: User as typeof Model, }));
     });
 
     it('should apply response interceptor', async () => {
@@ -56,7 +57,7 @@ describe('RestAdapter', () => {
         requestHandler,
       });
 
-      const response = await httpClient.call(new QueryBuilder({ resource: 'test' }));
+      const response = await httpClient.call(new QueryBuilder({ model: User as typeof Model, }));
       expect(response.data).toHaveProperty('intercepted', true);
     });
   });
@@ -77,7 +78,7 @@ describe('RestAdapter', () => {
         requestHandler,
       });
 
-      await expect(httpClient.call(new QueryBuilder({ resource: 'test' }))).rejects.toThrow(
+      await expect(httpClient.call(new QueryBuilder({ model: User as typeof Model, }))).rejects.toThrow(
         'HTTP error: 404'
       );
     });
@@ -93,7 +94,7 @@ describe('RestAdapter', () => {
       httpClient.configure({ requestHandler });
 
       for (const method of methods) {
-        const queryBuilder = new QueryBuilder({ resource: 'test', method });
+        const queryBuilder = new QueryBuilder({ model: User as typeof Model, method });
         const response = await httpClient.call(queryBuilder) as HttpResponse<TestResponseData>;
         expect(response.data.method).toBe(method);
       }
@@ -109,7 +110,7 @@ describe('RestAdapter', () => {
       httpClient.configure({ requestHandler });
 
       const response = await httpClient.call(
-        new QueryBuilder({ resource: 'test', method: Methods.POST, body: { test: 'data' } })
+        new QueryBuilder({ model: User as typeof Model, method: Methods.POST, body: { test: 'data' } })
       ) as HttpResponse<TestResponseData>;
       expect(response.data.success).toBe(true);
     });
@@ -128,7 +129,7 @@ describe('RestAdapter', () => {
       httpClient.configure({ requestHandler });
 
       await httpClient.call(
-        new QueryBuilder({ resource: 'test', method: Methods.POST, body: { test: 'data' } })
+        new QueryBuilder({ model: User as typeof Model, method: Methods.POST, body: { test: 'data' } })
       );
       expect(httpClient.options.options?.headers).toHaveProperty('X-Default');
     });
@@ -145,14 +146,14 @@ describe('RestAdapter', () => {
       baseUrl: 'https://jsonplaceholder.typicode.com',
     });
 
-    const response = await httpClient.call(new QueryBuilder({ resource: 'posts' }));
+    const response = await httpClient.call(new QueryBuilder({ model: User as typeof Model, }));
     expect(response).toEqual(mockResponse);
   });
 
   it('should throw error if baseUrl is not configured', async () => {
     httpClient.configure({ baseUrl: undefined });
 
-    await expect(httpClient.call(new QueryBuilder({ resource: 'posts' }))).rejects.toThrow(
+    await expect(httpClient.call(new QueryBuilder({ model: User as typeof Model, }))).rejects.toThrow(
       'baseUrl is required'
     );
   });
@@ -164,7 +165,7 @@ describe('RestAdapter', () => {
 
     httpClient.configure({ requestHandler });
 
-    await expect(httpClient.call(new QueryBuilder({ resource: 'test' }))).rejects.toThrow(
+    await expect(httpClient.call(new QueryBuilder({ model: User as typeof Model, }))).rejects.toThrow(
       'HTTP error: 404'
     );
   });

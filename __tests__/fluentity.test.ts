@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, beforeAll, afterEach, mock, spyOn } from 'bun:test';
-import { Fluentity, RestAdapter, Methods } from '../src/index';
+import { Fluentity, RestAdapter, Methods, Model } from '../src/index';
 import { QueryBuilder } from '../src/QueryBuilder';
 import { User } from '../examples/models/User';
 import { HttpResponse, HttpRequest } from '../src/adapters/HttpAdapter';
@@ -40,7 +40,7 @@ describe('Fluentity Class', () => {
     it('can initialize with custom adapter', () => {
       fluentity = Fluentity.initialize({
         adapter: new RestAdapter({
-          baseUrl: '',
+          baseUrl: 'https://api.example.com',
         }),
       });
       expect(fluentity).toBeDefined();
@@ -69,7 +69,7 @@ describe('Fluentity Class', () => {
     beforeEach(() => {
       fluentity = Fluentity.initialize({
         adapter: new RestAdapter({
-          baseUrl: '',
+          baseUrl: 'https://api.example.com',
         }),
       });
     });
@@ -111,14 +111,15 @@ describe('Fluentity Class', () => {
     const testHttpMethod = (method: typeof Methods[keyof typeof Methods]) => {
       it(`can call a ${method} request`, async () => {
         spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-          expect(queryBuilder.resource).toBe('users');
+          expect(queryBuilder.model?.resource).toBe('users');
           expect(queryBuilder.method).toBe(method);
           return Promise.resolve({ data: true });
         });
 
-        const queryBuilder = new QueryBuilder();
-        queryBuilder.resource = 'users';
-        queryBuilder.method = method;
+        const queryBuilder = new QueryBuilder({
+          model: User as typeof Model,
+          method,
+        })
 
         const response = await fluentity.adapter.call(queryBuilder);
         expect(response).toBeDefined();
@@ -138,8 +139,9 @@ describe('Fluentity Class', () => {
           baseUrl: 'https://api.example.com',
         }),
       });
-      mockQueryBuilder = new QueryBuilder();
-      mockQueryBuilder.resource = 'test';
+      mockQueryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+      });
     });
 
     it('should call the adapter with the query builder using instance method', async () => {

@@ -3,10 +3,41 @@ import {
   AdapterOptions,
   AdapterRequest,
   AdapterResponse,
-  MethodType,
 } from '../Fluentity';
-import { Model } from '../Model';
 import { QueryBuilder } from '../QueryBuilder';
+
+
+/**
+ * HTTP method constants for use in requests.
+ * Provides type-safe HTTP method names.
+ *
+ * @example
+ * ```typescript
+ * const method: MethodType = Methods.POST;
+ * ```
+ */
+export const Methods = {
+  /** HTTP GET method */
+  GET: 'GET',
+  /** HTTP POST method */
+  POST: 'POST',
+  /** HTTP PUT method */
+  PUT: 'PUT',
+  /** HTTP PATCH method */
+  PATCH: 'PATCH',
+  /** HTTP DELETE method */
+  DELETE: 'DELETE',
+  /** HTTP HEAD method */
+  HEAD: 'HEAD',
+  /** HTTP OPTIONS method */
+  OPTIONS: 'OPTIONS',
+} as const;
+
+/**
+ * Type representing valid HTTP method names.
+ * Derived from the Methods constant object.
+ */
+export type MethodType = keyof typeof Methods;
 
 /**
  * A static HTTP client class that provides methods for making HTTP requests with built-in caching,
@@ -52,6 +83,8 @@ export abstract class HttpAdapter implements AdapterInterface {
     this.options = { ...this.options, ...options };
     return this;
   }
+
+
 
   /**
    * The request object.
@@ -186,7 +219,7 @@ export class HttpRequest implements HttpRequestInterface, AdapterRequest {
   url: string = '';
   options?: HttpRequestOptions;
   method?: MethodType;
-  body?: string;
+  body?: string | any | any[];
 
   constructor(options?: Partial<HttpRequestInterface>) {
     if (options) {

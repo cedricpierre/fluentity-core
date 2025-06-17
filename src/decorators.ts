@@ -44,7 +44,6 @@ export type PropertyDecoratorType = (target: object, key: string | symbol) => vo
 const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>(
   model: (arg?: any) => Constructor<T>,
   relationBuilderFactory: Constructor<R>,
-  resource?: string
 ): PropertyDecoratorType => {
   const relationDataMap = new WeakMap<object,RelationBuilder<any>>();
   
@@ -55,7 +54,7 @@ const makeRelation = <T extends Model<Attributes>, R extends RelationBuilder<T>>
     // Initialize the property on the prototype
     Object.defineProperty(target, key, {
       get(this: Model<Attributes>) {
-        const relation = relationDataMap.get(this) ?? new relationBuilderFactory(model(), this.queryBuilder, resource) as R
+        const relation = relationDataMap.get(this) ?? new relationBuilderFactory(model(), this.queryBuilder) as R
         relationDataMap.set(this, relation);
         // If there's a stored value, return the model instance
         if ((this as any)[privateKey] !== undefined) {

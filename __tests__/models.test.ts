@@ -228,7 +228,7 @@ describe('Models', () => {
 
   it('can find users where name is Cedric and is active', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe(`users`);
+      expect(queryBuilder.model).toBe(User);
       expect(queryBuilder.query).toEqual({
         name: 'Cedric Pierre',
         email: 'cedric@example.com',
@@ -252,7 +252,7 @@ describe('Models', () => {
   it('generates correct URL with query parameters', async () => {
     const mockCall = spyOn(fluentity.adapter, 'call');
     mockCall.mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe(`users`);
+      expect(queryBuilder.model).toBe(User);
       expect(queryBuilder.query).toEqual({ name: 'Cedric', email: 'cedric@example.com' });
       expect(queryBuilder.limit).toBe(10);
       expect(queryBuilder.offset).toBe(0);
@@ -294,9 +294,9 @@ describe('Models', () => {
     const user = await User.find(1);
 
     spyOn(fluentity.adapter, 'call').mockImplementation(async (queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe(`medias`);
+      expect(queryBuilder.model).toBe(Media);
       expect(queryBuilder.id).toBe(2);
-      expect(queryBuilder.parent?.resource).toBe(`users`);
+      expect(queryBuilder.parent?.model).toBe(User);
       expect(queryBuilder.parent?.id).toBe(1);
 
       return Promise.resolve({
@@ -316,11 +316,11 @@ describe('Models', () => {
     expect(media.url).toBe('https://example.com/thumbnail.jpg');
 
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe(`thumbnails`);
+      expect(queryBuilder.model).toBe(Thumbnail);
       expect(queryBuilder.id).toBe(undefined);
-      expect(queryBuilder.parent?.resource).toBe(`medias`);
+      expect(queryBuilder.parent?.model).toBe(Media);
       expect(queryBuilder.parent?.id).toBe(2);
-      expect(queryBuilder.parent?.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.parent?.model).toBe(User);
       expect(queryBuilder.parent?.parent?.id).toBe(1);
       return Promise.resolve({
         data: [
@@ -339,11 +339,11 @@ describe('Models', () => {
 
   it('generates deep nested relations', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe(`thumbnails`);
+      expect(queryBuilder.model).toBe(Thumbnail);
       expect(queryBuilder.id).toBe(undefined);
-      expect(queryBuilder.parent?.resource).toBe(`medias`);
+      expect(queryBuilder.parent?.model).toBe(Media);
       expect(queryBuilder.parent?.id).toBe(2);
-      expect(queryBuilder.parent?.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.parent?.model).toBe(User);
       expect(queryBuilder.parent?.parent?.id).toBe(1);
       return Promise.resolve({ data: [] });
     });
@@ -354,7 +354,7 @@ describe('Models', () => {
   it('can use the query method', async () => {
     spyOn(fluentity.adapter, 'call')
       .mockImplementation((queryBuilder: QueryBuilder) => {
-        expect(queryBuilder.resource).toBe(`users`);
+        expect(queryBuilder.model).toBe(User);
         expect(queryBuilder.query).toEqual({ name: 'Cedric' });
         return Promise.resolve({ data: [] });
       })
@@ -372,7 +372,7 @@ describe('Models', () => {
 
   it('can use the get method', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe(`users`);
+      expect(queryBuilder.model).toBe(User);
       expect(queryBuilder.id).toBe(1);
       return Promise.resolve({
         data: { id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 },
@@ -388,7 +388,8 @@ describe('Models', () => {
 
   it('can use the filter method', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe(`users`);
+      console.log(queryBuilder.model);
+      expect(queryBuilder.model).toBe(User);
       expect(queryBuilder.query).toEqual({ name: 'Cedric' });
       return Promise.resolve({
         data: [{ id: '1', name: 'Cedric', email: 'cedric@example.com', phone: 1234567890 }],
@@ -415,9 +416,10 @@ describe('Model protected methods', () => {
       email: 'test@example.com',
       phone: 1234567890,
     });
-    mockQueryBuilder = new QueryBuilder();
-    mockQueryBuilder.resource = 'users';
-    mockQueryBuilder.id = '123';
+    mockQueryBuilder = new QueryBuilder({
+      model: User as typeof Model,
+      id: '123',
+    });
     mock.restore();
   });
 

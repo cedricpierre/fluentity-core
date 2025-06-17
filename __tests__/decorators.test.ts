@@ -44,9 +44,9 @@ describe('Models', () => {
   
   it('should be able to get libraries (custom name) from a user', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe('medias');
+      expect(queryBuilder.model).toBe(Media);
       expect(queryBuilder.id).toBeUndefined();
-      expect(queryBuilder.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.model).toBe(User);
       expect(queryBuilder.parent?.id).toBe(1);
 
       return Promise.resolve({
@@ -90,24 +90,11 @@ describe('Models', () => {
     expect(user.thumbnail).toBeInstanceOf(Thumbnail);
   });
 
-  it('should construct correct path with custom resource name', async () => {
-    spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe('custom-resource');
-      expect(queryBuilder.id).toBeUndefined();
-      expect(queryBuilder.parent?.resource).toBe('users');
-      expect(queryBuilder.parent?.id).toBe(1);
-      return Promise.resolve({ data: [] });
-    });
-
-    const result = await User.id(1).customResource.all();
-    expect(result).toBeInstanceOf(Array);
-  });
-
   it('should construct correct path with default resource name', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe('medias');
+      expect(queryBuilder.model).toBe(Media);
       expect(queryBuilder.id).toBeUndefined();
-      expect(queryBuilder.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.model).toBe(User);
       expect(queryBuilder.parent?.id).toBe(1);
       return Promise.resolve({ data: [] });
     });
@@ -118,11 +105,11 @@ describe('Models', () => {
 
   it('should handle nested paths correctly', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe('thumbnails');
+      expect(queryBuilder.model).toBe(Thumbnail);
       expect(queryBuilder.id).toBeUndefined();
-      expect(queryBuilder.parent?.resource).toBe('medias');
+      expect(queryBuilder.parent?.model).toBe(Media);
       expect(queryBuilder.parent?.id).toBe(2);
-      expect(queryBuilder.parent?.parent?.resource).toBe('users');
+      expect(queryBuilder.parent?.parent?.model).toBe(User);
       expect(queryBuilder.parent?.parent?.id).toBe(1);
       return Promise.resolve({ data: [] });
     });
@@ -132,7 +119,7 @@ describe('Models', () => {
 
   it('should handle empty path correctly', async () => {
     spyOn(fluentity.adapter, 'call').mockImplementation((queryBuilder: QueryBuilder) => {
-      expect(queryBuilder.resource).toBe('users');
+      expect(queryBuilder.model).toBe(User);
       expect(queryBuilder.id).toBe(1);
       return Promise.resolve({ data: { id: 1, name: 'Cedric' } });
     });

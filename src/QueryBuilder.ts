@@ -1,7 +1,7 @@
-import { MethodType } from './Fluentity';
+import { MethodType, Model } from './index';
 
 export interface QueryBuilderOptions {
-  resource?: string;
+  model?: typeof Model;
   id?: string | number;
   parent?: QueryBuilder;
   query?: Record<string, any>;
@@ -13,6 +13,7 @@ export interface QueryBuilderOptions {
   perPage?: number;
   method?: MethodType;
   body?: any;
+  url?: string;
 }
 
 /**
@@ -21,7 +22,6 @@ export interface QueryBuilderOptions {
  * Used internally by models and relation builders to construct API calls.
  * 
  * The QueryBuilder supports:
- * - Resource path construction
  * - Query parameter management
  * - Sorting and pagination
  * - HTTP method specification
@@ -52,10 +52,11 @@ export class QueryBuilder {
       Object.assign(this, options);
     }
   }
-  /** The resource name for the API endpoint */
-  public resource?: string;
+  public url?: string;
+  /** The model for the query builder */
+  public model?: Model;
   /** Resource ID for single-resource operations */
-  public id?: string | number;
+  public id?: string | number | BigInt;
   /** The parents of the query builder */
   public parent?: QueryBuilder;
   /** Query parameters to be added to the URL */
@@ -165,6 +166,7 @@ export class QueryBuilder {
     this.perPage = undefined;
     this.method = undefined;
     this.body = undefined;
+    this.model = undefined;
   }
 
   /**

@@ -4,10 +4,8 @@ import { Post } from '../examples/models/Post';
 import { Comment } from '../examples/models/Comment';
 import { Fluentity, RestAdapter } from '../src';
 import { Company } from '../examples/models/Company';
-import { Media } from '../examples/models/Media';
 import { HttpResponse } from '../src/adapters/HttpAdapter';
 import { Address } from '../examples/models/Address';
-import { HasManyRelationBuilder } from '../src/HasManyRelationBuilder';
 import { HasOneRelationBuilder } from '../src/HasOneRelationBuilder';
 
 let fluentity: Fluentity<RestAdapter>;
@@ -35,6 +33,7 @@ describe('API', () => {
     const users = await User.all();
     expect(fluentity.adapter.request.url).toBe('users');
     expect(users).toBeDefined();
+    
   });
 
   it('should fetch one user with address', async () => {

@@ -1,5 +1,7 @@
 import { expect, describe, it, beforeEach, mock, spyOn } from 'bun:test';
 import { QueryBuilder } from '../src/QueryBuilder';
+import { User } from '../examples/models/User';
+import { Model } from '../src/Model';
 
 describe('QueryBuilder', () => {
   let queryBuilder: QueryBuilder;
@@ -16,7 +18,7 @@ describe('QueryBuilder', () => {
 
     it('should initialize with provided options', () => {
       const options = {
-        resource: 'users',
+        model: User as typeof Model,
         id: 123,
         limit: 10,
         page: 1,

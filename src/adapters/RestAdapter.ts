@@ -41,6 +41,7 @@ export class RestAdapter extends HttpAdapter {
     if (queryString) {
       url += `?${queryString}`;
     }
+    
     return decodeURIComponent(url);
   }
 
@@ -49,10 +50,10 @@ export class RestAdapter extends HttpAdapter {
       this.unwrapParents(queryBuilder.parent, segments);
     }
 
-    if (queryBuilder.resource && queryBuilder.id) {
-      segments.push(`${queryBuilder.resource}/${queryBuilder.id}`);
-    } else if (queryBuilder.resource) {
-      segments.push(`${queryBuilder.resource}`);
+    segments.push(queryBuilder.url ?? queryBuilder.model?.resource);
+
+    if (queryBuilder.id) {
+      segments.push(`${queryBuilder.id}`);
     }
 
     return segments;

@@ -63,7 +63,7 @@ export class User extends Model<UserAttributes> implements Partial<UserAttribute
 
   static async login(username: string, password: string) {
     const queryBuilder = new QueryBuilder({
-      resource: 'login',
+      url: 'login',
       body: {
         username,
         password,

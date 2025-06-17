@@ -90,38 +90,6 @@ export type AdapterResponse<T = unknown | any> = {
 };
 
 /**
- * HTTP method constants for use in requests.
- * Provides type-safe HTTP method names.
- *
- * @example
- * ```typescript
- * const method: MethodType = Methods.POST;
- * ```
- */
-export const Methods = {
-  /** HTTP GET method */
-  GET: 'GET',
-  /** HTTP POST method */
-  POST: 'POST',
-  /** HTTP PUT method */
-  PUT: 'PUT',
-  /** HTTP PATCH method */
-  PATCH: 'PATCH',
-  /** HTTP DELETE method */
-  DELETE: 'DELETE',
-  /** HTTP HEAD method */
-  HEAD: 'HEAD',
-  /** HTTP OPTIONS method */
-  OPTIONS: 'OPTIONS',
-} as const;
-
-/**
- * Type representing valid HTTP method names.
- * Derived from the Methods constant object.
- */
-export type MethodType = keyof typeof Methods;
-
-/**
  * Configuration options for initializing Fluentity.
  *
  * @interface

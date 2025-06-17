@@ -1,10 +1,12 @@
+import { User } from '../../examples/models/User';
 import {
   HttpAdapter,
   HttpRequest,
   HttpResponse,
+  Methods,
 } from '../../src/adapters/HttpAdapter';
+import { Model } from '../../src/Model';
 import { QueryBuilder } from '../../src/QueryBuilder';
-import { Methods } from '../../src/Fluentity';
 import { expect, describe, afterEach, beforeAll, beforeEach, mock, it} from 'bun:test';
 
 interface TestResponseData {
@@ -56,7 +58,7 @@ class TestHttpAdapter extends HttpAdapter {
     // Mock implementation for testing
     const response = new HttpResponse<T>({
       data: {
-        url: `${this.options.baseUrl}/${queryBuilder.resource}`,
+        url: `${this.options.baseUrl}/${queryBuilder.model?.resource}`,
         method: queryBuilder.method || Methods.GET,
         body: JSON.stringify(queryBuilder.body || {}),
       } as T,
@@ -90,9 +92,11 @@ describe('HttpAdapter', () => {
 
   describe('configuration', () => {
     it('should initialize with default options', () => {
-      const defaultAdapter = new TestHttpAdapter({});
+      const defaultAdapter = new TestHttpAdapter({
+        baseUrl: 'https://api.example.com',
+      });
       expect(defaultAdapter.options).toMatchObject({
-        baseUrl: '',
+        baseUrl: 'https://api.example.com',
         options: {
           headers: {
             'Content-Type': 'application/json',
@@ -125,24 +129,23 @@ describe('HttpAdapter', () => {
 
   describe('request handling', () => {
     it('should throw error if baseUrl is not configured', async () => {
-      const adapterWithoutBaseUrl = new TestHttpAdapter({});
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'test';
-      
       try {
-        await adapterWithoutBaseUrl.call(queryBuilder);
-        throw new Error('Expected call to throw an error');
+        const adapterWithoutBaseUrl = new TestHttpAdapter({
+          baseUrl: '',
+        });
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
+        console.log(error);
         expect((error as Error).message).toBe('baseUrl is required');
       }
     });
 
     it('should make successful request with correct parameters', async () => {
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'users';
-      queryBuilder.method = Methods.GET;
-      queryBuilder.body = { name: 'test' };
+      const queryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+        method: Methods.GET,
+        body: { name: 'test' },
+      });
 
       const response = await adapter.call(queryBuilder);
       expect(response).toBeDefined();
@@ -152,10 +155,11 @@ describe('HttpAdapter', () => {
       const methods = [Methods.GET, Methods.POST, Methods.PUT, Methods.PATCH, Methods.DELETE];
 
       for (const method of methods) {
-        const queryBuilder = new QueryBuilder();
-        queryBuilder.resource = 'test';
-        queryBuilder.method = method;
-        queryBuilder.body = { data: 'test' };
+        const queryBuilder = new QueryBuilder({
+          model: User as typeof Model,
+          method,
+          body: { data: 'test' },
+        });
 
         const response = await adapter.call<TestResponseData>(queryBuilder);
         expect(response.data.method).toBe(method);
@@ -165,8 +169,9 @@ describe('HttpAdapter', () => {
 
   describe('caching', () => {
     it('should not cache responses when caching is disabled', async () => {
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'test';
+      const queryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+      });
 
       const response1 = await adapter.call(queryBuilder);
       const response2 = await adapter.call(queryBuilder);
@@ -182,8 +187,9 @@ describe('HttpAdapter', () => {
         },
       });
 
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'test';
+      const queryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+      });
 
       const response1 = await adapter.call(queryBuilder);
       const response2 = await adapter.call(queryBuilder);
@@ -199,8 +205,9 @@ describe('HttpAdapter', () => {
         },
       });
 
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'test';
+      const queryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+      });
 
       const response1 = await adapter.call(queryBuilder);
       adapter.clearCache();
@@ -220,11 +227,12 @@ describe('HttpAdapter', () => {
       };
       
       adapter.configure({ requestInterceptor });
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'test';
+      const queryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+      });
 
       const response = await adapter.call<TestResponseData>(queryBuilder);
-      expect(response.data.url).toBe('https://api.example.com/test');
+      expect(response.data.url).toBe('https://api.example.com/users');
     });
 
     it('should apply response interceptor', async () => {
@@ -239,8 +247,9 @@ describe('HttpAdapter', () => {
       };
 
       adapter.configure({ responseInterceptor: responseInterceptor.bind(adapter) });
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'test';
+      const queryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+      });
 
       const response = await adapter.call<TestResponseData>(queryBuilder);
       expect(response.data.intercepted).toBe(true);
@@ -265,11 +274,12 @@ describe('HttpAdapter', () => {
         requestInterceptor: (request) => requestInterceptor2(requestInterceptor1(request)),
       });
 
-      const queryBuilder = new QueryBuilder();
-      queryBuilder.resource = 'test';
+      const queryBuilder = new QueryBuilder({
+        model: User as typeof Model,
+      });
 
       const response = await adapter.call<TestResponseData>(queryBuilder);
-      expect(response.data.url).toBe('https://api.example.com/test');
+      expect(response.data.url).toBe('https://api.example.com/users');
     });
   });
 });
