@@ -6,7 +6,7 @@
 
 # Interface: HttpResponseInterface
 
-Defined in: [adapters/HttpAdapter.ts:232](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L232)
+Defined in: [adapters/HttpAdapter.ts:232](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L232)
 
 ## Properties
 
@@ -14,4 +14,4 @@ Defined in: [adapters/HttpAdapter.ts:232](https://github.com/cedricpierre/fluent
 
 > **data**: `any`
 
-Defined in: [adapters/HttpAdapter.ts:233](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L233)
+Defined in: [adapters/HttpAdapter.ts:233](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L233)

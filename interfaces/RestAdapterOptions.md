@@ -6,7 +6,7 @@
 
 # Interface: RestAdapterOptions
 
-Defined in: [adapters/RestAdapter.ts:115](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/RestAdapter.ts#L115)
+Defined in: [adapters/RestAdapter.ts:115](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/RestAdapter.ts#L115)
 
 Configuration options for the RestAdapter.
 Extends HttpAdapterOptions with any additional REST-specific options.
@@ -25,7 +25,7 @@ Extends HttpAdapterOptions with any additional REST-specific options.
 
 > `optional` **baseUrl**: `string`
 
-Defined in: [adapters/HttpAdapter.ts:179](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L179)
+Defined in: [adapters/HttpAdapter.ts:179](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L179)
 
 Base URL to prepend to all requests
 
@@ -39,7 +39,7 @@ Base URL to prepend to all requests
 
 > `optional` **cacheOptions**: [`CacheOptions`](CacheOptions.md)
 
-Defined in: [adapters/HttpAdapter.ts:191](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L191)
+Defined in: [adapters/HttpAdapter.ts:191](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L191)
 
 Cache configuration options
 
@@ -53,7 +53,7 @@ Cache configuration options
 
 > `optional` **errorInterceptor**: (`error`) => `void`
 
-Defined in: [adapters/HttpAdapter.ts:187](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L187)
+Defined in: [adapters/HttpAdapter.ts:187](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L187)
 
 Handler for request errors
 
@@ -77,7 +77,7 @@ Handler for request errors
 
 > `optional` **options**: [`HttpRequestOptions`](HttpRequestOptions.md)
 
-Defined in: [adapters/HttpAdapter.ts:181](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L181)
+Defined in: [adapters/HttpAdapter.ts:181](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L181)
 
 Default request options to apply to all requests
 
@@ -91,7 +91,7 @@ Default request options to apply to all requests
 
 > `optional` **requestHandler**: (`request`) => `Promise`\<[`HttpResponse`](../classes/HttpResponse.md)\<`any`\>\>
 
-Defined in: [adapters/HttpAdapter.ts:189](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L189)
+Defined in: [adapters/HttpAdapter.ts:189](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L189)
 
 Custom request handler function
 
@@ -115,7 +115,7 @@ Custom request handler function
 
 > `optional` **requestInterceptor**: (`request`) => [`HttpRequest`](../classes/HttpRequest.md)
 
-Defined in: [adapters/HttpAdapter.ts:183](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L183)
+Defined in: [adapters/HttpAdapter.ts:183](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L183)
 
 Interceptor to modify requests before they are sent
 
@@ -139,7 +139,7 @@ Interceptor to modify requests before they are sent
 
 > `optional` **responseInterceptor**: (`response`) => [`HttpResponse`](../classes/HttpResponse.md)\<`any`\>
 
-Defined in: [adapters/HttpAdapter.ts:185](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L185)
+Defined in: [adapters/HttpAdapter.ts:185](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L185)
 
 Interceptor to modify responses after they are received
 

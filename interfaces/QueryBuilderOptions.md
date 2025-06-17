@@ -6,7 +6,7 @@
 
 # Interface: QueryBuilderOptions
 
-Defined in: [QueryBuilder.ts:3](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L3)
+Defined in: [QueryBuilder.ts:3](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L3)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [QueryBuilder.ts:3](https://github.com/cedricpierre/fluentity-core/b
 
 > `optional` **body**: `any`
 
-Defined in: [QueryBuilder.ts:15](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L15)
+Defined in: [QueryBuilder.ts:15](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L15)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [QueryBuilder.ts:15](https://github.com/cedricpierre/fluentity-core/
 
 > `optional` **direction**: `string`
 
-Defined in: [QueryBuilder.ts:9](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L9)
+Defined in: [QueryBuilder.ts:9](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L9)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [QueryBuilder.ts:9](https://github.com/cedricpierre/fluentity-core/b
 
 > `optional` **id**: `string` \| `number`
 
-Defined in: [QueryBuilder.ts:5](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L5)
+Defined in: [QueryBuilder.ts:5](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L5)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [QueryBuilder.ts:5](https://github.com/cedricpierre/fluentity-core/b
 
 > `optional` **limit**: `number`
 
-Defined in: [QueryBuilder.ts:10](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L10)
+Defined in: [QueryBuilder.ts:10](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L10)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [QueryBuilder.ts:10](https://github.com/cedricpierre/fluentity-core/
 
 > `optional` **method**: `"GET"` \| `"POST"` \| `"PUT"` \| `"PATCH"` \| `"DELETE"` \| `"HEAD"` \| `"OPTIONS"`
 
-Defined in: [QueryBuilder.ts:14](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L14)
+Defined in: [QueryBuilder.ts:14](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L14)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [QueryBuilder.ts:14](https://github.com/cedricpierre/fluentity-core/
 
 > `optional` **model**: *typeof* [`Model`](../classes/Model.md)
 
-Defined in: [QueryBuilder.ts:4](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L4)
+Defined in: [QueryBuilder.ts:4](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L4)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [QueryBuilder.ts:4](https://github.com/cedricpierre/fluentity-core/b
 
 > `optional` **offset**: `number`
 
-Defined in: [QueryBuilder.ts:11](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L11)
+Defined in: [QueryBuilder.ts:11](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L11)
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: [QueryBuilder.ts:11](https://github.com/cedricpierre/fluentity-core/
 
 > `optional` **page**: `number`
 
-Defined in: [QueryBuilder.ts:12](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L12)
+Defined in: [QueryBuilder.ts:12](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L12)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [QueryBuilder.ts:12](https://github.com/cedricpierre/fluentity-core/
 
 > `optional` **parent**: [`QueryBuilder`](../classes/QueryBuilder.md)
 
-Defined in: [QueryBuilder.ts:6](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L6)
+Defined in: [QueryBuilder.ts:6](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L6)
 
 ***
 
@@ -86,7 +86,7 @@ Defined in: [QueryBuilder.ts:6](https://github.com/cedricpierre/fluentity-core/b
 
 > `optional` **perPage**: `number`
 
-Defined in: [QueryBuilder.ts:13](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L13)
+Defined in: [QueryBuilder.ts:13](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L13)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [QueryBuilder.ts:13](https://github.com/cedricpierre/fluentity-core/
 
 > `optional` **query**: `Record`\<`string`, `any`\>
 
-Defined in: [QueryBuilder.ts:7](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L7)
+Defined in: [QueryBuilder.ts:7](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L7)
 
 ***
 
@@ -102,7 +102,7 @@ Defined in: [QueryBuilder.ts:7](https://github.com/cedricpierre/fluentity-core/b
 
 > `optional` **sort**: `string`
 
-Defined in: [QueryBuilder.ts:8](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L8)
+Defined in: [QueryBuilder.ts:8](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L8)
 
 ***
 
@@ -110,4 +110,4 @@ Defined in: [QueryBuilder.ts:8](https://github.com/cedricpierre/fluentity-core/b
 
 > `optional` **url**: `string`
 
-Defined in: [QueryBuilder.ts:16](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L16)
+Defined in: [QueryBuilder.ts:16](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/QueryBuilder.ts#L16)

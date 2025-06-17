@@ -6,7 +6,7 @@
 
 # Class: DefaultAdapter
 
-Defined in: [adapters/DefaultAdapter.ts:19](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/DefaultAdapter.ts#L19)
+Defined in: [adapters/DefaultAdapter.ts:19](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/DefaultAdapter.ts#L19)
 
 Default adapter implementation that provides no-op behavior.
 Used as a fallback when no specific adapter is configured.
@@ -44,7 +44,7 @@ Fluentity.initialize({
 
 > **options**: [`AdapterOptions`](../interfaces/AdapterOptions.md) = `{}`
 
-Defined in: [adapters/DefaultAdapter.ts:20](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/DefaultAdapter.ts#L20)
+Defined in: [adapters/DefaultAdapter.ts:20](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/DefaultAdapter.ts#L20)
 
 The options for the adapter.
 Contains configuration settings specific to the adapter implementation.
@@ -59,7 +59,7 @@ Contains configuration settings specific to the adapter implementation.
 
 > **call**(`_queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\>
 
-Defined in: [adapters/DefaultAdapter.ts:35](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/DefaultAdapter.ts#L35)
+Defined in: [adapters/DefaultAdapter.ts:35](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/DefaultAdapter.ts#L35)
 
 Makes a mock API request that always returns undefined data.
 This is a no-op implementation for testing or when no real API is available.
@@ -96,7 +96,7 @@ const response = await adapter.call(new QueryBuilder());
 
 > **configure**(`_options`): `void`
 
-Defined in: [adapters/DefaultAdapter.ts:50](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/DefaultAdapter.ts#L50)
+Defined in: [adapters/DefaultAdapter.ts:50](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/DefaultAdapter.ts#L50)
 
 Configures the adapter with options (no-op in this implementation).
 This method exists to satisfy the AdapterInterface contract.

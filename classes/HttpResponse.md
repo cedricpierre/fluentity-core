@@ -6,7 +6,7 @@
 
 # Class: HttpResponse\<T\>
 
-Defined in: [adapters/HttpAdapter.ts:236](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L236)
+Defined in: [adapters/HttpAdapter.ts:236](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L236)
 
 Interface for adapter responses.
 Contains the response data from the API.
@@ -42,7 +42,7 @@ const response: AdapterResponse<User[]> = {
 
 > **new HttpResponse**\<`T`\>(`options?`): `HttpResponse`\<`T`\>
 
-Defined in: [adapters/HttpAdapter.ts:239](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L239)
+Defined in: [adapters/HttpAdapter.ts:239](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L239)
 
 #### Parameters
 
@@ -60,7 +60,7 @@ Defined in: [adapters/HttpAdapter.ts:239](https://github.com/cedricpierre/fluent
 
 > **data**: `T`
 
-Defined in: [adapters/HttpAdapter.ts:237](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L237)
+Defined in: [adapters/HttpAdapter.ts:237](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L237)
 
 The response data from the API
 

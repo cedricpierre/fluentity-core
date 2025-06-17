@@ -8,7 +8,7 @@
 
 > **Cast**\<`T`\>(`caster`): [`PropertyDecoratorType`](../type-aliases/PropertyDecoratorType.md)
 
-Defined in: [decorators.ts:95](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/decorators.ts#L95)
+Defined in: [decorators.ts:95](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/decorators.ts#L95)
 
 Decorator for casting property values to model instances.
 Automatically converts plain objects to model instances when accessed.

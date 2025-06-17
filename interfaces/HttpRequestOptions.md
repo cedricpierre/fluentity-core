@@ -6,7 +6,7 @@
 
 # Interface: HttpRequestOptions
 
-Defined in: [adapters/HttpAdapter.ts:250](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L250)
+Defined in: [adapters/HttpAdapter.ts:250](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L250)
 
 Configuration options for HTTP requests.
 Extends the standard Fetch API RequestInit interface with additional options.
@@ -25,7 +25,7 @@ Extends the standard Fetch API RequestInit interface with additional options.
 
 > `optional` **cache**: `RequestCache`
 
-Defined in: [adapters/HttpAdapter.ts:266](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L266)
+Defined in: [adapters/HttpAdapter.ts:266](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L266)
 
 Cache mode
 
@@ -35,7 +35,7 @@ Cache mode
 
 > `optional` **credentials**: `RequestCredentials`
 
-Defined in: [adapters/HttpAdapter.ts:254](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L254)
+Defined in: [adapters/HttpAdapter.ts:254](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L254)
 
 Request credentials mode
 
@@ -45,7 +45,7 @@ Request credentials mode
 
 > `optional` **headers**: `Record`\<`string`, `string`\>
 
-Defined in: [adapters/HttpAdapter.ts:252](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L252)
+Defined in: [adapters/HttpAdapter.ts:252](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L252)
 
 Request headers
 
@@ -55,7 +55,7 @@ Request headers
 
 > `optional` **integrity**: `string`
 
-Defined in: [adapters/HttpAdapter.ts:264](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L264)
+Defined in: [adapters/HttpAdapter.ts:264](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L264)
 
 Subresource integrity value
 
@@ -65,7 +65,7 @@ Subresource integrity value
 
 > `optional` **keepalive**: `boolean`
 
-Defined in: [adapters/HttpAdapter.ts:268](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L268)
+Defined in: [adapters/HttpAdapter.ts:268](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L268)
 
 Whether to keep the connection alive
 
@@ -75,7 +75,7 @@ Whether to keep the connection alive
 
 > `optional` **mode**: `RequestMode`
 
-Defined in: [adapters/HttpAdapter.ts:256](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L256)
+Defined in: [adapters/HttpAdapter.ts:256](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L256)
 
 Request mode
 
@@ -85,7 +85,7 @@ Request mode
 
 > `optional` **redirect**: `RequestRedirect`
 
-Defined in: [adapters/HttpAdapter.ts:258](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L258)
+Defined in: [adapters/HttpAdapter.ts:258](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L258)
 
 How to handle redirects
 
@@ -95,7 +95,7 @@ How to handle redirects
 
 > `optional` **referrer**: `string`
 
-Defined in: [adapters/HttpAdapter.ts:260](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L260)
+Defined in: [adapters/HttpAdapter.ts:260](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L260)
 
 Referrer URL
 
@@ -105,7 +105,7 @@ Referrer URL
 
 > `optional` **referrerPolicy**: `ReferrerPolicy`
 
-Defined in: [adapters/HttpAdapter.ts:262](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L262)
+Defined in: [adapters/HttpAdapter.ts:262](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L262)
 
 Referrer policy
 
@@ -115,6 +115,6 @@ Referrer policy
 
 > `optional` **signal**: `AbortSignal`
 
-Defined in: [adapters/HttpAdapter.ts:270](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L270)
+Defined in: [adapters/HttpAdapter.ts:270](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L270)
 
 Abort signal for cancelling the request

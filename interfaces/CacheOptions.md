@@ -6,7 +6,7 @@
 
 # Interface: CacheOptions
 
-Defined in: [adapters/HttpAdapter.ts:197](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L197)
+Defined in: [adapters/HttpAdapter.ts:197](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L197)
 
 Configuration options for response caching.
 
@@ -16,7 +16,7 @@ Configuration options for response caching.
 
 > **enabled**: `boolean`
 
-Defined in: [adapters/HttpAdapter.ts:199](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L199)
+Defined in: [adapters/HttpAdapter.ts:199](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L199)
 
 Whether caching is enabled
 
@@ -26,6 +26,6 @@ Whether caching is enabled
 
 > `optional` **ttl**: `number`
 
-Defined in: [adapters/HttpAdapter.ts:201](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L201)
+Defined in: [adapters/HttpAdapter.ts:201](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L201)
 
 Time-to-live for cached responses in milliseconds

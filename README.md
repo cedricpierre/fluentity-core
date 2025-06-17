@@ -180,9 +180,6 @@ export class User extends Model<UserAttributes> implements UserAttributes {
   @HasMany(() => Media, 'medias')
   libraries!: Relation<Media[]>;
 
-  @HasMany(() => Media, 'custom-resource')
-  customResource!: Relation<Media[]>;
-
   @HasOne(() => Media)
   picture!: Relation<Media>;
 
@@ -202,7 +199,7 @@ export class User extends Model<UserAttributes> implements UserAttributes {
   // Custom reusable method: User.login(username, password)
   static async login(username: string, password: string) {
     const queryBuilder = new QueryBuilder({
-      resource: 'login',
+      url: 'login',
       body: {
         username,
         password,
@@ -344,10 +341,10 @@ This is the core of Fluentity, you can nest different query builders and the ada
 
 ```typescript
     const queryBuilder = new QueryBuilder({
-      resource: 'medias',
+      model: Media,
       id: 2,
       parent: new QueryBuilder({
-        resource: 'users',
+        model: User,
         id: 1
       })
     });
@@ -381,7 +378,7 @@ class User extends Model<UserAttributes> {
   posts!: Relation<Post[]>;
 
   /** One-to-many relationship with Media model using custom resource name */
-  @HasMany(() => Media, 'libraries')
+  @HasMany(() => Media)
   medias!: Relation<Media[]>;
 
   /** Many-to-many relationship with Role model */
@@ -438,7 +435,7 @@ class User extends Model<UserAttributes> {
 
     // The query builder will be used by the current adapter.
     const queryBuilder = new QueryBuilder({
-      resource: 'login',
+      url: 'login',
       body: {
         username,
         password,
@@ -596,7 +593,6 @@ const userObject = user.toObject();
 Fluentity includes comprehensive error handling for common scenarios:
 
 - Missing required parameters (ID, data, where conditions)
-- Undefined resource names
 - API request failures
 - Invalid model operations
 

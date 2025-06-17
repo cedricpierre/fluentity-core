@@ -6,7 +6,7 @@
 
 # Class: HttpRequest
 
-Defined in: [adapters/HttpAdapter.ts:218](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L218)
+Defined in: [adapters/HttpAdapter.ts:218](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L218)
 
 Represents an HTTP request configuration.
 
@@ -21,7 +21,7 @@ Represents an HTTP request configuration.
 
 > **new HttpRequest**(`options?`): `HttpRequest`
 
-Defined in: [adapters/HttpAdapter.ts:225](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L225)
+Defined in: [adapters/HttpAdapter.ts:225](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L225)
 
 #### Parameters
 
@@ -39,7 +39,7 @@ Defined in: [adapters/HttpAdapter.ts:225](https://github.com/cedricpierre/fluent
 
 > `optional` **body**: `any`
 
-Defined in: [adapters/HttpAdapter.ts:223](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L223)
+Defined in: [adapters/HttpAdapter.ts:223](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L223)
 
 Request body data
 
@@ -53,7 +53,7 @@ Request body data
 
 > `optional` **method**: `"GET"` \| `"POST"` \| `"PUT"` \| `"PATCH"` \| `"DELETE"` \| `"HEAD"` \| `"OPTIONS"`
 
-Defined in: [adapters/HttpAdapter.ts:222](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L222)
+Defined in: [adapters/HttpAdapter.ts:222](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L222)
 
 HTTP method to use
 
@@ -67,7 +67,7 @@ HTTP method to use
 
 > `optional` **options**: [`HttpRequestOptions`](../interfaces/HttpRequestOptions.md)
 
-Defined in: [adapters/HttpAdapter.ts:221](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L221)
+Defined in: [adapters/HttpAdapter.ts:221](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L221)
 
 Request options including method, headers, body, etc.
 
@@ -81,7 +81,7 @@ Request options including method, headers, body, etc.
 
 > **url**: `string` = `''`
 
-Defined in: [adapters/HttpAdapter.ts:220](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L220)
+Defined in: [adapters/HttpAdapter.ts:220](https://github.com/cedricpierre/fluentity-core/blob/b9e907b503f5d8cbc83b38cdb5626da057589278/src/adapters/HttpAdapter.ts#L220)
 
 The full URL to send the request to
 
