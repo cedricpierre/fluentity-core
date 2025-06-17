@@ -6,7 +6,7 @@
 
 # Interface: HttpAdapterOptions\<T\>
 
-Defined in: [adapters/HttpAdapter.ts:177](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L177)
+Defined in: [adapters/HttpAdapter.ts:177](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L177)
 
 Configuration options for the HttpClient.
 
@@ -34,7 +34,7 @@ Configuration options for the HttpClient.
 
 > `optional` **baseUrl**: `string`
 
-Defined in: [adapters/HttpAdapter.ts:179](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L179)
+Defined in: [adapters/HttpAdapter.ts:179](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L179)
 
 Base URL to prepend to all requests
 
@@ -44,7 +44,7 @@ Base URL to prepend to all requests
 
 > `optional` **cacheOptions**: [`CacheOptions`](CacheOptions.md)
 
-Defined in: [adapters/HttpAdapter.ts:191](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L191)
+Defined in: [adapters/HttpAdapter.ts:191](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L191)
 
 Cache configuration options
 
@@ -54,7 +54,7 @@ Cache configuration options
 
 > `optional` **errorInterceptor**: (`error`) => `void`
 
-Defined in: [adapters/HttpAdapter.ts:187](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L187)
+Defined in: [adapters/HttpAdapter.ts:187](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L187)
 
 Handler for request errors
 
@@ -74,7 +74,7 @@ Handler for request errors
 
 > `optional` **options**: [`HttpRequestOptions`](HttpRequestOptions.md)
 
-Defined in: [adapters/HttpAdapter.ts:181](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L181)
+Defined in: [adapters/HttpAdapter.ts:181](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L181)
 
 Default request options to apply to all requests
 
@@ -84,7 +84,7 @@ Default request options to apply to all requests
 
 > `optional` **requestHandler**: (`request`) => `Promise`\<[`HttpResponse`](../classes/HttpResponse.md)\<`any`\>\>
 
-Defined in: [adapters/HttpAdapter.ts:189](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L189)
+Defined in: [adapters/HttpAdapter.ts:189](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L189)
 
 Custom request handler function
 
@@ -104,7 +104,7 @@ Custom request handler function
 
 > `optional` **requestInterceptor**: (`request`) => [`HttpRequest`](../classes/HttpRequest.md)
 
-Defined in: [adapters/HttpAdapter.ts:183](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L183)
+Defined in: [adapters/HttpAdapter.ts:183](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L183)
 
 Interceptor to modify requests before they are sent
 
@@ -124,7 +124,7 @@ Interceptor to modify requests before they are sent
 
 > `optional` **responseInterceptor**: (`response`) => [`HttpResponse`](../classes/HttpResponse.md)\<`T`\>
 
-Defined in: [adapters/HttpAdapter.ts:185](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/adapters/HttpAdapter.ts#L185)
+Defined in: [adapters/HttpAdapter.ts:185](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/adapters/HttpAdapter.ts#L185)
 
 Interceptor to modify responses after they are received
 

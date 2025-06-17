@@ -6,7 +6,7 @@
 
 # Class: QueryBuilder
 
-Defined in: [QueryBuilder.ts:49](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L49)
+Defined in: [QueryBuilder.ts:49](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L49)
 
 Builder class for constructing URL query strings and API requests.
 Provides a fluent interface for building and managing query parameters for API requests.
@@ -44,7 +44,7 @@ const query = new QueryBuilder()
 
 > **new QueryBuilder**(`options?`): `QueryBuilder`
 
-Defined in: [QueryBuilder.ts:50](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L50)
+Defined in: [QueryBuilder.ts:50](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L50)
 
 #### Parameters
 
@@ -62,7 +62,7 @@ Defined in: [QueryBuilder.ts:50](https://github.com/cedricpierre/fluentity-core/
 
 > `optional` **body**: `any`
 
-Defined in: [QueryBuilder.ts:79](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L79)
+Defined in: [QueryBuilder.ts:79](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L79)
 
 Request body data
 
@@ -72,7 +72,7 @@ Request body data
 
 > `optional` **direction**: `string`
 
-Defined in: [QueryBuilder.ts:67](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L67)
+Defined in: [QueryBuilder.ts:67](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L67)
 
 Sort direction ('asc' or 'desc')
 
@@ -82,7 +82,7 @@ Sort direction ('asc' or 'desc')
 
 > `optional` **id**: `string` \| `number` \| `BigInt`
 
-Defined in: [QueryBuilder.ts:59](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L59)
+Defined in: [QueryBuilder.ts:59](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L59)
 
 Resource ID for single-resource operations
 
@@ -92,7 +92,7 @@ Resource ID for single-resource operations
 
 > `optional` **limit**: `number`
 
-Defined in: [QueryBuilder.ts:69](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L69)
+Defined in: [QueryBuilder.ts:69](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L69)
 
 Maximum number of results to return
 
@@ -102,7 +102,7 @@ Maximum number of results to return
 
 > `optional` **method**: `"GET"` \| `"POST"` \| `"PUT"` \| `"PATCH"` \| `"DELETE"` \| `"HEAD"` \| `"OPTIONS"`
 
-Defined in: [QueryBuilder.ts:77](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L77)
+Defined in: [QueryBuilder.ts:77](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L77)
 
 HTTP method to use for the request
 
@@ -112,7 +112,7 @@ HTTP method to use for the request
 
 > `optional` **model**: [`Model`](Model.md)\<[`Attributes`](../interfaces/Attributes.md)\>
 
-Defined in: [QueryBuilder.ts:57](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L57)
+Defined in: [QueryBuilder.ts:57](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L57)
 
 The model for the query builder
 
@@ -122,7 +122,7 @@ The model for the query builder
 
 > `optional` **offset**: `number`
 
-Defined in: [QueryBuilder.ts:71](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L71)
+Defined in: [QueryBuilder.ts:71](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L71)
 
 Number of results to skip
 
@@ -132,7 +132,7 @@ Number of results to skip
 
 > `optional` **page**: `number`
 
-Defined in: [QueryBuilder.ts:73](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L73)
+Defined in: [QueryBuilder.ts:73](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L73)
 
 Page number for pagination
 
@@ -142,7 +142,7 @@ Page number for pagination
 
 > `optional` **parent**: `QueryBuilder`
 
-Defined in: [QueryBuilder.ts:61](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L61)
+Defined in: [QueryBuilder.ts:61](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L61)
 
 The parents of the query builder
 
@@ -152,7 +152,7 @@ The parents of the query builder
 
 > `optional` **perPage**: `number`
 
-Defined in: [QueryBuilder.ts:75](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L75)
+Defined in: [QueryBuilder.ts:75](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L75)
 
 Number of items per page
 
@@ -162,7 +162,7 @@ Number of items per page
 
 > `optional` **query**: `Record`\<`string`, `any`\> = `{}`
 
-Defined in: [QueryBuilder.ts:63](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L63)
+Defined in: [QueryBuilder.ts:63](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L63)
 
 Query parameters to be added to the URL
 
@@ -172,7 +172,7 @@ Query parameters to be added to the URL
 
 > `optional` **sort**: `string`
 
-Defined in: [QueryBuilder.ts:65](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L65)
+Defined in: [QueryBuilder.ts:65](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L65)
 
 Field to sort results by
 
@@ -182,7 +182,7 @@ Field to sort results by
 
 > `optional` **url**: `string`
 
-Defined in: [QueryBuilder.ts:55](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L55)
+Defined in: [QueryBuilder.ts:55](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L55)
 
 ## Methods
 
@@ -190,7 +190,7 @@ Defined in: [QueryBuilder.ts:55](https://github.com/cedricpierre/fluentity-core/
 
 > **filter**(`filters`): `this`
 
-Defined in: [QueryBuilder.ts:133](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L133)
+Defined in: [QueryBuilder.ts:133](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L133)
 
 Adds filter conditions to the query.
 Supports more complex filtering operations than where().
@@ -240,7 +240,7 @@ query.filter({
 
 > **reset**(): `void`
 
-Defined in: [QueryBuilder.ts:157](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L157)
+Defined in: [QueryBuilder.ts:157](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L157)
 
 Resets the query builder to its initial state.
 Clears all query parameters, pagination settings, and request options.
@@ -270,7 +270,7 @@ query.where({ type: 'user' })
 
 > **toObject**(): `Record`\<`string`, `any`\>
 
-Defined in: [QueryBuilder.ts:190](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L190)
+Defined in: [QueryBuilder.ts:190](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L190)
 
 Converts the query builder to a plain object.
 Used internally to construct the final query parameters for API requests.
@@ -302,7 +302,7 @@ const params = query.toObject();
 
 > **where**(`where`): `this`
 
-Defined in: [QueryBuilder.ts:98](https://github.com/cedricpierre/fluentity-core/blob/26f05b6b1157becd5e413d332a8cbeb24afb2c36/src/QueryBuilder.ts#L98)
+Defined in: [QueryBuilder.ts:98](https://github.com/cedricpierre/fluentity-core/blob/ff4e4131c1b559350a048decc81f340aa7866d50/src/QueryBuilder.ts#L98)
 
 Adds where conditions to the query.
 Shorthand for filter() that adds exact field-value matches.
