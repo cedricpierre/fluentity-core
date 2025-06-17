@@ -6,7 +6,7 @@
 
 # Class: Fluentity\<A\>
 
-Defined in: [Fluentity.ts:162](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L162)
+Defined in: [Fluentity.ts:130](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L130)
 
 Main Fluentity class that manages API communication.
 Implements the singleton pattern to ensure a single instance is used throughout the application.
@@ -43,7 +43,7 @@ The type of adapter being used
 
 > **get** **adapter**(): `A`
 
-Defined in: [Fluentity.ts:210](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L210)
+Defined in: [Fluentity.ts:192](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L192)
 
 Gets the adapter instance used for API communication.
 
@@ -59,7 +59,7 @@ The configured adapter instance
 
 > **call**(`queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\<`any`\>\>
 
-Defined in: [Fluentity.ts:274](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L274)
+Defined in: [Fluentity.ts:272](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L272)
 
 Calls the adapter with the given query builder.
 
@@ -83,7 +83,10 @@ The adapter response
 
 > **configure**(`options?`): `void`
 
-Defined in: [Fluentity.ts:195](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L195)
+Defined in: [Fluentity.ts:177](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L177)
+
+Configures the Fluentity instance with new options.
+Updates the adapter and configuration settings.
 
 #### Parameters
 
@@ -91,9 +94,24 @@ Defined in: [Fluentity.ts:195](https://github.com/cedricpierre/fluentity-core/bl
 
 [`FluentityOptions`](../interfaces/FluentityOptions.md)\<`A`\>
 
+Optional configuration options to apply
+
 #### Returns
 
 `void`
+
+#### Throws
+
+If Fluentity has not been initialized
+
+#### Example
+
+```typescript
+// Configure with new adapter
+fluentity.configure({
+  adapter: new CustomAdapter()
+});
+```
 
 ***
 
@@ -101,9 +119,10 @@ Defined in: [Fluentity.ts:195](https://github.com/cedricpierre/fluentity-core/bl
 
 > `static` **call**(`queryBuilder`): `Promise`\<[`AdapterResponse`](../interfaces/AdapterResponse.md)\<`any`\>\>
 
-Defined in: [Fluentity.ts:283](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L283)
+Defined in: [Fluentity.ts:293](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L293)
 
-Calls the adapter with the given query builder.
+Calls the adapter with the given query builder using the singleton instance.
+Static convenience method that delegates to the singleton instance.
 
 #### Parameters
 
@@ -119,13 +138,28 @@ The query builder to use
 
 The adapter response
 
+#### Throws
+
+If Fluentity has not been initialized
+
+#### Example
+
+```typescript
+// Use static method
+const response = await Fluentity.call(queryBuilder);
+
+// Equivalent to
+const fluentity = Fluentity.getInstance();
+const response = await fluentity.call(queryBuilder);
+```
+
 ***
 
 ### getInstance()
 
 > `static` **getInstance**\<`A`\>(): `Fluentity`\<`A`\>
 
-Defined in: [Fluentity.ts:261](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L261)
+Defined in: [Fluentity.ts:259](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L259)
 
 Gets the Fluentity singleton instance.
 
@@ -161,7 +195,7 @@ const adapter = fluentity.adapter;
 
 > `static` **initialize**\<`A`\>(`options?`): `Fluentity`\<`A`\>
 
-Defined in: [Fluentity.ts:234](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L234)
+Defined in: [Fluentity.ts:216](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L216)
 
 Initializes the Fluentity singleton instance.
 Must be called before using any other Fluentity functionality.
@@ -210,8 +244,24 @@ Fluentity.initialize({
 
 > `static` **reset**(): `void`
 
-Defined in: [Fluentity.ts:243](https://github.com/cedricpierre/fluentity-core/blob/1e69a8de935352455e2e344f5f8b480e30c89eda/src/Fluentity.ts#L243)
+Defined in: [Fluentity.ts:241](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/Fluentity.ts#L241)
+
+Resets the Fluentity singleton instance.
+Clears the current instance, allowing for re-initialization.
+Useful for testing or when you need to change the adapter configuration.
 
 #### Returns
 
 `void`
+
+#### Example
+
+```typescript
+// Reset for testing
+Fluentity.reset();
+
+// Re-initialize with different adapter
+Fluentity.initialize({
+  adapter: new CustomAdapter()
+});
+```

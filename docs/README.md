@@ -14,6 +14,29 @@
 
 Fluentity is a lightweight and flexible library for TypeScript/JavaScript applications to consume API using models. It's inspired by Active Record and Laravel Eloquent. It provides a simple and intuitive way to interact with your API endpoints while maintaining type safety and following object-oriented principles. Fluentity has also a small caching mechinism. 
 
+## Table of Contents
+
+- [Features](#features)
+- [Quality & Reliability](#quality--reliability)
+- [Installation](#installation)
+  - [Development](#development)
+- [Configuration](#configuration)
+  - [Typescript](#typescript)
+  - [If you are using Babel](#if-you-are-using-babel)
+- [Usage](#usage)
+  - [Basic Usage](#basic-usage)
+  - [Models](#models)
+  - [Relationships](#relationships)
+  - [Querying](#querying)
+  - [Caching](#caching)
+- [API Reference](#api-reference)
+  - [Fluentity](#fluentity)
+  - [Model](#model)
+  - [QueryBuilder](#querybuilder)
+  - [Adapters](#adapters)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Quality & Reliability
 
 - 💯 Written in TypeScript
@@ -469,7 +492,7 @@ Example usage:
 const activeUsers = await User.where({ status: 'active' }).all();
 
 // Deep chaining
-const thumbails = User.id(1).medias.id(2).thumnails.all();
+const thumbails = await User.id(1).medias.id(2).thumnails.all();
 // Will make a call to /users/1/medias/2/thumbails
 ```
 
@@ -500,31 +523,60 @@ await user.update({ email: "test@example.com" });
 await user.delete();
 ```
 
+## Auto-populate relations
+
+If you query the API and it return something like:
+
+```json
+{
+  "name": "Cedric",
+  "medias": [
+    { "id": 1, "url": "https://..." },
+    { "id": 2, "url": "https://..." },
+  ]
+}
+```
+
+The relation is populated with the existing data:
+
+```ts
+const user = await User.find(1);
+console.log(user.medias); // HasManyRelationBuilder<Media>,
+console.log(user.medias.data); // Media[],
+```
+
 ## Using relations
 
 You can use the relations declared in the model to create API calls.
 
 ```typescript
-const user = User.find(1)
+const user = await User.find(1)
 
 // Will create an API call: GET /users/1/medias
-user.medias.all()
+await user.medias.all()
 
 // Will create an API call: GET /users/1/medias/2
-user.medias.find(2)
+await user.medias.find(2)
 
 // Will create an API call: GET /users/1/medias/2/thumbnails
-user.medias.id(2).thumbnails.all()
+await user.medias.id(2).thumbnails.all()
+```
+
+## Accessing the retrieved data
+
+```ts
+const medias = await user.medias.all()
+console.log(medias); // Media[]
+// or
+console.log(user.medias.data); // Media[]
 ```
 
 ### Difference between id() and find()
 
 ```typescript
-const user = User.find(1) // Will make an API call to /users/1
+const user = await User.find(1) // Will make an API call to /users/1
 
 const user = User.id(1) // return an instance of a new User with id equals 1. Then this instance can be used to query relations.
-
-user.medias.all() // Will create an API call: GET /users/1/medias
 ```
 
 ## Additional Methods

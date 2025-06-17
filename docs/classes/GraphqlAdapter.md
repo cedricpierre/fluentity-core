@@ -2,11 +2,11 @@
 
 ***
 
-[@fluentity/core](../globals.md) / RestAdapter
+[@fluentity/core](../globals.md) / GraphqlAdapter
 
-# Class: RestAdapter
+# Class: GraphqlAdapter
 
-Defined in: [adapters/RestAdapter.ts:8](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/adapters/RestAdapter.ts#L8)
+Defined in: [adapters/GraphqlAdapter.ts:8](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/adapters/GraphqlAdapter.ts#L8)
 
 A static HTTP client class that provides methods for making HTTP requests with built-in caching,
 interceptors, and request/response handling capabilities.
@@ -19,23 +19,27 @@ interceptors, and request/response handling capabilities.
 
 ### Constructor
 
-> **new RestAdapter**(`options`): `RestAdapter`
+> **new GraphqlAdapter**(`options`): `GraphqlAdapter`
 
-Defined in: [adapters/RestAdapter.ts:15](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/adapters/RestAdapter.ts#L15)
+Defined in: [adapters/GraphqlAdapter.ts:16](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/adapters/GraphqlAdapter.ts#L16)
 
-Constructor for the RestAdapter class.
+Constructor for the GraphqlAdapter class.
 
 #### Parameters
 
 ##### options
 
-`Partial`\<[`RestAdapterOptions`](../interfaces/RestAdapterOptions.md)\>
+`Partial`\<[`GraphqlAdapterOptions`](../type-aliases/GraphqlAdapterOptions.md)\>
 
 Partial configuration options to merge with existing options
 
 #### Returns
 
-`RestAdapter`
+`GraphqlAdapter`
+
+#### Throws
+
+If endpoint is not provided
 
 #### Overrides
 
@@ -45,9 +49,9 @@ Partial configuration options to merge with existing options
 
 ### options
 
-> **options**: [`RestAdapterOptions`](../interfaces/RestAdapterOptions.md)
+> **options**: [`GraphqlAdapterOptions`](../type-aliases/GraphqlAdapterOptions.md)
 
-Defined in: [adapters/RestAdapter.ts:9](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/adapters/RestAdapter.ts#L9)
+Defined in: [adapters/GraphqlAdapter.ts:9](https://github.com/cedricpierre/fluentity-core/blob/3545f27c0a85945d554127b597e9fe870d03f95a/src/adapters/GraphqlAdapter.ts#L9)
 
 The options for the adapter.
 Contains configuration settings specific to the adapter implementation.
